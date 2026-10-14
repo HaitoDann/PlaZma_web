@@ -42,8 +42,7 @@ const seasons = [...new Set(results.map((r) => yearOf(r.season)))];
     <div class="container">
       <div class="s-head" data-reveal>
         <p class="kicker">Le projet</p>
-        <h2>De zéro à la LFL</h2>
-        <p class="s-head__lede">Une bande d’amis, une association, un roster. Chaque étape compte.</p>
+        <h2>De zéro à la Division 2 de LFL</h2>
       </div>
       <Timeline />
     </div>
@@ -62,7 +61,7 @@ const seasons = [...new Set(results.map((r) => yearOf(r.season)))];
           <li data-reveal>
             <PlayerCard
               pseudo={p.pseudo} sub={p.role} realName={p.realName} country={p.country}
-              photo={p.photo} href={`${base}/joueur/${p.slug}`} index={i + 1}
+              photo={p.photo} href={`${base}/joueur/${p.slug}`} index={i + 1} captain={p.captain}
             />
           </li>
         ))}
