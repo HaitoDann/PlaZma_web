@@ -1,53 +1,84 @@
 /* =========================================================================
-   Roster, staff, palmarès, actus — données réelles PlaZma.
-   Pour modifier : édite simplement les tableaux ci-dessous.
+   Roster, staff, palmarès, actus — données PlaZma.
+   Les pages joueur se génèrent automatiquement à partir du roster (slug).
+   Champs optionnels (bio, setup, réseaux, photo) = à compléter plus tard ;
+   le site gère proprement leur absence.
    ========================================================================= */
 
 export type Role = 'Top' | 'Jungle' | 'Mid' | 'ADC' | 'Support';
 
+export interface SocialLinks {
+  twitch?: string;
+  x?: string;
+  instagram?: string;
+  youtube?: string;
+  tiktok?: string;
+}
+
 export interface Player {
   pseudo: string;
   role: Role;
-  name?: string;        // nom réel (optionnel)
-  country?: string;     // emoji drapeau (optionnel)
-  photo?: string;       // fichier dans /public/roster/ (optionnel)
-  twitter?: string;
-  stream?: string;
+  slug: string;            // identifiant URL (auto si absent via slugify)
+  realName?: string;
+  country?: string;        // emoji drapeau
+  nationality?: string;    // ex. 'France'
+  photo?: string;          // fichier dans /public/roster/ (portrait ~3:4)
+  bio?: string;
+  setup?: { label: string; value: string }[];
+  socials?: SocialLinks;
   captain?: boolean;
 }
 
 export interface StaffMember {
   pseudo: string;
-  role: string;         // Head Coach, Manager, Analyste…
-  name?: string;
+  role: string;
+  realName?: string;
   country?: string;
   photo?: string;
 }
 
 export interface Result {
-  year: string;         // année ou saison (ex. '2025', 'S21')
+  year: string;
   event: string;
-  placement: string;    // ex. « Vainqueur », « Top 8 »
-  highlight?: boolean;  // met en avant (couleur or)
+  placement: string;
+  highlight?: boolean;
 }
 
 export interface NewsItem {
-  date: string;         // ISO : 'YYYY-MM-DD'
+  date: string;
   title: string;
   excerpt: string;
   tag?: string;
 }
 
-/* Ordre d'affichage des rôles */
 export const ROLE_ORDER: Role[] = ['Top', 'Jungle', 'Mid', 'ADC', 'Support'];
+
+export const slugify = (s: string) =>
+  s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 /* ---- ROSTER ---- */
 export const roster: Player[] = [
-  { pseudo: 'Boulou', role: 'Top', country: '🇫🇷' },
-  { pseudo: 'naiko', role: 'Jungle', country: '🇫🇷' },
-  { pseudo: 'Lakraël', role: 'Mid', country: '🇫🇷' },
-  { pseudo: 'Ke1d0', role: 'ADC', country: '🇫🇷' },
-  { pseudo: 'Joordy', role: 'Support', country: '🇫🇷' },
+  {
+    pseudo: 'Boulou', role: 'Top', slug: 'boulou',
+    country: '🇫🇷', nationality: 'France',
+  },
+  {
+    pseudo: 'naiko', role: 'Jungle', slug: 'naiko',
+    country: '🇫🇷', nationality: 'France',
+  },
+  {
+    pseudo: 'Lakraël', role: 'Mid', slug: 'lakrael',
+    country: '🇫🇷', nationality: 'France',
+  },
+  {
+    pseudo: 'Ke1d0', role: 'ADC', slug: 'ke1d0',
+    country: '🇫🇷', nationality: 'France',
+  },
+  {
+    pseudo: 'Joordy', role: 'Support', slug: 'joordy',
+    country: '🇫🇷', nationality: 'France',
+  },
 ];
 
 /* ---- STAFF ---- */

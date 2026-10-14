@@ -1,0 +1,25 @@
+---
+/* Marque PlaZma reconstruite en vectoriel propre (net, sans glow, recolorable
+   via currentColor). Utilisée en grand : hero, fallback de carte, filigrane.
+   Le PNG d'origine (halo néon cuit) ne sert plus qu'en favicon. */
+interface Props { size?: number | string; class?: string; }
+const { size = 64, class: cls = '' } = Astro.props;
+---
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 100 100"
+  width={size}
+  height={size}
+  class={cls}
+  role="img"
+  aria-label="PlaZma"
+  fill="none"
+>
+  <polyline
+    points="20,26 80,26 28,74 84,74"
+    stroke="currentColor"
+    stroke-width="17"
+    stroke-linejoin="miter"
+    stroke-linecap="butt"
+  />
+</svg>

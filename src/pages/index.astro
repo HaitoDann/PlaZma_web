@@ -1,19 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
+import Mark from '../components/Mark.astro';
+import PlayerCard from '../components/PlayerCard.astro';
 import { site, recruitment, socials } from '../data/site';
-import {
-  roster, staff, results, news, ROLE_ORDER, type Role,
-} from '../data/content';
+import { roster, staff, results, news, ROLE_ORDER } from '../data/content';
+import { roleColor } from '../data/roles';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const hasContact = Boolean(site.email) || socials.length > 0;
-
-// Couleurs de rôle — arêtes franches uniquement (identité des lanes).
-const roleColor: Record<Role, string> = {
-  Top: '#e06c47', Jungle: '#3fb950', Mid: '#58a6ff', ADC: '#f0c04a', Support: '#c77dff',
-};
-
 const orderedRoster = [...roster].sort(
   (a, b) => ROLE_ORDER.indexOf(a.role) - ROLE_ORDER.indexOf(b.role)
 );
@@ -21,33 +16,37 @@ const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
 ---
 <Base>
-  <!-- ======================= HERO ======================= -->
+  <!-- ======================= HERO (cinématique) ======================= -->
   <section class="hero">
-    <div class="container">
-      <p class="kicker">Club Esport — {site.game}</p>
+    <div class="container hero__hud">
+      <span class="hero__hud-l">● Accueil</span>
+      <span class="hero__hud-c">League of Legends — OUAT S23</span>
+      <span class="hero__hud-r num">PLZ · FR · ©26</span>
+    </div>
 
-      <h1 class="hero__word">{site.name}</h1>
+    <div class="container hero__grid">
+      <div class="hero__left">
+        <p class="kicker">Club Esport — {site.game}</p>
+        <h1 class="hero__name">{site.name}</h1>
+        <p class="hero__intro">{site.intro}</p>
 
-      <div class="hero__grid">
-        <div class="hero__left">
-          <p class="hero__intro">{site.intro}</p>
-          <div class="hero__cta">
-            <a href="#roster" class="btn btn--primary">Le roster <Icon name="arrow" size={17} /></a>
-            <a href="#palmares" class="btn btn--ghost">Palmarès</a>
-          </div>
+        <div class="hero__cta">
+          <a href="#roster" class="btn btn--primary">Le roster <Icon name="arrow-up-right" size={16} /></a>
+          <a href="#palmares" class="btn btn--ghost">Palmarès</a>
         </div>
 
-        <dl class="spec">
-          <div class="spec__item">
-            <dt>Région</dt><dd>France · EUW</dd>
-          </div>
-          <div class="spec__item">
-            <dt>Compétition</dt><dd>OUAT — Saison 23</dd>
-          </div>
-          <div class="spec__item">
-            <dt>Effectif</dt><dd class="num">{orderedRoster.length} joueurs · {staff.length} staff</dd>
-          </div>
+        <dl class="hero__spec">
+          <div><dt>Région</dt><dd>France · EUW</dd></div>
+          <div><dt>Compétition</dt><dd>OUAT — Saison 23</dd></div>
+          <div><dt>Effectif</dt><dd class="num">{orderedRoster.length} joueurs · {staff.length} staff</dd></div>
         </dl>
+      </div>
+
+      <div class="hero__media" aria-hidden="true">
+        <span class="hero__streaks"></span>
+        <span class="hero__media-mark"><Mark size="60%" /></span>
+        <span class="hero__media-tag num">EST. · PLAZMA</span>
+        <span class="hero__media-corner num">01 / 01</span>
       </div>
     </div>
   </section>
@@ -58,23 +57,12 @@ const fmtDate = (iso: string) =>
       <div class="section-head" data-reveal>
         <span class="idx">01</span>
         <h2>Roster</h2>
-        <p class="lead">La line-up titulaire de PlaZma.</p>
+        <p class="lead">Clique sur un joueur pour sa fiche.</p>
       </div>
 
       <div class="roster">
         {orderedRoster.map((p, i) => (
-          <article class="jersey" data-reveal style={`--role:${roleColor[p.role]}`}>
-            <span class="jersey__idx num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-            <span class="jersey__role">{p.role}</span>
-            <div class="jersey__foot">
-              <h3 class="jersey__pseudo">{p.pseudo}</h3>
-              <p class="jersey__meta">
-                <span>{p.country}</span>
-                {p.name && <span>· {p.name}</span>}
-                {p.captain && <span class="jersey__cap">· Capitaine</span>}
-              </p>
-            </div>
-          </article>
+          <div data-reveal><PlayerCard player={p} index={i} roleColor={roleColor} /></div>
         ))}
       </div>
 
@@ -102,15 +90,13 @@ const fmtDate = (iso: string) =>
         <h2>Palmarès</h2>
         <p class="lead">Les résultats du club en compétition.</p>
       </div>
-
-      <div class="palmares" role="table">
+      <div class="palmares">
         {results.map((r) => (
-          <div class={`palmares__row ${r.highlight ? 'is-win' : ''}`} data-reveal role="row">
-            <span class="palmares__year num" role="cell">{r.year}</span>
-            <span class="palmares__event" role="cell">{r.event}</span>
-            <span class="palmares__place" role="cell">
-              {r.highlight && <Icon name="trophy" size={16} />}
-              {r.placement}
+          <div class={`palmares__row ${r.highlight ? 'is-win' : ''}`} data-reveal>
+            <span class="palmares__year num">{r.year}</span>
+            <span class="palmares__event">{r.event}</span>
+            <span class="palmares__place">
+              {r.highlight && <Icon name="trophy" size={16} />}{r.placement}
             </span>
           </div>
         ))}
@@ -126,7 +112,6 @@ const fmtDate = (iso: string) =>
         <h2>Actus</h2>
         <p class="lead">Les dernières nouvelles de PlaZma.</p>
       </div>
-
       <div class="news">
         {news.map((n) => (
           <article class="news__row" data-reveal>
@@ -148,17 +133,11 @@ const fmtDate = (iso: string) =>
       <div class="recruit" data-reveal>
         <div class="recruit__head">
           <h2 class="recruit__title">Recrutement</h2>
-          <span class={`tag ${recruitment.open ? 'tag--violet' : ''}`}>
-            {recruitment.open ? 'Ouvert' : 'Fermé'}
-          </span>
+          <span class={`tag ${recruitment.open ? 'tag--violet' : ''}`}>{recruitment.open ? 'Ouvert' : 'Fermé'}</span>
         </div>
-        <p class="recruit__intro">
-          {recruitment.open ? recruitment.intro : recruitment.closedIntro}
-        </p>
+        <p class="recruit__intro">{recruitment.open ? recruitment.intro : recruitment.closedIntro}</p>
         {recruitment.open && recruitment.roles.length > 0 && (
-          <div class="recruit__roles">
-            {recruitment.roles.map((r) => <span class="tag tag--violet">{r}</span>)}
-          </div>
+          <div class="recruit__roles">{recruitment.roles.map((r) => <span class="tag tag--violet">{r}</span>)}</div>
         )}
         {recruitment.open && recruitment.ctaUrl && (
           <a href={recruitment.ctaUrl} class="btn btn--primary" target="_blank" rel="noopener">
@@ -187,103 +166,86 @@ const fmtDate = (iso: string) =>
 
 <style>
   /* ---------- HERO ---------- */
-  .hero {
-    padding-block: clamp(48px, 8vw, 96px) clamp(40px, 6vw, 72px);
-    border-bottom: 1px solid var(--line-strong);
+  .hero { border-bottom: 1px solid var(--line-strong); }
+  .hero__hud {
+    display: flex; align-items: center; gap: 16px;
+    padding-block: 14px; border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono); font-size: 0.72rem;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3);
   }
-  .hero .kicker { margin-bottom: 22px; }
-  .hero__word {
-    font-size: clamp(4.2rem, 23vw, 20rem);
-    line-height: 0.8;
-    letter-spacing: -0.04em;
-    margin-bottom: clamp(24px, 4vw, 44px);
-    /* léger débord pour l'effet "coupé" façon affiche */
-    margin-left: -0.02em;
-  }
+  .hero__hud-l { color: var(--violet-soft); }
+  .hero__hud-c { color: var(--text-3); }
+  .hero__hud-r { margin-left: auto; }
+  @media (max-width: 620px) { .hero__hud-c { display: none; } }
+
   .hero__grid {
     display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    gap: clamp(28px, 5vw, 64px);
-    align-items: end;
+    grid-template-columns: 1.25fr 0.75fr;
+    gap: clamp(28px, 5vw, 60px);
+    align-items: center;
+    padding-block: clamp(40px, 7vw, 90px);
   }
-  .hero__intro { font-size: clamp(1rem, 1.6vw, 1.2rem); max-width: 46ch; color: var(--text-2); }
-  .hero__cta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 26px; }
+  .hero .kicker { margin-bottom: 20px; }
+  .hero__name {
+    font-size: clamp(4rem, 15vw, 12rem);
+    line-height: 0.82; letter-spacing: -0.04em;
+    margin-bottom: 24px;
+  }
+  .hero__intro { font-size: clamp(1rem, 1.5vw, 1.2rem); max-width: 44ch; }
+  .hero__cta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 28px; margin-bottom: 36px; }
 
-  .spec { display: grid; gap: 0; border-top: 1px solid var(--line); }
-  .spec__item {
+  .hero__spec { display: grid; gap: 0; border-top: 1px solid var(--line); max-width: 520px; }
+  .hero__spec > div {
     display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
-    padding: 13px 0;
-    border-bottom: 1px solid var(--line);
+    padding: 12px 0; border-bottom: 1px solid var(--line);
   }
-  .spec__item dt {
-    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--text-3);
+  .hero__spec dt { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
+  .hero__spec dd { font-family: var(--font-display); font-weight: 700; font-size: 0.9rem; text-transform: uppercase; }
+
+  .hero__media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    background:
+      radial-gradient(120% 90% at 55% 8%, var(--violet-wash), transparent 60%),
+      linear-gradient(180deg, var(--surface-2), #0a0a10);
+    border: 1px solid var(--line);
+    border-top: 2px solid var(--violet);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
   }
-  .spec__item dd {
-    font-family: var(--font-display); font-weight: 700; font-size: 0.92rem;
-    text-transform: uppercase; letter-spacing: 0.01em; color: var(--text);
+  .hero__media-mark { color: var(--violet); opacity: 0.9; display: flex; }
+  .hero__streaks {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: repeating-linear-gradient(118deg, color-mix(in srgb, var(--violet) 80%, transparent) 0 2px, transparent 2px 18px);
+    opacity: 0.12;
+    -webkit-mask: radial-gradient(120% 120% at 100% 0, #000, transparent 58%);
+    mask: radial-gradient(120% 120% at 100% 0, #000, transparent 58%);
   }
-  @media (max-width: 760px) {
-    .hero__grid { grid-template-columns: 1fr; align-items: start; }
+  .hero__media-tag {
+    position: absolute; left: 12px; bottom: 12px;
+    font-size: 0.66rem; letter-spacing: 0.1em; color: var(--text-3);
+  }
+  .hero__media-tag::before { content: '● '; color: var(--violet); }
+  .hero__media-corner {
+    position: absolute; right: 12px; top: 12px;
+    font-size: 0.66rem; letter-spacing: 0.1em; color: var(--text-3);
+  }
+  @media (max-width: 720px) {
+    .hero__grid { grid-template-columns: 1fr; }
+    .hero__media { order: -1; aspect-ratio: 16 / 10; }
   }
 
-  /* ---------- ROSTER (jerseys) ---------- */
+  /* ---------- ROSTER ---------- */
   .roster {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 1px;
-    background: var(--line);
-    border: 1px solid var(--line);
+    gap: clamp(10px, 1.4vw, 18px);
   }
-  .jersey {
-    position: relative;
-    background: var(--surface);
-    aspect-ratio: 3 / 4;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transition: background 0.18s ease;
-    border-left: 3px solid var(--role);
-  }
-  .jersey:hover { background: var(--surface-2); }
-  .jersey__idx {
-    position: absolute;
-    right: -6px; bottom: -22px;
-    font-size: 7.5rem;
-    font-weight: 700;
-    line-height: 1;
-    color: var(--elevated);
-    transition: color 0.18s ease;
-    pointer-events: none;
-  }
-  .jersey:hover .jersey__idx { color: color-mix(in srgb, var(--role) 26%, var(--elevated)); }
-  .jersey__role {
-    align-self: flex-start;
-    font-family: var(--font-mono);
-    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--role);
-    padding: 4px 9px;
-    background: color-mix(in srgb, var(--role) 14%, transparent);
-    position: relative; z-index: 1;
-  }
-  .jersey__foot { margin-top: auto; position: relative; z-index: 1; }
-  .jersey__pseudo { font-size: clamp(1.1rem, 1.6vw, 1.5rem); }
-  .jersey__meta {
-    margin-top: 6px; display: flex; flex-wrap: wrap; gap: 5px;
-    font-size: 0.8rem; color: var(--text-3);
-  }
-  .jersey__cap { color: var(--violet-soft); }
-  @media (max-width: 880px) {
-    .roster { grid-template-columns: repeat(2, 1fr); }
-    .jersey { aspect-ratio: 4 / 3; }
-  }
-  @media (max-width: 440px) { .roster { grid-template-columns: 1fr; } }
+  @media (max-width: 920px) { .roster { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 620px) { .roster { grid-template-columns: repeat(2, 1fr); } }
 
-  /* ---------- STAFF ---------- */
   .staff {
-    margin-top: 32px;
-    display: flex; gap: 28px; align-items: baseline; flex-wrap: wrap;
+    margin-top: 34px; display: flex; gap: 28px; align-items: baseline; flex-wrap: wrap;
     border-top: 1px solid var(--line); padding-top: 24px;
   }
   .staff__label {
@@ -292,43 +254,30 @@ const fmtDate = (iso: string) =>
   }
   .staff__list { display: flex; gap: 14px 40px; flex-wrap: wrap; }
   .staff__item { display: flex; flex-direction: column; gap: 2px; }
-  .staff__pseudo {
-    font-family: var(--font-display); font-weight: 800; text-transform: uppercase;
-    font-size: 0.98rem; letter-spacing: 0.01em;
-  }
+  .staff__pseudo { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: 0.98rem; }
   .staff__role { font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.04em; }
 
   /* ---------- PALMARÈS ---------- */
   .palmares { border-top: 1px solid var(--line-strong); }
   .palmares__row {
-    display: grid;
-    grid-template-columns: 90px 1fr auto;
-    align-items: center; gap: 20px;
-    padding: 20px 4px;
-    border-bottom: 1px solid var(--line);
-    transition: background 0.15s ease;
+    display: grid; grid-template-columns: 90px 1fr auto; align-items: center; gap: 20px;
+    padding: 20px 4px; border-bottom: 1px solid var(--line); transition: background 0.15s ease;
   }
   .palmares__row:hover { background: var(--surface); }
   .palmares__year { color: var(--violet); font-size: 0.95rem; letter-spacing: 0.04em; }
-  .palmares__event {
-    font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.01em; font-size: clamp(1rem, 1.6vw, 1.25rem);
-  }
+  .palmares__event { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; font-size: clamp(1rem, 1.6vw, 1.25rem); }
   .palmares__place {
     display: inline-flex; align-items: center; gap: 7px;
-    font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-2);
-    white-space: nowrap;
+    font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-2); white-space: nowrap;
   }
   .palmares__row.is-win {
-    background: var(--violet);
-    border-color: var(--violet);
-    padding-inline: 18px;
+    background: var(--violet); border-color: var(--violet); padding-inline: 18px;
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
   }
   .palmares__row.is-win:hover { background: var(--violet); }
-  .palmares__row.is-win .palmares__year { color: #fff; opacity: 0.85; }
-  .palmares__row.is-win .palmares__event { color: #fff; }
+  .palmares__row.is-win .palmares__year,
+  .palmares__row.is-win .palmares__event,
   .palmares__row.is-win .palmares__place { color: #fff; }
   @media (max-width: 560px) {
     .palmares__row { grid-template-columns: 64px 1fr; }
@@ -337,28 +286,15 @@ const fmtDate = (iso: string) =>
 
   /* ---------- ACTUS ---------- */
   .news { border-top: 1px solid var(--line-strong); }
-  .news__row {
-    display: grid;
-    grid-template-columns: 130px 1fr;
-    gap: 24px;
-    padding: 26px 4px;
-    border-bottom: 1px solid var(--line);
-  }
-  .news__date {
-    font-size: 0.78rem; color: var(--text-3); letter-spacing: 0.04em;
-    text-transform: uppercase; padding-top: 4px;
-  }
+  .news__row { display: grid; grid-template-columns: 130px 1fr; gap: 24px; padding: 26px 4px; border-bottom: 1px solid var(--line); }
+  .news__date { font-size: 0.78rem; color: var(--text-3); letter-spacing: 0.04em; text-transform: uppercase; padding-top: 4px; }
   .news__title { font-size: clamp(1.1rem, 2vw, 1.5rem); margin: 10px 0 8px; }
   .news__excerpt { color: var(--text-2); font-size: 0.95rem; max-width: 62ch; }
-  @media (max-width: 560px) {
-    .news__row { grid-template-columns: 1fr; gap: 6px; }
-  }
+  @media (max-width: 560px) { .news__row { grid-template-columns: 1fr; gap: 6px; } }
 
   /* ---------- RECRUTEMENT ---------- */
   .recruit {
-    background: var(--surface);
-    border: 1px solid var(--line-strong);
-    border-left: 3px solid var(--violet);
+    background: var(--surface); border: 1px solid var(--line-strong); border-left: 3px solid var(--violet);
     padding: clamp(28px, 5vw, 52px);
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%);
   }

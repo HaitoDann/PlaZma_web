@@ -1,0 +1,120 @@
+---
+import Mark from './Mark.astro';
+import Icon from './Icon.astro';
+import type { Player, Role } from '../data/content';
+
+interface Props { player: Player; index: number; roleColor: Record<Role, string>; }
+const { player: p, index, roleColor } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const href = `${base}/joueur/${p.slug}`;
+const color = roleColor[p.role];
+---
+<a class="pcard" href={href} style={`--role:${color}`} aria-label={`${p.pseudo} — ${p.role}`}>
+  <div class="pcard__media">
+    <span class="pcard__streaks pcard__streaks--tr" aria-hidden="true"></span>
+    <span class="pcard__streaks pcard__streaks--bl" aria-hidden="true"></span>
+    <span class="pcard__idx num" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+
+    {p.photo
+      ? <img class="pcard__photo" src={`${base}/roster/${p.photo}`} alt={p.pseudo} loading="lazy" />
+      : <span class="pcard__fallback" aria-hidden="true"><Mark size="46%" /></span>}
+
+    <span class="pcard__role">{p.role}</span>
+    <span class="pcard__arrow" aria-hidden="true"><Icon name="arrow-up-right" size={16} /></span>
+  </div>
+
+  <div class="pcard__foot">
+    <h3 class="pcard__pseudo">{p.pseudo}</h3>
+    <p class="pcard__sub">
+      <span>{p.country}</span>
+      {p.realName && <span class="pcard__real">{p.realName}</span>}
+      {p.captain && <span class="pcard__cap">Capitaine</span>}
+    </p>
+  </div>
+</a>
+
+<style>
+  .pcard {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 2px solid var(--role);
+    overflow: hidden;
+    transition: border-color 0.18s ease, background 0.18s ease;
+  }
+  .pcard:hover { border-color: color-mix(in srgb, var(--role) 55%, var(--line)); background: var(--surface-2); }
+
+  .pcard__media {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    background:
+      radial-gradient(130% 90% at 50% 8%, color-mix(in srgb, var(--role) 20%, transparent), transparent 62%),
+      linear-gradient(180deg, var(--surface-2), #0c0c12);
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pcard__photo {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .pcard:hover .pcard__photo { transform: scale(1.04); }
+
+  .pcard__fallback { color: var(--role); opacity: 0.2; display: flex; }
+  .pcard:hover .pcard__fallback { opacity: 0.3; }
+
+  /* Stries diagonales façon Solary, concentrées dans deux coins */
+  .pcard__streaks {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: repeating-linear-gradient(
+      118deg,
+      color-mix(in srgb, var(--role) 80%, transparent) 0 2px,
+      transparent 2px 15px
+    );
+    opacity: 0.16;
+    transition: opacity 0.18s ease;
+  }
+  .pcard__streaks--tr { -webkit-mask: radial-gradient(110% 110% at 100% 0, #000, transparent 55%); mask: radial-gradient(110% 110% at 100% 0, #000, transparent 55%); }
+  .pcard__streaks--bl { -webkit-mask: radial-gradient(110% 110% at 0 100%, #000, transparent 55%); mask: radial-gradient(110% 110% at 0 100%, #000, transparent 55%); }
+  .pcard:hover .pcard__streaks { opacity: 0.26; }
+
+  .pcard__idx {
+    position: absolute; left: 10px; bottom: 6px;
+    font-size: 3.4rem; font-weight: 700; line-height: 1;
+    color: #fff; opacity: 0.06;
+    pointer-events: none;
+  }
+  .pcard__role {
+    position: absolute; top: 10px; left: 10px;
+    font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--role);
+    padding: 4px 9px;
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    border: 1px solid color-mix(in srgb, var(--role) 40%, transparent);
+  }
+  .pcard__arrow {
+    position: absolute; top: 10px; right: 10px;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-3);
+    background: color-mix(in srgb, var(--bg) 60%, transparent);
+    opacity: 0; transform: translateY(-4px);
+    transition: opacity 0.18s ease, transform 0.18s ease, color 0.18s ease;
+  }
+  .pcard:hover .pcard__arrow { opacity: 1; transform: none; color: var(--violet-soft); }
+
+  .pcard__foot { padding: 13px 15px 16px; }
+  .pcard__pseudo { font-size: clamp(1.15rem, 1.5vw, 1.45rem); }
+  .pcard__sub {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-top: 5px; font-size: 0.82rem; color: var(--text-3);
+  }
+  .pcard__real { font-style: italic; }
+  .pcard__cap {
+    font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--violet-soft);
+    border: 1px solid var(--violet-deep); padding: 2px 6px;
+  }
+</style>
