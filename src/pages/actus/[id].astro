@@ -34,7 +34,7 @@ const players = roster.filter((p) => d.players.includes(p.slug));
 
     {players.length > 0 && (
       <section class="container art__players">
-        <p class="kicker">Joueurs concernés</p>
+        <h2 class="art__ptitle">Dans cet article</h2>
         <ul>
           {players.map((p) => (
             <li><PlayerCard pseudo={p.pseudo} sub={p.role} country={p.country} photo={p.photo} href={`${base}/joueur/${p.slug}`} /></li>
@@ -68,5 +68,6 @@ const players = roster.filter((p) => d.players.includes(p.slug));
   .prose :global(blockquote) { border-left: 2px solid var(--violet); padding-left: 18px; }
   .prose :global(img) { margin: 1.4em 0; border: 1px solid var(--line); }
   .art__players { margin-top: 56px; }
+  .art__ptitle { font-size: 1.8rem; }
   .art__players ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 18px; max-width: 900px; }
 </style>

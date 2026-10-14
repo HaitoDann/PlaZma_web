@@ -50,20 +50,5 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     </main>
     <Footer />
 
-    <script>
-      // Révélation au scroll (respecte prefers-reduced-motion via CSS).
-      const io = new IntersectionObserver(
-        (entries) => {
-          for (const e of entries) {
-            if (e.isIntersecting) {
-              e.target.classList.add('is-in');
-              io.unobserve(e.target);
-            }
-          }
-        },
-        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
-      );
-      document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
-    </script>
   </body>
 </html>

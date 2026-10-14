@@ -38,3 +38,8 @@ export const recruitment = {
   ctaLabel: 'Postuler sur Discord',
   ctaUrl: '',
 };
+
+/* Prochain match — affiché en haut de l'accueil. Mettre `null` pour masquer.
+   Exemple :
+   { date: '2026-10-21T20:00', competition: 'OUAT · Division 5', opponent: 'Nom de l’équipe', stream: 'https://twitch.tv/...' } */
+export const nextMatch: { date: string; competition: string; opponent: string; stream?: string } | null = null;

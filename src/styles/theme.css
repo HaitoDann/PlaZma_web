@@ -115,8 +115,6 @@ strong { color: var(--text); font-weight: 600; }
 .btn svg { width: 17px; height: 17px; }
 .btn--primary { background: var(--violet); color: #fff; }
 .btn--primary:hover { background: var(--violet-bright); }
-.btn--ghost { background: var(--surface-2); color: var(--text); }
-.btn--ghost:hover { background: var(--line); }
 
 .textlink {
   display: inline-flex; align-items: center; gap: 8px;
@@ -143,6 +141,3 @@ strong { color: var(--text); font-weight: 600; }
 }
 .skip-link:focus { top: 14px; }
 
-[data-reveal] { opacity: 0; transform: translateY(14px); transition: opacity .55s ease, transform .55s ease; }
-[data-reveal].is-in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { [data-reveal] { opacity: 1; transform: none; } }

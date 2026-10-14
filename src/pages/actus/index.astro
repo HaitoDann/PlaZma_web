@@ -10,9 +10,8 @@ const tags = [...new Set(news.map((n) => n.data.tag))];
 <Base title={`Actus · ${site.name}`} description={`Les actus d’équipe de ${site.name}.`}>
   <section class="section">
     <div class="container">
-      <div class="s-head">
-        <p class="kicker">Actus d’équipe</p>
-        <h1 class="title">Actualités</h1>
+      <div>
+        <h1 class="title">Actus</h1>
       </div>
 
       {tags.length > 1 && (
@@ -48,8 +47,8 @@ const tags = [...new Set(news.map((n) => n.data.tag))];
 </script>
 
 <style>
-  .title { font-size: clamp(2.8rem, 6vw, 4.6rem); margin-top: 12px; }
-  .filters { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .title { font-size: clamp(2.8rem, 6vw, 4.6rem); margin-bottom: 28px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
   .filter {
     font: 600 0.78rem var(--font); letter-spacing: 0.1em; text-transform: uppercase;
     color: var(--text-2); background: transparent; border: 1px solid var(--line);
