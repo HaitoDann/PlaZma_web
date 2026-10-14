@@ -4,6 +4,7 @@
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import Mark from '../../components/Mark.astro';
+import Flag from '../../components/Flag.astro';
 import NewsCard from '../../components/NewsCard.astro';
 import { roster, ROLE_ORDER, type Player } from '../../data/content';
 import { roleLabel } from '../../data/roles';
@@ -48,7 +49,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
           </div>
           {(p.realName || p.nationality) && (
             <p class="pp__real">
-              {p.realName}{p.realName && p.nationality && ' · '}{p.nationality && `${p.country} ${p.nationality}`}
+              {p.realName}{p.realName && p.nationality && ' · '}{p.nationality && <span class="pp__nat">{p.country && <Flag emoji={p.country} />} {p.nationality}</span>}
             </p>
           )}
           <p class="pp__bio">{p.bio ?? `${roleLabel[p.role]} de ${site.name} pour la saison 23. Présentation complète à venir.`}</p>
@@ -136,6 +137,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     background: var(--surface-2); color: var(--text);
   }
   .pp__real { font-size: 0.9rem; color: var(--text-3); margin-bottom: 14px; }
+  .pp__nat { display: inline-flex; align-items: center; gap: 8px; }
   .pp__bio { font-size: 0.95rem; max-width: 58ch; }
   .pp__socials { display: flex; gap: 8px; margin-top: 22px; }
   .pp__socials a {

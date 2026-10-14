@@ -1,0 +1,13 @@
+---
+/* Drapeau en image : les emojis drapeaux ne s'affichent pas sous Windows
+   (on y voit « FR »). Convertit l'emoji en code pays → flagcdn. */
+interface Props { emoji: string; class?: string; }
+const { emoji, class: cls = '' } = Astro.props;
+const code = [...emoji].map((c) => String.fromCharCode((c.codePointAt(0) ?? 0) - 0x1f1e6 + 97)).join('');
+const valid = /^[a-z]{2}$/.test(code);
+---
+{code === 'fr'
+  ? <svg viewBox="0 0 3 2" width="22" height="15" class={cls} role="img" aria-label="FR"><rect width="1" height="2" fill="#002654"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ce1126"/></svg>
+  : valid
+  ? <img src={`https://flagcdn.com/${code}.svg`} alt={code.toUpperCase()} width="22" height="15" class={cls} loading="lazy" />
+  : <span class={cls}>{emoji}</span>}

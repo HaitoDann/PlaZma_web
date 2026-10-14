@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import Mark from '../components/Mark.astro';
 import PlayerCard from '../components/PlayerCard.astro';
 import NewsCard from '../components/NewsCard.astro';
 import { site, recruitment, socials } from '../data/site';
@@ -24,20 +23,15 @@ const seasons = [...new Set(results.map((r) => yearOf(r.season)))];
 <Base>
   <!-- ======================= HERO ======================= -->
   <section class="hero">
-    <Mark size={900} class="hero__mark" title="" />
+    <img src={`${base}/img/bg-plazma.webp`} alt="" class="hero__bg" />
     <div class="container hero__inner">
-      <p class="kicker">Club esport · {site.game}</p>
       <h1 class="hero__title">{site.name}</h1>
+      <p class="hero__tagline">{site.tagline}</p>
       <p class="hero__text">{site.intro}</p>
       <div class="hero__cta">
         <a href="#roster" class="btn btn--primary">Découvrir l’équipe</a>
         <a href={`${base}/actus`} class="btn btn--ghost">Actualités</a>
       </div>
-    </div>
-    <div class="container hero__strip">
-      <span>France · EUW</span>
-      <span>OUAT — Saison 23</span>
-      <span class="num">{String(roster.length).padStart(2, '0')} joueurs</span>
     </div>
   </section>
 
@@ -45,7 +39,6 @@ const seasons = [...new Set(results.map((r) => yearOf(r.season)))];
   <section class="section" id="roster">
     <div class="container">
       <div class="s-head" data-reveal>
-        <p class="kicker">Saison 23</p>
         <h2>Équipe LoL</h2>
       </div>
 
@@ -179,24 +172,23 @@ const seasons = [...new Set(results.map((r) => yearOf(r.season)))];
   /* ---------- HERO ---------- */
   .hero {
     position: relative; overflow: hidden;
-    min-height: min(88vh, 820px); display: flex; flex-direction: column; justify-content: flex-end;
+    min-height: min(86vh, 800px); display: flex; flex-direction: column; justify-content: center;
     border-bottom: 1px solid var(--line);
-    background: radial-gradient(60% 70% at 78% 40%, rgba(169,35,214,.10), transparent 70%);
   }
-  .hero :global(.hero__mark) {
-    position: absolute; right: -8%; top: 50%; transform: translateY(-50%);
-    width: min(70vw, 900px); height: auto; color: var(--violet); opacity: .12;
+  .hero__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+  .hero::before {
+    content: ''; position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(90deg, rgba(7,7,10,.92) 0%, rgba(7,7,10,.6) 50%, rgba(7,7,10,.25) 100%),
+                linear-gradient(to top, var(--bg) 0%, transparent 30%);
   }
-  .hero__inner { position: relative; padding-bottom: clamp(48px, 7vw, 88px); }
-  .hero__title { font-size: clamp(4.5rem, 16vw, 12rem); letter-spacing: 0.01em; margin: 14px 0 18px; line-height: .85; }
-  .hero__text { font-size: clamp(1.02rem, 1.5vw, 1.2rem); max-width: 46ch; }
+  .hero__inner { position: relative; z-index: 2; padding-block: clamp(64px, 9vw, 112px); }
+  .hero__title { font-size: clamp(4.5rem, 16vw, 12rem); letter-spacing: 0.01em; margin: 0 0 10px; line-height: .85; }
+  .hero__tagline {
+    font-family: var(--font-display); font-weight: 600; font-style: italic; text-transform: uppercase;
+    font-size: clamp(1.4rem, 2.6vw, 2rem); letter-spacing: 0.02em; color: var(--violet-soft); margin-bottom: 14px;
+  }
+  .hero__text { font-size: clamp(1rem, 1.4vw, 1.12rem); max-width: 52ch; color: #c9c9d2; }
   .hero__cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
-  .hero__strip {
-    position: relative; display: flex; gap: 12px 40px; flex-wrap: wrap;
-    padding-block: 16px; border-top: 1px solid var(--line);
-    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-3);
-  }
-  .hero__strip span::before { content: '•'; color: var(--violet); margin-right: 10px; }
 
   /* ---------- ROSTER ---------- */
   .cards { display: grid; gap: 14px; justify-content: center; }
