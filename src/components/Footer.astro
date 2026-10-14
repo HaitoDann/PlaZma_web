@@ -14,13 +14,15 @@ const year = new Date().getFullYear();
       <p class="footer__desc">{site.intro}</p>
     </div>
 
-    <div class="footer__socials" aria-label="Réseaux sociaux">
-      {socials.map((s) => (
-        <a href={s.url} class="footer__social" target="_blank" rel="noopener noreferrer" aria-label={s.name}>
-          <Icon name={s.icon} size={20} />
-        </a>
-      ))}
-    </div>
+    {socials.length > 0 && (
+      <div class="footer__socials" aria-label="Réseaux sociaux">
+        {socials.map((s) => (
+          <a href={s.url} class="footer__social" target="_blank" rel="noopener noreferrer" aria-label={s.name}>
+            <Icon name={s.icon} size={20} />
+          </a>
+        ))}
+      </div>
+    )}
   </div>
 
   <div class="container footer__bottom">

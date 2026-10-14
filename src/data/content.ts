@@ -1,7 +1,6 @@
 /* =========================================================================
-   Roster, staff, palmarès, actus.
-   ⚠️  PLACEHOLDER : exemples pour visualiser le design.
-       Remplace par les vraies infos envoyées par l'équipe.
+   Roster, staff, palmarès, actus — données réelles PlaZma.
+   Pour modifier : édite simplement les tableaux ci-dessous.
    ========================================================================= */
 
 export type Role = 'Top' | 'Jungle' | 'Mid' | 'ADC' | 'Support';
@@ -10,7 +9,7 @@ export interface Player {
   pseudo: string;
   role: Role;
   name?: string;        // nom réel (optionnel)
-  country?: string;     // emoji drapeau ou code (optionnel)
+  country?: string;     // emoji drapeau (optionnel)
   photo?: string;       // fichier dans /public/roster/ (optionnel)
   twitter?: string;
   stream?: string;
@@ -21,13 +20,14 @@ export interface StaffMember {
   pseudo: string;
   role: string;         // Head Coach, Manager, Analyste…
   name?: string;
+  country?: string;
   photo?: string;
 }
 
 export interface Result {
-  year: string;
+  year: string;         // année ou saison (ex. '2025', 'S21')
   event: string;
-  placement: string;    // ex. « Champions », « 2e », « Demi-finale »
+  placement: string;    // ex. « Vainqueur », « Top 8 »
   highlight?: boolean;  // met en avant (couleur or)
 }
 
@@ -41,34 +41,35 @@ export interface NewsItem {
 /* Ordre d'affichage des rôles */
 export const ROLE_ORDER: Role[] = ['Top', 'Jungle', 'Mid', 'ADC', 'Support'];
 
-/* ---- ROSTER (placeholder) ---- */
+/* ---- ROSTER ---- */
 export const roster: Player[] = [
-  { pseudo: 'Joueur Top', role: 'Top', country: '🇫🇷' },
-  { pseudo: 'Joueur Jungle', role: 'Jungle', country: '🇫🇷', captain: true },
-  { pseudo: 'Joueur Mid', role: 'Mid', country: '🇫🇷' },
-  { pseudo: 'Joueur ADC', role: 'ADC', country: '🇫🇷' },
-  { pseudo: 'Joueur Support', role: 'Support', country: '🇫🇷' },
+  { pseudo: 'Boulou', role: 'Top', country: '🇫🇷' },
+  { pseudo: 'naiko', role: 'Jungle', country: '🇫🇷' },
+  { pseudo: 'Lakraël', role: 'Mid', country: '🇫🇷' },
+  { pseudo: 'Ke1d0', role: 'ADC', country: '🇫🇷' },
+  { pseudo: 'Joordy', role: 'Support', country: '🇫🇷' },
 ];
 
-/* ---- STAFF (placeholder) ---- */
+/* ---- STAFF ---- */
 export const staff: StaffMember[] = [
-  { pseudo: 'Head Coach', role: 'Head Coach' },
-  { pseudo: 'Manager', role: 'Manager' },
+  { pseudo: 'Haito', role: 'CEO · General Manager', country: '🇫🇷' },
+  { pseudo: 'Kledou', role: 'Head Coach', country: '🇫🇷' },
 ];
 
-/* ---- PALMARÈS (placeholder) ---- */
+/* ---- PALMARÈS ---- */
 export const results: Result[] = [
-  { year: '2025', event: 'Compétition à renseigner', placement: 'Champions', highlight: true },
-  { year: '2025', event: 'Tournoi à renseigner', placement: 'Finaliste' },
-  { year: '2024', event: 'Ligue à renseigner', placement: 'Demi-finale' },
+  { year: '2025', event: 'Momen’cup', placement: 'Vainqueur', highlight: true },
+  { year: 'S22', event: 'OUAT · Division 5', placement: 'Top 16' },
+  { year: 'S21', event: 'OUAT · Division 7', placement: 'Top 8' },
 ];
 
-/* ---- ACTUS (placeholder) ---- */
+/* ---- ACTUS ---- */
 export const news: NewsItem[] = [
   {
-    date: '2026-10-01',
-    title: 'Le site vitrine de PlaZma est en ligne',
-    excerpt: 'Découvrez le club, le roster et notre actualité au même endroit.',
-    tag: 'Club',
+    date: '2026-10-14',
+    title: 'Coup d’envoi de la saison 23 de la OUAT',
+    excerpt:
+      'PlaZma lance sa campagne : premier jour de compétition pour la saison 23 de la OUAT.',
+    tag: 'Compétition',
   },
 ];

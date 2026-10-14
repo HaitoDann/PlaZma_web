@@ -1,26 +1,25 @@
 /* =========================================================================
    Infos générales du club + réseaux + recrutement.
-   ⚠️  PLACEHOLDER : remplace les valeurs par les vraies infos PlaZma.
    ========================================================================= */
 
 export const site = {
   name: 'PlaZma',
-  // Petit descriptif (pas de slogan demandé pour le moment).
-  tagline: '', // laissé vide volontairement
+  // Pas de slogan pour le moment (choix volontaire).
+  tagline: '',
   intro:
     'Club esport compétitif sur League of Legends. Une structure, un roster, une ambition : performer au plus haut niveau.',
   game: 'League of Legends',
-  // Logo : remplace /public/logo-plazma.svg par le vrai logo violet
-  // (SVG idéal ; sinon dépose un PNG et change l'extension ici).
-  logo: 'logo-plazma.svg',
-  email: 'contact@plazma.gg', // ⚠️ à remplacer
+  // Logo violet officiel du club.
+  logo: 'logo-plazma.png',
+  // Pas de contact public pour le moment.
+  email: '',
 } as const;
 
-/* Réseaux — mets `url: ''` pour masquer un réseau non utilisé. */
+/* Réseaux — ajoute une URL pour afficher le réseau. Vides = masqués. */
 export const socials = [
-  { name: 'Discord', url: 'https://discord.gg/REMPLACER', icon: 'discord' },
-  { name: 'X / Twitter', url: 'https://x.com/REMPLACER', icon: 'x' },
-  { name: 'Instagram', url: 'https://instagram.com/REMPLACER', icon: 'instagram' },
+  { name: 'Discord', url: '', icon: 'discord' },
+  { name: 'X / Twitter', url: '', icon: 'x' },
+  { name: 'Instagram', url: '', icon: 'instagram' },
   { name: 'Twitch', url: '', icon: 'twitch' },
   { name: 'YouTube', url: '', icon: 'youtube' },
   { name: 'TikTok', url: '', icon: 'tiktok' },
@@ -28,13 +27,15 @@ export const socials = [
 
 /* Recrutement */
 export const recruitment = {
-  open: true, // true = ouvert, false = fermé
+  open: false, // recrutement fermé pour le moment
+  // Message affiché quand c'est ouvert.
   intro:
     'PlaZma cherche à renforcer son effectif. Tu penses avoir le niveau et l’état d’esprit ? Rejoins-nous.',
-  // Postes recherchés (vide => on affiche juste « candidatures spontanées »).
-  roles: ['Mid', 'Support'], // ⚠️ à ajuster
-  // Comment postuler.
-  how: 'Rejoins le Discord et ouvre un ticket #recrutement, ou écris-nous par mail.',
+  // Message affiché quand c'est fermé.
+  closedIntro:
+    'Le recrutement est fermé pour le moment. Le roster est complet — reste connecté, les prochaines ouvertures seront annoncées ici.',
+  roles: [] as string[],
+  how: 'Rejoins le Discord et ouvre un ticket #recrutement.',
   ctaLabel: 'Postuler sur Discord',
-  ctaUrl: 'https://discord.gg/REMPLACER',
+  ctaUrl: '',
 };

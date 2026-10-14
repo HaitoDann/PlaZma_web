@@ -18,13 +18,13 @@
   --line: #2a2838;
   --line-soft: #211f2d;
 
-  /* --- Accent de marque : VIOLET (provisoire, calé sur le futur logo) --- */
-  --violet: #7c3aed;
-  --violet-bright: #8b5cf6;
-  --violet-soft: #a78bfa;
-  --violet-dim: #5b21b6;
-  --violet-wash: rgba(124, 58, 237, 0.12);
-  --violet-line: rgba(124, 58, 237, 0.32);
+  /* --- Accent de marque : VIOLET magenta (calé sur le logo, cœur ~#c612dc) --- */
+  --violet: #b422d6;
+  --violet-bright: #cf4df0;
+  --violet-soft: #de93f2;
+  --violet-dim: #6e1788;
+  --violet-wash: rgba(180, 34, 214, 0.12);
+  --violet-line: rgba(180, 34, 214, 0.34);
 
   /* --- Prestige (palmarès, trophées) --- */
   --gold: #d4af37;

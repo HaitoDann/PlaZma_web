@@ -1,13 +1,14 @@
 ---
 import Icon from './Icon.astro';
-import { site } from '../data/site';
+import { site, socials } from '../data/site';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const hasContact = Boolean(site.email) || socials.length > 0;
 const links = [
   { href: '#roster', label: 'Roster' },
   { href: '#palmares', label: 'Palmarès' },
   { href: '#actus', label: 'Actus' },
   { href: '#recrutement', label: 'Recrutement' },
-  { href: '#contact', label: 'Contact' },
+  ...(hasContact ? [{ href: '#contact', label: 'Contact' }] : []),
 ];
 ---
 <header class="nav" id="nav">
