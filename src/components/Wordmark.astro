@@ -1,6 +1,6 @@
 ---
 /* Logotype « PlaZma » : le P et le Z, initiales du monogramme, ressortent
-   en violet et en capitales ; le reste en minuscules. */
+   en capitales ; police large Unbounded. */
 interface Props { class?: string; }
 const { class: cls = '' } = Astro.props;
 ---
@@ -8,12 +8,8 @@ const { class: cls = '' } = Astro.props;
 
 <style>
   .wm {
-    font-family: var(--font-display); font-weight: 800; text-transform: none;
-    letter-spacing: 0.01em; white-space: nowrap; color: var(--text);
+    font-family: 'Unbounded', var(--font-display); font-weight: 800; text-transform: none;
+    letter-spacing: -0.02em; white-space: nowrap; color: var(--text);
   }
-  .wm b {
-    font-weight: 800; font-size: 1.12em; line-height: 0;
-    background: linear-gradient(160deg, #e08cff 0%, var(--violet-bright) 45%, #6d3cf0 100%);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
+  .wm b { font-weight: 800; }
 </style>
