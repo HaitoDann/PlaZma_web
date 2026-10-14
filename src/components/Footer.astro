@@ -1,0 +1,90 @@
+---
+import Icon from './Icon.astro';
+import { site, socials } from '../data/site';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <a href="#top" class="footer__logo-row">
+        <img src={`${base}/${site.logo}`} alt="" width="34" height="34" />
+        <span>{site.name}</span>
+      </a>
+      <p class="footer__desc">{site.intro}</p>
+    </div>
+
+    <div class="footer__socials" aria-label="Réseaux sociaux">
+      {socials.map((s) => (
+        <a href={s.url} class="footer__social" target="_blank" rel="noopener noreferrer" aria-label={s.name}>
+          <Icon name={s.icon} size={20} />
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <div class="container footer__bottom">
+    <span>© {year} {site.name} · {site.game}</span>
+    <span class="footer__fineprint">
+      Non affilié à Riot Games. Images champions © Riot Games.
+    </span>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--line-soft);
+    background: var(--bg-2);
+    padding-top: clamp(48px, 7vw, 72px);
+  }
+  .footer__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding-bottom: 36px;
+  }
+  .footer__logo-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.4rem;
+  }
+  .footer__desc {
+    margin-top: 14px;
+    max-width: 42ch;
+    color: var(--text-3);
+    font-size: 0.95rem;
+  }
+  .footer__socials { display: flex; gap: 10px; flex-wrap: wrap; }
+  .footer__social {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: var(--r-sm);
+    background: var(--surface);
+    color: var(--text-2);
+    transition: transform 0.18s ease, color 0.18s ease, background 0.18s ease;
+  }
+  .footer__social:hover {
+    color: #fff;
+    background: var(--violet);
+    transform: translateY(-3px);
+  }
+  .footer__bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-block: 24px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 0.85rem;
+    color: var(--text-3);
+  }
+  .footer__fineprint { color: var(--text-3); opacity: 0.8; }
+</style>

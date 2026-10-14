@@ -1,0 +1,294 @@
+/* =========================================================================
+   PlaZma — Vitrine publique · Design system
+   Identité « violet classe / esport premium ».
+   Règles anti-look-IA (héritées d'ARCHI/DESIGN.md) :
+   - UN SEUL accent de marque (violet), en aplat. JAMAIS de dégradé cyan→violet.
+   - Surfaces opaques, pas de glassmorphism décoratif.
+   - La couleur signifie (victoire/défaite, prestige), elle ne décore pas.
+   - Typo affirmée (Sora display + Inter texte), pas la police par défaut.
+   ========================================================================= */
+
+:root {
+  /* --- Fonds & surfaces (presque noir, légère teinte froide) --- */
+  --bg: #0a0a0f;
+  --bg-2: #0e0d15;
+  --surface: #14131c;
+  --surface-2: #1b1926;
+  --elevated: #221f30;
+  --line: #2a2838;
+  --line-soft: #211f2d;
+
+  /* --- Accent de marque : VIOLET (provisoire, calé sur le futur logo) --- */
+  --violet: #7c3aed;
+  --violet-bright: #8b5cf6;
+  --violet-soft: #a78bfa;
+  --violet-dim: #5b21b6;
+  --violet-wash: rgba(124, 58, 237, 0.12);
+  --violet-line: rgba(124, 58, 237, 0.32);
+
+  /* --- Prestige (palmarès, trophées) --- */
+  --gold: #d4af37;
+
+  /* --- États sémantiques --- */
+  --ok: #22c55e;
+  --warn: #f59e0b;
+  --err: #ef4444;
+
+  /* --- Texte --- */
+  --text: #f4f3f7;
+  --text-2: #b4b1c2;
+  --text-3: #85828f;
+
+  /* --- Rayons --- */
+  --r-sm: 8px;
+  --r: 12px;
+  --r-lg: 18px;
+  --r-pill: 999px;
+
+  /* --- Ombres (douces, pas de contour gris par défaut) --- */
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-3: 0 20px 60px rgba(0, 0, 0, 0.55);
+
+  /* --- Typographie --- */
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Sora', var(--font);
+
+  /* --- Layout --- */
+  --maxw: 1180px;
+  --gutter: clamp(16px, 5vw, 48px);
+  --nav-h: 68px;
+
+  color-scheme: dark;
+}
+
+/* --------------------------------------------------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+* { margin: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* --- Titres --- */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+h1 { font-size: clamp(2.6rem, 7vw, 5.2rem); }
+h2 { font-size: clamp(1.9rem, 4vw, 3rem); }
+h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
+
+p { color: var(--text-2); }
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+img { max-width: 100%; display: block; }
+
+ul { list-style: none; padding: 0; }
+
+/* --------------------------------------------------------------------- */
+/*  Primitives réutilisables                                             */
+/* --------------------------------------------------------------------- */
+
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: clamp(64px, 10vw, 120px);
+  position: relative;
+}
+
+.section--tight { padding-block: clamp(48px, 7vw, 80px); }
+
+/* Entête de section : numéro + titre, discret, « éditorial » */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: clamp(32px, 5vw, 56px);
+  flex-wrap: wrap;
+}
+.section-head .idx {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--violet-soft);
+  letter-spacing: 0.04em;
+  padding-top: 0.4em;
+}
+.section-head .lead {
+  color: var(--text-3);
+  max-width: 48ch;
+  margin-left: auto;
+  font-size: 0.98rem;
+}
+
+/* Eyebrow (casse normale, tracking 0 — pas de MAJUSCULES espacées) */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--violet-soft);
+  margin-bottom: 18px;
+}
+.eyebrow::before {
+  content: '';
+  width: 22px;
+  height: 2px;
+  background: var(--violet);
+  border-radius: 2px;
+}
+
+/* Boutons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 13px 22px;
+  border-radius: var(--r);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+  white-space: nowrap;
+}
+.btn svg { width: 18px; height: 18px; }
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+
+.btn--primary { background: var(--violet); color: #fff; box-shadow: var(--shadow-2); }
+.btn--primary:hover { background: var(--violet-bright); }
+
+.btn--ghost { background: transparent; color: var(--text); border-color: var(--line); }
+.btn--ghost:hover { border-color: var(--violet-line); color: #fff; }
+
+/* Cartes — pas de bordure grise par défaut, hiérarchie par fond + ombre */
+.card {
+  background: var(--surface);
+  border: 1px solid transparent;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card--hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-3);
+  border-color: var(--violet-line);
+}
+
+/* Badges / tags */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 11px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  color: var(--text-2);
+}
+.tag--violet { background: var(--violet-wash); color: var(--violet-soft); }
+.tag--gold   { background: rgba(212, 175, 55, 0.12); color: var(--gold); }
+.tag--ok     { background: rgba(34, 197, 94, 0.12); color: var(--ok); }
+
+/* Chiffres (scores, stats) en tabular-nums */
+.num { font-variant-numeric: tabular-nums; }
+
+/* Lien discret avec flèche */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--violet-soft);
+}
+.link-arrow svg { width: 16px; height: 16px; transition: transform 0.18s ease; }
+.link-arrow:hover svg { transform: translateX(3px); }
+
+/* Accessibilité : focus visible */
+:focus-visible {
+  outline: 2px solid var(--violet-soft);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Lien d'évitement */
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -60px;
+  z-index: 200;
+  background: var(--violet);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: var(--r-sm);
+  font-weight: 600;
+  transition: top 0.2s ease;
+}
+.skip-link:focus { top: 16px; }
+
+/* Grilles utilitaires */
+.grid { display: grid; gap: clamp(16px, 2.5vw, 28px); }
+.grid--auto { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+
+/* Révélation au scroll */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; }
+}

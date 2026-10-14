@@ -1,0 +1,135 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const links = [
+  { href: '#roster', label: 'Roster' },
+  { href: '#palmares', label: 'Palmarès' },
+  { href: '#actus', label: 'Actus' },
+  { href: '#recrutement', label: 'Recrutement' },
+  { href: '#contact', label: 'Contact' },
+];
+---
+<header class="nav" id="nav">
+  <div class="container nav__inner">
+    <a href="#top" class="nav__brand" aria-label={`${site.name} — accueil`}>
+      <img src={`${base}/${site.logo}`} alt="" width="30" height="30" class="nav__logo" />
+      <span class="nav__name">{site.name}</span>
+    </a>
+
+    <nav class="nav__links" aria-label="Navigation principale">
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+
+    <a href="#recrutement" class="btn btn--primary nav__cta">Nous rejoindre</a>
+
+    <button class="nav__burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobile-menu">
+      <Icon name="menu" size={22} />
+    </button>
+  </div>
+
+  <div class="nav__mobile" id="mobile-menu" hidden>
+    <nav aria-label="Navigation mobile">
+      {links.map((l) => <a href={l.href} class="nav__mobile-link">{l.label}</a>)}
+      <a href="#recrutement" class="btn btn--primary" style="margin-top:8px">Nous rejoindre</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .nav__inner {
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .nav__brand { display: flex; align-items: center; gap: 11px; }
+  .nav__logo { object-fit: contain; }
+  .nav__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.22rem;
+    letter-spacing: -0.01em;
+  }
+  .nav__links {
+    display: flex;
+    gap: 28px;
+    margin-left: auto;
+  }
+  .nav__links a {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-2);
+    position: relative;
+    padding: 4px 0;
+  }
+  .nav__links a::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -2px;
+    width: 0; height: 2px;
+    background: var(--violet);
+    border-radius: 2px;
+    transition: width 0.2s ease;
+  }
+  .nav__links a:hover { color: var(--text); }
+  .nav__links a:hover::after { width: 100%; }
+
+  .nav__cta { padding: 9px 18px; }
+
+  .nav__burger {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--text);
+    border-radius: var(--r-sm);
+    padding: 8px;
+    cursor: pointer;
+    margin-left: auto;
+  }
+
+  .nav__mobile {
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-2);
+  }
+  .nav__mobile nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px var(--gutter) 20px;
+  }
+  .nav__mobile-link {
+    padding: 13px 4px;
+    font-weight: 500;
+    color: var(--text-2);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .nav__mobile-link:hover { color: var(--text); }
+
+  @media (max-width: 860px) {
+    .nav__links, .nav__cta { display: none; }
+    .nav__burger { display: inline-flex; }
+  }
+</style>
+
+<script>
+  const burger = document.getElementById('burger');
+  const menu = document.getElementById('mobile-menu');
+  if (burger && menu) {
+    const toggle = (open: boolean) => {
+      menu.hidden = !open;
+      burger.setAttribute('aria-expanded', String(open));
+    };
+    burger.addEventListener('click', () => toggle(menu.hidden));
+    menu.querySelectorAll('a').forEach((a) =>
+      a.addEventListener('click', () => toggle(false))
+    );
+  }
+</script>

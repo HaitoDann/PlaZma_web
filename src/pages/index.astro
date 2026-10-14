@@ -1,0 +1,424 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { site, recruitment } from '../data/site';
+import {
+  roster, staff, results, news, ROLE_ORDER, type Role,
+} from '../data/content';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Couleurs de rôle (sémantiques — identité des lanes, pas des accents d'UI).
+const roleColor: Record<Role, string> = {
+  Top: '#e06c47',
+  Jungle: '#3fb950',
+  Mid: '#58a6ff',
+  ADC: '#f0c04a',
+  Support: '#c77dff',
+};
+
+const orderedRoster = [...roster].sort(
+  (a, b) => ROLE_ORDER.indexOf(a.role) - ROLE_ORDER.indexOf(b.role)
+);
+
+const fmtDate = (iso: string) =>
+  new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base>
+  <!-- ======================= HERO ======================= -->
+  <section class="hero">
+    <div class="hero__glow" aria-hidden="true"></div>
+    <div class="container hero__inner">
+      <p class="eyebrow">Club esport · {site.game}</p>
+      <h1 class="hero__title">{site.name}</h1>
+      <p class="hero__intro">{site.intro}</p>
+      <div class="hero__actions">
+        <a href="#roster" class="btn btn--primary">
+          Découvrir l'équipe <Icon name="arrow" size={18} />
+        </a>
+        <a href="#recrutement" class="btn btn--ghost">Nous rejoindre</a>
+      </div>
+
+      <div class="hero__meta">
+        <div class="hero__stat">
+          <span class="hero__stat-num num">{orderedRoster.length}</span>
+          <span class="hero__stat-label">joueurs</span>
+        </div>
+        <span class="hero__sep" aria-hidden="true"></span>
+        <div class="hero__stat">
+          <span class="hero__stat-num num">{staff.length}</span>
+          <span class="hero__stat-label">staff</span>
+        </div>
+        <span class="hero__sep" aria-hidden="true"></span>
+        <div class="hero__stat">
+          <span class="hero__stat-num num">{results.length}</span>
+          <span class="hero__stat-label">résultats</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= ROSTER ======================= -->
+  <section class="section" id="roster">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="idx">01</span>
+        <h2>Roster</h2>
+        <p class="lead">La line-up qui défend les couleurs de PlaZma.</p>
+      </div>
+
+      <div class="roster-grid">
+        {orderedRoster.map((p) => (
+          <article class="player card card--hover" data-reveal style={`--role:${roleColor[p.role]}`}>
+            <div class="player__photo">
+              {p.photo
+                ? <img src={`${base}/roster/${p.photo}`} alt={p.pseudo} loading="lazy" />
+                : <span class="player__initial">{p.pseudo.charAt(0)}</span>}
+              <span class="player__role" style={`color:${roleColor[p.role]}`}>{p.role}</span>
+            </div>
+            <div class="player__body">
+              <div class="player__name-row">
+                <h3 class="player__pseudo">{p.pseudo}</h3>
+                {p.captain && <span class="tag tag--violet">Capitaine</span>}
+              </div>
+              {(p.name || p.country) && (
+                <p class="player__real">{p.country} {p.name}</p>
+              )}
+              <div class="player__links">
+                {p.twitter && <a href={p.twitter} target="_blank" rel="noopener" aria-label="X / Twitter"><Icon name="x" size={16} /></a>}
+                {p.stream && <a href={p.stream} target="_blank" rel="noopener" aria-label="Stream"><Icon name="twitch" size={16} /></a>}
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <!-- Staff -->
+      {staff.length > 0 && (
+        <div class="staff" data-reveal>
+          <h3 class="staff__title"><Icon name="users" size={18} /> Staff</h3>
+          <div class="staff__grid">
+            {staff.map((s) => (
+              <div class="staff__card card">
+                <div class="staff__avatar">
+                  {s.photo
+                    ? <img src={`${base}/roster/${s.photo}`} alt={s.pseudo} loading="lazy" />
+                    : <span>{s.pseudo.charAt(0)}</span>}
+                </div>
+                <div>
+                  <p class="staff__pseudo">{s.pseudo}</p>
+                  <p class="staff__role">{s.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- ======================= PALMARÈS ======================= -->
+  <section class="section section--alt" id="palmares">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="idx">02</span>
+        <h2>Palmarès</h2>
+        <p class="lead">Les résultats marquants du club en compétition.</p>
+      </div>
+
+      <ol class="palmares">
+        {results.map((r) => (
+          <li class={`palmares__row card ${r.highlight ? 'is-highlight' : ''}`} data-reveal>
+            <span class="palmares__year num">{r.year}</span>
+            <span class="palmares__event">{r.event}</span>
+            <span class={`palmares__place ${r.highlight ? 'tag tag--gold' : 'tag'}`}>
+              {r.highlight && <Icon name="trophy" size={15} />}
+              {r.placement}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ======================= ACTUS ======================= -->
+  <section class="section" id="actus">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="idx">03</span>
+        <h2>Actualités</h2>
+        <p class="lead">Les dernières nouvelles de PlaZma.</p>
+      </div>
+
+      <div class="news-grid">
+        {news.map((n) => (
+          <article class="news card card--hover" data-reveal>
+            <div class="news__top">
+              {n.tag && <span class="tag tag--violet">{n.tag}</span>}
+              <time class="news__date num" datetime={n.date}>{fmtDate(n.date)}</time>
+            </div>
+            <h3 class="news__title">{n.title}</h3>
+            <p class="news__excerpt">{n.excerpt}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= RECRUTEMENT ======================= -->
+  <section class="section section--alt" id="recrutement">
+    <div class="container">
+      <div class="recruit card" data-reveal>
+        <div class="recruit__body">
+          <p class="eyebrow">Recrutement {recruitment.open ? 'ouvert' : 'fermé'}</p>
+          <h2>Rejoindre PlaZma</h2>
+          <p class="recruit__intro">{recruitment.intro}</p>
+          {recruitment.open && recruitment.roles.length > 0 && (
+            <div class="recruit__roles">
+              <span class="recruit__roles-label">Postes recherchés</span>
+              <div class="recruit__tags">
+                {recruitment.roles.map((r) => <span class="tag tag--violet">{r}</span>)}
+              </div>
+            </div>
+          )}
+          <p class="recruit__how">{recruitment.how}</p>
+          {recruitment.open && (
+            <a href={recruitment.ctaUrl} class="btn btn--primary" target="_blank" rel="noopener">
+              <Icon name="discord" size={18} /> {recruitment.ctaLabel}
+            </a>
+          )}
+        </div>
+        <div class="recruit__deco" aria-hidden="true">
+          <Icon name="sword" size={120} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= CONTACT ======================= -->
+  <section class="section section--tight" id="contact">
+    <div class="container">
+      <div class="contact" data-reveal>
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2>Une question, un partenariat ?</h2>
+          <p class="contact__intro">Écris-nous ou retrouve-nous sur nos réseaux.</p>
+        </div>
+        <div class="contact__actions">
+          <a href={`mailto:${site.email}`} class="btn btn--primary">
+            <Icon name="mail" size={18} /> {site.email}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---------- HERO ---------- */
+  .hero {
+    position: relative;
+    padding-block: clamp(80px, 14vw, 170px) clamp(60px, 9vw, 110px);
+    overflow: hidden;
+  }
+  .hero__glow {
+    position: absolute;
+    top: -30%;
+    left: 50%;
+    width: min(900px, 120vw);
+    height: 700px;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, var(--violet-wash), transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero__inner { position: relative; z-index: 1; }
+  .hero__title {
+    font-size: clamp(3.6rem, 13vw, 8.5rem);
+    font-weight: 800;
+    line-height: 0.92;
+    margin-bottom: 20px;
+  }
+  .hero__intro {
+    font-size: clamp(1.05rem, 2vw, 1.3rem);
+    color: var(--text-2);
+    max-width: 50ch;
+    margin-bottom: 34px;
+  }
+  .hero__actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+  .hero__meta {
+    display: flex;
+    align-items: center;
+    gap: clamp(20px, 4vw, 40px);
+    margin-top: clamp(44px, 7vw, 72px);
+  }
+  .hero__stat { display: flex; flex-direction: column; }
+  .hero__stat-num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    line-height: 1;
+    color: #fff;
+  }
+  .hero__stat-label { font-size: 0.85rem; color: var(--text-3); margin-top: 6px; }
+  .hero__sep { width: 1px; height: 38px; background: var(--line); }
+
+  /* ---------- Sections alternées ---------- */
+  .section--alt { background: var(--bg-2); }
+  .section--alt::before, .section--alt::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: var(--line-soft);
+  }
+  .section--alt::before { top: 0; }
+  .section--alt::after { bottom: 0; }
+
+  /* ---------- ROSTER ---------- */
+  .roster-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: clamp(14px, 2vw, 22px);
+  }
+  .player { overflow: hidden; }
+  .player__photo {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    background:
+      radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--role) 22%, transparent), transparent 70%),
+      var(--surface-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .player__photo img { width: 100%; height: 100%; object-fit: cover; }
+  .player__initial {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 4rem;
+    color: color-mix(in srgb, var(--role) 55%, var(--text-3));
+    opacity: 0.6;
+  }
+  .player__role {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    border-radius: var(--r-pill);
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    border: 1px solid color-mix(in srgb, var(--role) 40%, transparent);
+  }
+  .player__body { padding: 15px 16px 18px; }
+  .player__name-row { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+  .player__pseudo { font-size: 1.1rem; }
+  .player__real { color: var(--text-3); font-size: 0.88rem; margin-top: 3px; }
+  .player__links { display: flex; gap: 8px; margin-top: 12px; }
+  .player__links a {
+    display: inline-flex;
+    width: 30px; height: 30px;
+    align-items: center; justify-content: center;
+    border-radius: var(--r-sm);
+    background: var(--surface-2);
+    color: var(--text-2);
+    transition: color 0.18s, background 0.18s;
+  }
+  .player__links a:hover { color: #fff; background: var(--violet); }
+
+  /* ---------- STAFF ---------- */
+  .staff { margin-top: clamp(44px, 6vw, 64px); }
+  .staff__title {
+    display: flex; align-items: center; gap: 9px;
+    color: var(--text-2);
+    font-size: 1.15rem;
+    margin-bottom: 20px;
+  }
+  .staff__title :global(svg) { color: var(--violet-soft); }
+  .staff__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 14px;
+  }
+  .staff__card { display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
+  .staff__avatar {
+    width: 48px; height: 48px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--surface-2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 700;
+    color: var(--violet-soft);
+    overflow: hidden;
+  }
+  .staff__avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .staff__pseudo { font-weight: 600; color: var(--text); }
+  .staff__role { font-size: 0.85rem; color: var(--text-3); }
+
+  /* ---------- PALMARÈS ---------- */
+  .palmares { display: flex; flex-direction: column; gap: 12px; }
+  .palmares__row {
+    display: grid;
+    grid-template-columns: 70px 1fr auto;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 22px;
+  }
+  .palmares__row.is-highlight { border-color: color-mix(in srgb, var(--gold) 35%, transparent); }
+  .palmares__year { font-family: var(--font-display); font-weight: 700; color: var(--violet-soft); }
+  .palmares__event { font-weight: 500; color: var(--text); }
+  .palmares__place { white-space: nowrap; }
+  @media (max-width: 560px) {
+    .palmares__row { grid-template-columns: 56px 1fr; }
+    .palmares__place { grid-column: 2; justify-self: start; }
+  }
+
+  /* ---------- ACTUS ---------- */
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: clamp(16px, 2vw, 24px);
+  }
+  .news { padding: 22px 24px 26px; display: flex; flex-direction: column; }
+  .news__top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+  .news__date { font-size: 0.82rem; color: var(--text-3); }
+  .news__title { font-size: 1.22rem; margin-bottom: 10px; }
+  .news__excerpt { color: var(--text-2); font-size: 0.95rem; }
+
+  /* ---------- RECRUTEMENT ---------- */
+  .recruit {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 32px;
+    padding: clamp(32px, 5vw, 56px);
+    overflow: hidden;
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--violet-line);
+  }
+  .recruit__intro { font-size: 1.05rem; margin: 10px 0 22px; max-width: 54ch; }
+  .recruit__roles { margin-bottom: 22px; }
+  .recruit__roles-label { display: block; font-size: 0.82rem; color: var(--text-3); margin-bottom: 9px; }
+  .recruit__tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .recruit__how { color: var(--text-2); margin-bottom: 24px; max-width: 54ch; }
+  .recruit__deco { color: var(--violet); opacity: 0.14; flex-shrink: 0; }
+  @media (max-width: 760px) {
+    .recruit { grid-template-columns: 1fr; }
+    .recruit__deco { display: none; }
+  }
+
+  /* ---------- CONTACT ---------- */
+  .contact {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .contact__intro { margin-top: 10px; font-size: 1.05rem; }
+</style>
