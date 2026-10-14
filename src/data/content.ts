@@ -38,10 +38,11 @@ export interface StaffMember {
 }
 
 export interface Result {
-  year: string;
-  event: string;
-  placement: string;
-  highlight?: boolean;
+  season: string;          // ex. '2025', 'Saison 22'
+  competition: string;     // ex. 'OUAT', 'Momen’cup'
+  division?: string;       // ex. 'Division 5'
+  placement: string;       // ex. 'Top 16', 'Top 8'
+  title?: boolean;         // true = titre remporté (mis en avant)
 }
 
 export interface NewsItem {
@@ -87,11 +88,11 @@ export const staff: StaffMember[] = [
   { pseudo: 'Kledou', role: 'Head Coach', country: '🇫🇷' },
 ];
 
-/* ---- PALMARÈS ---- */
+/* ---- PALMARÈS (historique sportif, du plus marquant au plus ancien) ---- */
 export const results: Result[] = [
-  { year: '2025', event: 'Momen’cup', placement: 'Vainqueur', highlight: true },
-  { year: 'S22', event: 'OUAT · Division 5', placement: 'Top 16' },
-  { year: 'S21', event: 'OUAT · Division 7', placement: 'Top 8' },
+  { season: '2025', competition: 'Momen’cup', placement: 'Vainqueur', title: true },
+  { season: 'Saison 22', competition: 'OUAT', division: 'Division 5', placement: 'Top 16' },
+  { season: 'Saison 21', competition: 'OUAT', division: 'Division 7', placement: 'Top 8' },
 ];
 
 /* ---- ACTUS ---- */

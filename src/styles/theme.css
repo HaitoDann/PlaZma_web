@@ -1,60 +1,42 @@
 /* =========================================================================
-   PlaZma — Vitrine publique · Design system v2
-   Direction « esport pro / éditorial / angulaire » (réfs : Vitality, KC, Solary).
-   Principes :
-   - Fonds quasi noirs, à-plats. PAS d'ombre molle, PAS de glow, PAS de hover-lift.
-   - Géométrie angulaire : coins nets, quelques coupes en diagonale (clip-path).
-   - Typo massive en capitales (Archivo Black), data en mono. La STRUCTURE fait le design.
-   - UN seul accent de marque (violet du logo), en aplat et en arêtes franches.
+   PlaZma — Site officiel · Design system
+   Direction : média esport éditorial. Noir/anthracite, blanc pour la
+   lisibilité, violet en accent RARE (actions, liens, marqueurs d'identité).
+   Principe : la hiérarchie, la typo et l'espace font le design — pas les
+   effets. Pas de texture décorative systématique, pas de couleur par poste,
+   pas de micro-labels de remplissage.
    ========================================================================= */
 
 :root {
-  /* Surfaces — quasi noir */
-  --bg: #07070b;
-  --bg-2: #0b0b11;
-  --surface: #101017;
-  --surface-2: #16161f;
-  --elevated: #1c1c26;
+  /* Base */
+  --bg: #0a0a0c;
+  --surface: #131317;
+  --surface-2: #191920;
+  --line: #24242b;
+  --line-soft: #1b1b21;
 
-  /* Lignes franches (la grille est visible) */
-  --line: #272730;
-  --line-strong: #3a3a46;
-  --line-soft: #1a1a22;
-
-  /* Accent de marque — violet du logo (cœur ~#c612dc) */
-  --violet: #b51fd6;
-  --violet-bright: #d13cf0;
-  --violet-soft: #e39cf4;
-  --violet-deep: #5c1570;
-  --violet-wash: rgba(181, 31, 214, 0.1);
-
-  /* Prestige + états */
-  --gold: #e3b43a;
-  --ok: #2fbf6b;
-  --warn: #f0a62e;
-  --err: #e5484d;
+  /* Accent unique — violet électrique PlaZma (usage parcimonieux) */
+  --violet: #b225d6;
+  --violet-bright: #c94ae8;
+  --violet-soft: #d99cf0;
 
   /* Texte */
-  --text: #f3f2f6;
-  --text-2: #a4a2b0;
-  --text-3: #6d6b78;
+  --text: #f4f4f6;
+  --text-2: #adadb6;
+  --text-3: #70707a;
 
-  /* Rayons — quasi nuls (angulaire) */
-  --r: 4px;
+  /* Prestige (titre remporté) — doré sobre, très ponctuel */
+  --title-accent: #d9b44a;
+
+  --r: 3px;
   --r-lg: 6px;
 
-  /* Typo */
   --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: 'Archivo', var(--font);
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-  /* Layout */
-  --maxw: 1280px;
-  --gutter: clamp(18px, 5vw, 64px);
-  --nav-h: 70px;
-
-  /* Coupe diagonale réutilisable (notch bas-droite / haut-gauche) */
-  --cut: 14px;
+  --maxw: 1200px;
+  --gutter: clamp(20px, 5vw, 72px);
+  --nav-h: 72px;
 
   color-scheme: dark;
 }
@@ -64,22 +46,19 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--nav-h) + 8px);
+  scroll-padding-top: calc(var(--nav-h) + 12px);
   -webkit-text-size-adjust: 100%;
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    transition-duration: 0.001ms !important;
-  }
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
 }
 
 body {
   font-family: var(--font);
   background: var(--bg);
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.65;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -87,128 +66,75 @@ body {
   overflow-x: hidden;
 }
 
-/* --- Titres : Archivo Black, capitales, serrés --- */
-h1, h2, h3 {
-  font-family: var(--font-display);
-  font-weight: 900;
-  line-height: 0.92;
-  letter-spacing: -0.015em;
-  text-transform: uppercase;
-  color: var(--text);
-}
-h1 { font-size: clamp(3rem, 11vw, 9rem); }
-h2 { font-size: clamp(2rem, 5vw, 3.6rem); }
-h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); letter-spacing: 0; }
-
-p { color: var(--text-2); }
-a { color: inherit; text-decoration: none; transition: color 0.15s ease; }
-img { max-width: 100%; display: block; }
-ul { list-style: none; padding: 0; }
-
-/* --------------------------------------------------------------------- */
-.container {
-  width: 100%;
-  max-width: var(--maxw);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-}
-
-.section { padding-block: clamp(56px, 9vw, 112px); position: relative; }
-
-/* Entête de section : gros numéro + titre, filet pleine largeur dessous */
-.section-head {
-  display: flex;
-  align-items: flex-end;
-  gap: 20px;
-  padding-bottom: 20px;
-  margin-bottom: clamp(28px, 4vw, 48px);
-  border-bottom: 1px solid var(--line-strong);
-}
-.section-head .idx {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--violet);
-  letter-spacing: 0.1em;
-  padding-bottom: 0.5em;
-}
-.section-head h2 { flex: 1; }
-.section-head .lead {
-  color: var(--text-3);
-  max-width: 34ch;
-  font-size: 0.9rem;
-  text-align: right;
-  padding-bottom: 0.4em;
-}
-
-/* Label vertical / eyebrow — capitales, mono, espacé (code label, pas déco) */
-.kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: 0.78rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--violet-soft);
-}
-.kicker::before { content: ''; width: 28px; height: 1px; background: var(--violet); }
-
-/* Boutons — angulaires, coupe diagonale, pas d'ombre */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+h1, h2, h3, h4 {
   font-family: var(--font-display);
   font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  font-size: 0.9rem;
-  padding: 14px 26px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+h1 { font-size: clamp(2.6rem, 6vw, 4.6rem); }
+h2 { font-size: clamp(1.8rem, 3.4vw, 2.7rem); }
+h3 { font-size: clamp(1.15rem, 1.8vw, 1.45rem); letter-spacing: -0.01em; }
+
+p { color: var(--text-2); }
+a { color: inherit; text-decoration: none; transition: color .15s ease; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; padding: 0; }
+strong { color: var(--text); font-weight: 600; }
+
+/* --------------------------------------------------------------------- */
+.container { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+
+/* Sections — densité et poids VARIABLES (voir pages). Pas de cadre global. */
+.section { padding-block: clamp(56px, 9vw, 104px); }
+
+/* Overline — surtitre discret, un trait violet court. Usage ponctuel. */
+.overline {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.02em;
+  color: var(--text-3); text-transform: none;
+}
+.overline::before { content: ''; width: 22px; height: 2px; background: var(--violet); flex: none; }
+
+/* Titre de section éditorial : surtitre + titre, pas de numéro ni de filet
+   pleine largeur systématique. */
+.s-title { margin-bottom: clamp(28px, 4vw, 44px); }
+.s-title h2 { margin-top: 10px; }
+
+/* Boutons — rectangles nets, sans biseau ni ombre. */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  font-family: var(--font-display); font-weight: 700; font-size: 0.92rem;
+  padding: 13px 24px; border-radius: var(--r); border: 1px solid transparent;
+  cursor: pointer; transition: background .15s ease, color .15s ease, border-color .15s ease;
 }
 .btn svg { width: 17px; height: 17px; }
 .btn--primary { background: var(--violet); color: #fff; }
 .btn--primary:hover { background: var(--violet-bright); }
-.btn--ghost { background: transparent; color: var(--text); border-color: var(--line-strong); }
-.btn--ghost:hover { border-color: var(--violet); color: var(--violet-soft); }
+.btn--ghost { background: transparent; color: var(--text); border-color: var(--line); }
+.btn--ghost:hover { border-color: var(--text-3); }
 
-/* Tags — capitales mono, coin coupé */
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 5px 11px;
-  background: var(--surface-2);
-  color: var(--text-2);
-  clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px);
+/* Lien texte avec flèche (éditorial) */
+.textlink {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-weight: 600; color: var(--violet-soft);
 }
-.tag--violet { background: var(--violet-wash); color: var(--violet-soft); }
-.tag--gold   { background: rgba(227, 180, 58, 0.12); color: var(--gold); }
+.textlink svg { width: 16px; height: 16px; transition: transform .15s ease; }
+.textlink:hover svg { transform: translateX(3px); }
 
-/* Chiffres */
-.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.num { font-variant-numeric: tabular-nums; }
 
 /* Accessibilité */
-:focus-visible { outline: 2px solid var(--violet-soft); outline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--violet-soft); outline-offset: 3px; border-radius: 2px; }
 .skip-link {
   position: absolute; left: 16px; top: -60px; z-index: 200;
-  background: var(--violet); color: #fff; padding: 10px 16px; font-weight: 700;
-  transition: top 0.2s ease;
+  background: var(--violet); color: #fff; padding: 10px 16px; font-weight: 600; border-radius: var(--r);
+  transition: top .2s ease;
 }
 .skip-link:focus { top: 14px; }
 
-/* Révélation au scroll (discrète) */
-[data-reveal] { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
+/* Révélation au scroll — très discrète, désactivée en reduced-motion. */
+[data-reveal] { opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease; }
 [data-reveal].is-in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { [data-reveal] { opacity: 1; transform: none; } }

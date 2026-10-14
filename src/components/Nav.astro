@@ -20,9 +20,7 @@ const links = [
     </a>
 
     <nav class="nav__links" aria-label="Navigation principale">
-      {links.map((l, i) => (
-        <a href={l.href}><span class="nav__link-idx num">{String(i + 1).padStart(2, '0')}</span>{l.label}</a>
-      ))}
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
     </nav>
 
     <button class="nav__burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -50,26 +48,18 @@ const links = [
   .nav__logo { color: var(--violet); }
   .nav__name {
     font-family: var(--font-display);
-    font-weight: 900;
-    font-size: 1.3rem;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
+    font-weight: 800;
+    font-size: 1.28rem;
+    letter-spacing: -0.01em;
   }
-  .nav__links { display: flex; gap: 30px; margin-left: auto; }
+  .nav__links { display: flex; gap: 28px; margin-left: auto; }
   .nav__links a {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 7px;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 0.82rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    font-size: 0.95rem;
+    font-weight: 500;
     color: var(--text-2);
     padding: 6px 0;
     position: relative;
   }
-  .nav__link-idx { font-size: 0.62rem; color: var(--violet); font-weight: 500; }
   .nav__links a::after {
     content: ''; position: absolute; left: 0; bottom: 0;
     width: 0; height: 2px; background: var(--violet);
@@ -87,9 +77,8 @@ const links = [
   .nav__mobile nav { display: flex; flex-direction: column; padding: 6px var(--gutter) 18px; }
   .nav__mobile-link {
     padding: 15px 2px;
-    font-family: var(--font-display);
-    font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
-    font-size: 0.95rem;
+    font-weight: 500;
+    font-size: 1rem;
     color: var(--text-2);
     border-bottom: 1px solid var(--line-soft);
   }
