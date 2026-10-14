@@ -1,0 +1,56 @@
+---
+/* Carte d'actu (inspiration Team Liquid) : visuel plein cadre, titre en
+   surimpression. Sans image, un visuel de marque est généré. */
+import type { CollectionEntry } from 'astro:content';
+import Mark from './Mark.astro';
+import { fmtDate } from '../data/news';
+
+interface Props { entry: CollectionEntry<'actus'>; size?: 'lg' | 'md'; }
+const { entry, size = 'md' } = Astro.props;
+const d = entry.data;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<a href={`${base}/actus/${entry.id}`} class={`ncard ncard--${size}`}>
+  {d.cover ? (
+    <img src={`${base}/actus/${d.cover}`} alt="" loading="lazy" class="ncard__img" />
+  ) : (
+    <div class="ncard__gen" aria-hidden="true">
+      <Mark size={300} class="ncard__mark" title="" />
+    </div>
+  )}
+  <div class="ncard__body">
+    <span class="ncard__meta"><span class="tag">{d.tag}</span><time datetime={d.date.toISOString()}>{fmtDate(d.date)}</time></span>
+    <h3 class="ncard__title">{d.title}</h3>
+    {size === 'lg' && <p class="ncard__excerpt">{d.excerpt}</p>}
+  </div>
+</a>
+
+<style>
+  .ncard {
+    position: relative; display: flex; align-items: flex-end; overflow: hidden;
+    min-height: 300px; background: var(--surface); border: 1px solid var(--line);
+    isolation: isolate;
+  }
+  .ncard--lg { min-height: clamp(340px, 42vw, 480px); }
+  .ncard__img, .ncard__gen { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; transition: transform .5s ease; }
+  .ncard__img { object-fit: cover; }
+  .ncard__gen {
+    background:
+      linear-gradient(115deg, transparent 0 46%, var(--violet-glow) 46% 58%, transparent 58%),
+      radial-gradient(90% 90% at 85% 10%, #1b0f24, var(--bg-2) 70%);
+  }
+  .ncard :global(.ncard__mark) { position: absolute; right: -6%; top: 6%; width: 58%; height: auto; color: var(--violet); opacity: .14; }
+  .ncard::after {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(to top, rgba(7,7,10,.95) 0%, rgba(7,7,10,.55) 45%, transparent 75%);
+  }
+  .ncard:hover .ncard__img, .ncard:hover .ncard__gen { transform: scale(1.04); }
+  .ncard:hover { border-color: #33333d; }
+  .ncard__body { padding: clamp(18px, 2.4vw, 28px); }
+  .ncard__meta { display: flex; gap: 14px; align-items: center; font-size: 0.78rem; color: var(--text-3); }
+  .ncard__title {
+    margin-top: 10px; font-size: clamp(1.4rem, 2.2vw, 1.8rem); line-height: 1.02; max-width: 30ch;
+  }
+  .ncard--lg .ncard__title { font-size: clamp(1.9rem, 3.4vw, 2.8rem); }
+  .ncard__excerpt { margin-top: 12px; max-width: 56ch; font-size: 0.95rem; }
+</style>

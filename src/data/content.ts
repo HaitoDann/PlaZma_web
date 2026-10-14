@@ -1,5 +1,5 @@
 /* =========================================================================
-   Roster, staff, palmarès, actus — données PlaZma.
+   Roster, staff, palmarès — données PlaZma.
    Les pages joueur se génèrent automatiquement à partir du roster (slug).
    Champs optionnels (bio, setup, réseaux, photo) = à compléter plus tard ;
    le site gère proprement leur absence.
@@ -45,13 +45,6 @@ export interface Result {
   title?: boolean;         // true = titre remporté (mis en avant)
 }
 
-export interface NewsItem {
-  date: string;
-  title: string;
-  excerpt: string;
-  tag?: string;
-}
-
 export const ROLE_ORDER: Role[] = ['Top', 'Jungle', 'Mid', 'ADC', 'Support'];
 
 export const slugify = (s: string) =>
@@ -95,13 +88,4 @@ export const results: Result[] = [
   { season: 'Saison 21', competition: 'OUAT', division: 'Division 7', placement: 'Top 8' },
 ];
 
-/* ---- ACTUS ---- */
-export const news: NewsItem[] = [
-  {
-    date: '2026-10-14',
-    title: 'Coup d’envoi de la saison 23 de la OUAT',
-    excerpt:
-      'PlaZma lance sa campagne : premier jour de compétition pour la saison 23 de la OUAT.',
-    tag: 'Compétition',
-  },
-];
+/* Les actus sont dans src/content/actus/ (un fichier .md par article). */

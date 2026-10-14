@@ -1,0 +1,88 @@
+---
+/* Carte « collectible » (inspiration Solary) : portrait 3:4 sur fond
+   d'éclats biseautés repris du monogramme, bandeau d'identité en pied. */
+import Mark from './Mark.astro';
+
+interface Props {
+  pseudo: string;
+  sub: string;          // poste ou fonction
+  realName?: string;
+  country?: string;
+  photo?: string;
+  href?: string;
+  index?: number;
+}
+const { pseudo, sub, realName, country, photo, href, index } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const Tag = href ? 'a' : 'div';
+---
+<Tag class:list={['pcard', { 'is-link': href }]} href={href}>
+  <div class="pcard__art">
+    <svg class="pcard__shards" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <polygon points="150,-20 196,-20 -10,250 -10,190" />
+      <polygon points="255,-20 290,-20 60,420 25,420" class="b" />
+      <polygon points="320,60 320,120 160,420 128,420" />
+    </svg>
+    <Mark size={180} class="pcard__mark" title="" />
+    {photo ? (
+      <img src={`${base}/roster/${photo}`} alt={pseudo} loading="lazy" class="pcard__photo" />
+    ) : (
+      <svg class="pcard__ghost" viewBox="0 0 200 240" aria-hidden="true">
+        <circle cx="100" cy="86" r="38" />
+        <path d="M24 240c4-56 36-88 76-88s72 32 76 88z" />
+      </svg>
+    )}
+    <span class="pcard__sub">{sub}</span>
+    {index !== undefined && <span class="pcard__idx num">{String(index).padStart(2, '0')}</span>}
+  </div>
+  <div class="pcard__id">
+    <div>
+      <span class="pcard__pseudo">{pseudo}</span>
+      {realName && <span class="pcard__real">{realName}</span>}
+    </div>
+    {country && <span class="pcard__flag">{country}</span>}
+  </div>
+</Tag>
+
+<style>
+  .pcard {
+    display: flex; flex-direction: column;
+    background: var(--surface); border: 1px solid var(--line);
+    transition: transform .25s ease, border-color .25s ease;
+  }
+  .pcard.is-link:hover { transform: translateY(-4px); border-color: var(--violet); }
+  .pcard__art {
+    position: relative; aspect-ratio: 3 / 4; overflow: hidden;
+    background: radial-gradient(120% 80% at 50% 100%, #1a1022 0%, var(--bg-2) 60%);
+  }
+  .pcard__shards { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .pcard__shards polygon { fill: var(--violet); opacity: .22; }
+  .pcard__shards polygon.b { fill: #e9e9ee; opacity: .05; }
+  .pcard.is-link:hover .pcard__shards polygon { opacity: .34; }
+  .pcard :global(.pcard__mark) {
+    position: absolute; left: 50%; top: 38%; transform: translate(-50%, -50%);
+    width: 62%; height: auto; color: #fff; opacity: .035;
+  }
+  .pcard__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+  .pcard__ghost { position: absolute; left: 12%; right: 12%; bottom: 0; width: 76%; fill: #1d1d24; }
+  .pcard__sub {
+    position: absolute; left: 12px; top: 12px;
+    font-size: 0.66rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text); background: rgba(7,7,10,.7); padding: 5px 9px;
+  }
+  .pcard__idx {
+    position: absolute; right: 12px; bottom: 8px;
+    font-family: var(--font-display); font-weight: 800; font-size: 2.6rem; line-height: 1;
+    color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.22);
+  }
+  .pcard__id {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 12px 14px 13px; border-top: 1px solid var(--line);
+  }
+  .pcard__pseudo {
+    display: block; font-family: var(--font-display); font-weight: 700;
+    font-size: 1.3rem; line-height: 1.05; letter-spacing: 0.03em; text-transform: uppercase;
+  }
+  .pcard__real { display: block; font-size: 0.8rem; font-style: italic; color: var(--text-3); margin-top: 2px; }
+  .pcard__flag { font-size: 1.1rem; line-height: 1; }
+</style>

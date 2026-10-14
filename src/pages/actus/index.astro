@@ -1,0 +1,66 @@
+---
+import Base from '../../layouts/Base.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import { site } from '../../data/site';
+import { getNews } from '../../data/news';
+
+const news = await getNews();
+const tags = [...new Set(news.map((n) => n.data.tag))];
+---
+<Base title={`Actus · ${site.name}`} description={`Les actus d’équipe de ${site.name}.`}>
+  <section class="section">
+    <div class="container">
+      <div class="s-head">
+        <p class="kicker">Actus d’équipe</p>
+        <h1 class="title">Actualités</h1>
+      </div>
+
+      {tags.length > 1 && (
+        <div class="filters" role="group" aria-label="Filtrer par catégorie">
+          <button class="filter is-on" data-tag="all">Tout</button>
+          {tags.map((t) => <button class="filter" data-tag={t}>{t}</button>)}
+        </div>
+      )}
+
+      {news.length ? (
+        <ul class="list">
+          {news.map((n, i) => (
+            <li data-tag={n.data.tag} class={i === 0 ? 'is-lead' : ''}>
+              <NewsCard entry={n} size={i === 0 ? 'lg' : 'md'} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="empty">Aucune actu pour le moment.</p>
+      )}
+    </div>
+  </section>
+</Base>
+
+<script>
+  const items = document.querySelectorAll<HTMLElement>('.list > li');
+  document.querySelectorAll<HTMLButtonElement>('.filter').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter').forEach((b) => b.classList.toggle('is-on', b === btn));
+      items.forEach((li) => (li.hidden = btn.dataset.tag !== 'all' && li.dataset.tag !== btn.dataset.tag));
+    });
+  });
+</script>
+
+<style>
+  .title { font-size: clamp(2.8rem, 6vw, 4.6rem); margin-top: 12px; }
+  .filters { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .filter {
+    font: 600 0.78rem var(--font); letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-2); background: transparent; border: 1px solid var(--line);
+    padding: 10px 16px; cursor: pointer;
+  }
+  .filter.is-on { background: var(--surface-2); color: var(--text); border-color: var(--surface-2); }
+  .list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .list > li[hidden] { display: none; }
+  .list > li :global(.ncard) { height: 100%; }
+  .is-lead { grid-column: 1 / -1; }
+  .empty { text-align: center; color: var(--text-3); }
+  @media (max-width: 900px) { .list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .list { grid-template-columns: 1fr; } }
+</style>

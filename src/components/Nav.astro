@@ -7,7 +7,7 @@ const hasContact = Boolean(site.email) || socials.length > 0;
 const links = [
   { href: `${base}/#roster`, label: 'Roster' },
   { href: `${base}/#palmares`, label: 'Palmarès' },
-  { href: `${base}/#actus`, label: 'Actus' },
+  { href: `${base}/actus`, label: 'Actus' },
   { href: `${base}/#recrutement`, label: 'Recrutement' },
   ...(hasContact ? [{ href: `${base}/#contact`, label: 'Contact' }] : []),
 ];
@@ -15,7 +15,7 @@ const links = [
 <header class="nav" id="nav">
   <div class="container nav__inner">
     <a href={`${base}/#top`} class="nav__brand" aria-label={`${site.name} — accueil`}>
-      <Mark size={24} class="nav__logo" />
+      <Mark size={34} class="nav__logo" />
       <span class="nav__name">{site.name}</span>
     </a>
 
@@ -40,7 +40,8 @@ const links = [
     position: sticky;
     top: 0;
     z-index: 100;
-    background: var(--bg);
+    background: rgba(7, 7, 10, 0.86);
+    backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--line);
   }
   .nav__inner { height: var(--nav-h); display: flex; align-items: center; gap: 24px; }
@@ -48,14 +49,17 @@ const links = [
   .nav__logo { color: var(--violet); }
   .nav__name {
     font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 1.28rem;
-    letter-spacing: -0.01em;
+    font-weight: 700;
+    font-size: 1.45rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
   .nav__links { display: flex; gap: 28px; margin-left: auto; }
   .nav__links a {
-    font-size: 0.95rem;
-    font-weight: 500;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
     color: var(--text-2);
     padding: 6px 0;
     position: relative;
@@ -70,7 +74,7 @@ const links = [
 
   .nav__burger {
     display: none; margin-left: auto;
-    background: var(--surface); border: 1px solid var(--line-strong);
+    background: var(--surface); border: 1px solid var(--line);
     color: var(--text); padding: 8px; cursor: pointer;
   }
   .nav__mobile { border-bottom: 1px solid var(--line); background: var(--bg-2); }

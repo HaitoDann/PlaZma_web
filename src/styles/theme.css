@@ -1,42 +1,37 @@
 /* =========================================================================
-   PlaZma — Site officiel · Design system
-   Direction : média esport éditorial. Noir/anthracite, blanc pour la
-   lisibilité, violet en accent RARE (actions, liens, marqueurs d'identité).
-   Principe : la hiérarchie, la typo et l'espace font le design — pas les
-   effets. Pas de texture décorative systématique, pas de couleur par poste,
-   pas de micro-labels de remplissage.
+   PlaZma — Design system
+   Noir profond, blanc franc, violet du logo en touches rares.
+   Signature graphique : les coupes biseautées du monogramme (angles à 45°),
+   reprises en clip-path sur les cartes, boutons et cadres.
    ========================================================================= */
 
 :root {
-  /* Base */
-  --bg: #0a0a0c;
-  --surface: #131317;
-  --surface-2: #191920;
-  --line: #24242b;
-  --line-soft: #1b1b21;
+  --bg: #07070a;
+  --bg-2: #0c0c10;
+  --surface: #111116;
+  --surface-2: #17171d;
+  --line: #22222a;
+  --line-soft: #18181e;
 
-  /* Accent unique — violet électrique PlaZma (usage parcimonieux) */
-  --violet: #b225d6;
-  --violet-bright: #c94ae8;
-  --violet-soft: #d99cf0;
+  /* Violet PlaZma (extrait du logo) */
+  --violet: #a923d6;
+  --violet-bright: #c03df0;
+  --violet-soft: #d6a3ef;
+  --violet-glow: rgba(169, 35, 214, 0.16);
 
-  /* Texte */
-  --text: #f4f4f6;
-  --text-2: #adadb6;
-  --text-3: #70707a;
+  --text: #f3f3f5;
+  --text-2: #a9a9b3;
+  --text-3: #6b6b76;
 
-  /* Prestige (titre remporté) — doré sobre, très ponctuel */
-  --title-accent: #d9b44a;
+  --gold: #d4b25a;
 
-  --r: 3px;
-  --r-lg: 6px;
-
+  --cut: 14px;              /* taille du biseau */
   --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-display: 'Archivo', var(--font);
+  --font-display: 'Barlow Condensed', 'Inter', sans-serif;
 
-  --maxw: 1200px;
-  --gutter: clamp(20px, 5vw, 72px);
-  --nav-h: 72px;
+  --maxw: 1240px;
+  --gutter: clamp(16px, 4.5vw, 64px);
+  --nav-h: 68px;
 
   color-scheme: dark;
 }
@@ -58,24 +53,24 @@ body {
   font-family: var(--font);
   background: var(--bg);
   color: var(--text);
-  line-height: 1.65;
+  line-height: 1.6;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  font-weight: 800;
-  line-height: 1.04;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: 0;
+  text-transform: uppercase;
   color: var(--text);
 }
-h1 { font-size: clamp(2.6rem, 6vw, 4.6rem); }
-h2 { font-size: clamp(1.8rem, 3.4vw, 2.7rem); }
-h3 { font-size: clamp(1.15rem, 1.8vw, 1.45rem); letter-spacing: -0.01em; }
+h1 { font-size: clamp(3rem, 8vw, 6.5rem); font-weight: 800; }
+h2 { font-size: clamp(2.2rem, 4.4vw, 3.4rem); }
+h3 { font-size: clamp(1.3rem, 2vw, 1.6rem); }
 
 p { color: var(--text-2); }
 a { color: inherit; text-decoration: none; transition: color .15s ease; }
@@ -83,58 +78,71 @@ img { max-width: 100%; display: block; }
 ul { list-style: none; padding: 0; }
 strong { color: var(--text); font-weight: 600; }
 
-/* --------------------------------------------------------------------- */
 .container { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+.section { padding-block: clamp(64px, 9vw, 112px); }
 
-/* Sections — densité et poids VARIABLES (voir pages). Pas de cadre global. */
-.section { padding-block: clamp(56px, 9vw, 104px); }
-
-/* Overline — surtitre discret, un trait violet court. Usage ponctuel. */
-.overline {
-  display: inline-flex; align-items: center; gap: 12px;
-  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.02em;
-  color: var(--text-3); text-transform: none;
+/* Surtitre : petit, espacé, avec un biseau violet. */
+.kicker {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 0.74rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-3);
 }
-.overline::before { content: ''; width: 22px; height: 2px; background: var(--violet); flex: none; }
+.kicker::before {
+  content: ''; width: 14px; height: 8px; background: var(--violet); flex: none;
+  clip-path: polygon(40% 0, 100% 0, 60% 100%, 0 100%);
+}
 
-/* Titre de section éditorial : surtitre + titre, pas de numéro ni de filet
-   pleine largeur systématique. */
-.s-title { margin-bottom: clamp(28px, 4vw, 44px); }
-.s-title h2 { margin-top: 10px; }
+/* En-tête de section centré, façon fiche d'équipe */
+.s-head { text-align: center; margin-bottom: clamp(36px, 5vw, 56px); }
+.s-head h2 { margin-top: 12px; }
+.s-head--left { text-align: left; }
+.sub-label {
+  text-align: center; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--text-2); margin: 0 0 20px;
+}
 
-/* Boutons — rectangles nets, sans biseau ni ombre. */
+/* Coupe biseautée réutilisable */
+.cut { clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut))); }
+
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 9px;
-  font-family: var(--font-display); font-weight: 700; font-size: 0.92rem;
-  padding: 13px 24px; border-radius: var(--r); border: 1px solid transparent;
-  cursor: pointer; transition: background .15s ease, color .15s ease, border-color .15s ease;
+  font-family: var(--font-display); font-weight: 700; font-size: 1rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 13px 26px; border: 1px solid transparent; cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  transition: background .15s ease, color .15s ease;
 }
 .btn svg { width: 17px; height: 17px; }
 .btn--primary { background: var(--violet); color: #fff; }
 .btn--primary:hover { background: var(--violet-bright); }
-.btn--ghost { background: transparent; color: var(--text); border-color: var(--line); }
-.btn--ghost:hover { border-color: var(--text-3); }
+.btn--ghost { background: var(--surface-2); color: var(--text); }
+.btn--ghost:hover { background: var(--line); }
 
-/* Lien texte avec flèche (éditorial) */
 .textlink {
   display: inline-flex; align-items: center; gap: 8px;
-  font-weight: 600; color: var(--violet-soft);
+  font-size: 0.82rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-2);
 }
-.textlink svg { width: 16px; height: 16px; transition: transform .15s ease; }
+.textlink svg { width: 15px; height: 15px; transition: transform .15s ease; }
+.textlink:hover { color: var(--text); }
 .textlink:hover svg { transform: translateX(3px); }
+
+/* Pastille de catégorie d'actu */
+.tag {
+  display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--violet-soft);
+}
 
 .num { font-variant-numeric: tabular-nums; }
 
-/* Accessibilité */
-:focus-visible { outline: 2px solid var(--violet-soft); outline-offset: 3px; border-radius: 2px; }
+:focus-visible { outline: 2px solid var(--violet-soft); outline-offset: 3px; }
 .skip-link {
   position: absolute; left: 16px; top: -60px; z-index: 200;
-  background: var(--violet); color: #fff; padding: 10px 16px; font-weight: 600; border-radius: var(--r);
+  background: var(--violet); color: #fff; padding: 10px 16px; font-weight: 600;
   transition: top .2s ease;
 }
 .skip-link:focus { top: 14px; }
 
-/* Révélation au scroll — très discrète, désactivée en reduced-motion. */
-[data-reveal] { opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease; }
+[data-reveal] { opacity: 0; transform: translateY(14px); transition: opacity .55s ease, transform .55s ease; }
 [data-reveal].is-in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { [data-reveal] { opacity: 1; transform: none; } }

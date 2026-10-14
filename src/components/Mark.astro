@@ -1,25 +1,23 @@
 ---
-/* Marque PlaZma reconstruite en vectoriel propre (net, sans glow, recolorable
-   via currentColor). Utilisée en grand : hero, fallback de carte, filigrane.
-   Le PNG d'origine (halo néon cuit) ne sert plus qu'en favicon. */
-interface Props { size?: number | string; class?: string; }
-const { size = 64, class: cls = '' } = Astro.props;
+/* Monogramme PlaZma redessiné en vectoriel à partir du logo officiel :
+   mêmes éclats biseautés, sans le halo néon. Recolorable via currentColor. */
+interface Props { size?: number | string; class?: string; title?: string; }
+const { size = 64, class: cls = '', title = 'PlaZma' } = Astro.props;
 ---
 <svg
   xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 100 100"
+  viewBox="0 0 700 500"
   width={size}
-  height={size}
+  height={typeof size === 'number' ? Math.round(size * 0.714) : undefined}
   class={cls}
   role="img"
-  aria-label="PlaZma"
-  fill="none"
+  aria-label={title}
+  fill="currentColor"
 >
-  <polyline
-    points="20,26 80,26 28,74 84,74"
-    stroke="currentColor"
-    stroke-width="17"
-    stroke-linejoin="miter"
-    stroke-linecap="butt"
-  />
+  <polygon points="22,52 360,52 300,112 80,112" />
+  <polygon points="410,52 472,52 80,462 72,402" />
+  <polygon points="535,52 642,52 585,112 476,112" />
+  <polygon points="648,112 648,282 592,226 592,166" />
+  <polygon points="362,226 532,226 588,282 306,282" />
+  <polygon points="190,402 418,402 476,462 134,462" />
 </svg>
