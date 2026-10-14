@@ -10,10 +10,9 @@ interface Props {
   country?: string;
   photo?: string;
   href?: string;
-  index?: number;
   captain?: boolean;
 }
-const { pseudo, sub, realName, country, photo, href, index, captain } = Astro.props;
+const { pseudo, sub, realName, country, photo, href, captain } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const Tag = href ? 'a' : 'div';
 ---
@@ -29,13 +28,11 @@ const Tag = href ? 'a' : 'div';
         <path d="M24 240c4-56 36-88 76-88s72 32 76 88z" fill="url(#gh)" />
       </svg>
     )}
-    <span class="pcard__sub">{sub}{captain && <em class="pcard__cap" title="Capitaine">C</em>}</span>
-    {index !== undefined && <span class="pcard__idx num">{String(index).padStart(2, '0')}</span>}
   </div>
   <div class="pcard__id">
     <div>
       <span class="pcard__pseudo">{pseudo}</span>
-      {realName && <span class="pcard__real">{realName}</span>}
+      <span class="pcard__sub">{sub}{captain && ' · Capitaine'}{realName && ` · ${realName}`}</span>
     </div>
     {country && <Flag emoji={country} class="pcard__flag" />}
   </div>
@@ -45,36 +42,30 @@ const Tag = href ? 'a' : 'div';
   .pcard {
     display: flex; flex-direction: column;
     background: var(--surface); border: 1px solid var(--line);
-    transition: transform .25s ease, border-color .25s ease;
+    transition: transform .3s ease, border-color .3s ease;
   }
-  .pcard.is-link:hover { transform: translateY(-4px); border-color: var(--violet); }
-  .pcard__art {
-    position: relative; aspect-ratio: 3 / 4; overflow: hidden;
-    background: #0a0814;
+  .pcard.is-link:hover { transform: translateY(-3px); border-color: #3b3346; }
+  .pcard__art { position: relative; aspect-ratio: 3 / 4; overflow: hidden; background: var(--bg-2); }
+  .pcard__bg {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    filter: saturate(.6) brightness(.68); transition: filter .4s ease;
   }
-  .pcard__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease, filter .3s ease; }
-  .pcard.is-link:hover .pcard__bg { transform: scale(1.05); filter: brightness(1.2); }
-  .pcard__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
-  .pcard__ghost { position: absolute; left: 12%; right: 12%; bottom: 0; width: 76%; }
-  .pcard__sub {
-    position: absolute; left: 12px; top: 12px;
-    font-size: 0.66rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
-    color: #fff; background: var(--violet); padding: 5px 9px;
+  .pcard.is-link:hover .pcard__bg { filter: saturate(.8) brightness(.82); }
+  .pcard__art::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to top, rgba(10,10,14,.9) 0%, rgba(10,10,14,.15) 45%, rgba(10,10,14,.35) 100%);
   }
-  .pcard__cap { font-style: normal; margin-left: 7px; padding-left: 7px; border-left: 1px solid rgba(255,255,255,.4); }
-  .pcard__idx {
-    position: absolute; right: 12px; bottom: 8px;
-    font-family: var(--font-display); font-weight: 800; font-size: 2.6rem; line-height: 1;
-    color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.4);
-  }
+  .pcard__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; z-index: 1; }
+  .pcard__ghost { position: absolute; left: 12%; right: 12%; bottom: 0; width: 76%; z-index: 1; opacity: .8; }
   .pcard__id {
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    padding: 12px 14px 13px; border-top: 2px solid var(--violet); background: linear-gradient(180deg, #16121d, var(--surface));
+    padding: 13px 14px 14px; border-top: 1px solid var(--line);
   }
+  .pcard.is-link:hover .pcard__id { border-top-color: var(--violet); }
   .pcard__pseudo {
     display: block; font-family: var(--font-display); font-weight: 700;
     font-size: 1.3rem; line-height: 1.05; letter-spacing: 0.03em; text-transform: uppercase;
   }
-  .pcard__real { display: block; font-size: 0.8rem; font-style: italic; color: var(--text-3); margin-top: 2px; }
-  .pcard :global(.pcard__flag) { width: 22px; height: auto; flex: none; }
+  .pcard__sub { display: block; font-size: 0.8rem; font-style: italic; color: var(--text-3); margin-top: 3px; }
+  .pcard :global(.pcard__flag) { width: 20px; height: auto; flex: none; opacity: .9; }
 </style>

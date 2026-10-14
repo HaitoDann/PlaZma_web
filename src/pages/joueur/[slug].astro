@@ -6,7 +6,7 @@ import Icon from '../../components/Icon.astro';
 import Mark from '../../components/Mark.astro';
 import Flag from '../../components/Flag.astro';
 import NewsCard from '../../components/NewsCard.astro';
-import { roster, ROLE_ORDER, type Player } from '../../data/content';
+import { roster, staff, ROLE_ORDER, type Player } from '../../data/content';
 import { roleLabel } from '../../data/roles';
 import { site } from '../../data/site';
 import { getNews } from '../../data/news';
@@ -15,13 +15,19 @@ export function getStaticPaths() {
   const ordered = [...roster].sort(
     (a, b) => ROLE_ORDER.indexOf(a.role) - ROLE_ORDER.indexOf(b.role)
   );
-  return ordered.map((p, i) => ({
+  // Joueurs puis staff : même fiche, même rail.
+  const people: Person[] = [
+    ...ordered.map((p) => ({ ...p, label: p.label, short: p.role, isPlayer: true })),
+    ...staff.map((s) => ({ ...s, label: s.role, short: s.role.split(' · ')[0], isPlayer: false })),
+  ];
+  return people.map((p, i) => ({
     params: { slug: p.slug },
-    props: { player: p, ordered, index: i },
+    props: { player: p, ordered: people, index: i },
   }));
 }
 
-interface Props { player: Player; ordered: Player[]; index: number; }
+type Person = Omit<Player, 'role'> & { label: string; short: string; isPlayer: boolean };
+interface Props { player: Person; ordered: Person[]; index: number; }
 const { player: p, ordered, index } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const socials = p.socials ?? {};
@@ -32,7 +38,7 @@ const socialList = ([
 const related = (await getNews()).filter((n) => n.data.players.includes(p.slug)).slice(0, 3);
 const pad = (n: number) => String(n).padStart(2, '0');
 ---
-<Base title={`${p.pseudo} · ${site.name}`} description={`${p.pseudo}, ${roleLabel[p.role]} de ${site.name}.`}>
+<Base title={`${p.pseudo} · ${site.name}`} description={`${p.pseudo}, ${p.label} de ${site.name}.`}>
   <article class="pp">
     <div class="container pp__frame">
       <div class="pp__top">
@@ -42,7 +48,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
       <div class="pp__grid">
         <div class="pp__id">
-          <p class="pp__role">{roleLabel[p.role]}</p>
+          <p class="pp__role">{p.label}</p>
           <div class="pp__name-row">
             <h1 class="pp__name">{p.pseudo}</h1>
             <span class="pp__badge cut" aria-hidden="true"><Mark size={36} title="" /></span>
@@ -52,7 +58,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
               {p.realName}{p.realName && p.nationality && ' · '}{p.nationality && <span class="pp__nat">{p.country && <Flag emoji={p.country} />} {p.nationality}</span>}
             </p>
           )}
-          <p class="pp__bio">{p.bio ?? `${roleLabel[p.role]} de ${site.name} pour la saison 23. Présentation complète à venir.`}</p>
+          <p class="pp__bio">{p.bio ?? `${p.label} de ${site.name}. Présentation complète à venir.`}</p>
 
           {socialList.length > 0 && (
             <div class="pp__socials">
@@ -62,7 +68,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
             </div>
           )}
 
-          <div class="pp__setup">
+          {p.isPlayer && <div class="pp__setup">
             <div class="pp__setup-head"><span>Setup</span><span class="num">2026</span></div>
             {p.setup && p.setup.length > 0 ? (
               <dl>
@@ -71,13 +77,13 @@ const pad = (n: number) => String(n).padStart(2, '0');
             ) : (
               <p class="pp__setup-empty">Setup bientôt disponible.</p>
             )}
-          </div>
+          </div>}
         </div>
 
         <div class="pp__visual">
           <Mark size={600} class="pp__bgmark" title="" />
           {p.photo ? (
-            <img src={`${base}/roster/${p.photo}`} alt={`${p.pseudo}, ${roleLabel[p.role]} de ${site.name}`} class="pp__photo" />
+            <img src={`${base}/roster/${p.photo}`} alt={`${p.pseudo}, ${p.label} de ${site.name}`} class="pp__photo" />
           ) : (
             <span class="pp__ghost" aria-hidden="true">{p.pseudo}</span>
           )}
@@ -87,7 +93,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
           {ordered.map((o) => (
             <a href={`${base}/joueur/${o.slug}`} class:list={['pp__thumb', { 'is-on': o.slug === p.slug }]}
                aria-current={o.slug === p.slug ? 'page' : undefined} title={o.pseudo}>
-              {o.photo ? <img src={`${base}/roster/${o.photo}`} alt="" /> : <span>{o.role}</span>}
+              {o.photo ? <img src={`${base}/roster/${o.photo}`} alt="" /> : <span>{o.short}</span>}
             </a>
           ))}
         </nav>

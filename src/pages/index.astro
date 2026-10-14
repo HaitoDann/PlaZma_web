@@ -61,7 +61,7 @@ const seasons = [...new Set(results.map((r) => yearOf(r.season)))];
           <li data-reveal>
             <PlayerCard
               pseudo={p.pseudo} sub={p.role} realName={p.realName} country={p.country}
-              photo={p.photo} href={`${base}/joueur/${p.slug}`} index={i + 1} captain={p.captain}
+              photo={p.photo} href={`${base}/joueur/${p.slug}`} captain={p.captain}
             />
           </li>
         ))}
@@ -73,7 +73,7 @@ const seasons = [...new Set(results.map((r) => yearOf(r.season)))];
           <ul class="cards cards--staff">
             {staff.map((s) => (
               <li data-reveal>
-                <PlayerCard pseudo={s.pseudo} sub={s.role} realName={s.realName} country={s.country} photo={s.photo} />
+                <PlayerCard pseudo={s.pseudo} sub={s.role} realName={s.realName} country={s.country} photo={s.photo} href={`${base}/joueur/${s.slug}`} />
               </li>
             ))}
           </ul>
@@ -208,9 +208,12 @@ const seasons = [...new Set(results.map((r) => yearOf(r.season)))];
   /* ---------- ROSTER ---------- */
   .cards { display: grid; gap: 14px; justify-content: center; }
   .cards--players { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-  .cards--staff { grid-template-columns: repeat(auto-fit, minmax(0, 220px)); }
+  .cards--staff { grid-template-columns: repeat(auto-fit, calc((100% - 56px) / 5)); }
   .staff-label { margin-top: clamp(48px, 6vw, 72px); }
-  @media (max-width: 1000px) { .cards--players { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 1000px) {
+    .cards--players { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .cards--staff { grid-template-columns: repeat(auto-fit, calc((100% - 28px) / 3)); }
+  }
   @media (max-width: 620px) {
     .cards--players { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     .cards--staff { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }

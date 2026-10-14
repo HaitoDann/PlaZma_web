@@ -32,8 +32,12 @@ export interface Player {
 export interface StaffMember {
   pseudo: string;
   role: string;
+  slug: string;
+  bio?: string;
+  socials?: SocialLinks;
   realName?: string;
   country?: string;
+  nationality?: string;
   photo?: string;
 }
 
@@ -77,8 +81,8 @@ export const roster: Player[] = [
 
 /* ---- STAFF ---- */
 export const staff: StaffMember[] = [
-  { pseudo: 'Haito', role: 'CEO · General Manager', country: '🇫🇷' },
-  { pseudo: 'Kledou', role: 'Head Coach', country: '🇫🇷' },
+  { pseudo: 'Haito', role: 'CEO · General Manager', slug: 'haito', country: '🇫🇷', nationality: 'France' },
+  { pseudo: 'Kledou', role: 'Head Coach', slug: 'kledou', country: '🇫🇷', nationality: 'France' },
 ];
 
 /* ---- PALMARÈS (historique sportif, du plus marquant au plus ancien) ---- */
@@ -104,7 +108,7 @@ export const story: StoryEvent[] = [
     text: 'Refonte complète de la PlaZma : l’objectif est désormais de construire un vrai projet sérieux, dans le but de performer. Haito passe du rôle de joueur à celui de gérant et recrute cinq jeunes joueurs de niveau Platine/Émeraude pour bâtir sur le long terme : Boulou, Henri, Lakraël, Ke1d0 et Sayro.' },
   { date: '2026-03-29', when: '29 mars 2026', type: 'titre', title: 'Victoire à la Momen’cup',
     text: 'L’équipe s’est bien entraînée et le roster est solide. La PlaZma s’inscrit à son premier tournoi amateur… et le remporte. C’est le premier trophée de l’histoire du club.' },
-  { date: '2026-04-01', when: 'Avril 2026', type: 'roster', title: 'Joordy au support, Lakraël capitaine',
+  { date: '2026-04-01', when: 'Avril 2026', type: 'roster', title: 'Joordy support et Lakraël capitaine',
     text: 'Sayro, alors capitaine de l’équipe, décide de prendre ses distances avec le jeu. Nous recrutons Joordy au poste de support et le capitanat est transmis à Lakraël.' },
   { date: '2026-04-02', when: 'Avril 2026', type: 'tournoi', title: 'OUAT — Saison 21',
     text: 'Première inscription à la ligue amateur OUAT : l’équipe termine Top 8 de la Division 7.' },
