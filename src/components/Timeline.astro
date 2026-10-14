@@ -17,10 +17,10 @@ let lastYear = '';
     return (
       <>
         {showYear && <li class="tl__year" data-reveal><span>{year}</span></li>}
-        <li class={`tl__item tl__item--${e.type} ${i % 2 ? 'is-right' : 'is-left'}`} data-reveal>
+        <li class={`tl__item tl__item--${e.type} ${i % 2 ? 'is-right' : 'is-left'} ${e.upcoming ? 'is-upcoming' : ''}`} data-reveal>
           <span class="tl__dot"><Icon name={icon[e.type]} size={15} /></span>
           <div class="tl__card">
-            <p class="tl__meta"><span class="tl__type">{label[e.type]}</span><time datetime={e.date}>{e.when}</time></p>
+            <p class="tl__meta"><span class="tl__type">{e.upcoming ? 'À venir' : label[e.type]}</span><time datetime={e.date}>{e.when}</time></p>
             <h3 class="tl__title">{e.title}</h3>
             <p class="tl__text">{e.text}</p>
           </div>
@@ -73,6 +73,9 @@ let lastYear = '';
   .tl__item--titre .tl__card { border-color: #4a3812; background: linear-gradient(135deg, #1a1508, var(--surface) 60%); }
   .tl__item--titre .tl__type { color: var(--gold); }
   .tl__item--club .tl__dot { background: var(--violet); color: #fff; border-color: var(--violet); }
+
+  .tl__item.is-upcoming .tl__card { border-style: dashed; border-color: var(--violet); background: transparent; }
+  .tl__item.is-upcoming .tl__dot { background: var(--bg); border: 1px dashed var(--violet); color: var(--violet-soft); }
 
   .tl__goal {
     position: relative; text-align: center; margin-top: 40px; padding: 34px 24px;

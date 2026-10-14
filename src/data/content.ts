@@ -93,7 +93,7 @@ export const results: Result[] = [
 /* ---- HISTOIRE (timeline « Le projet ») ----
    type : club · roster · tournoi · titre. Triée automatiquement par date. */
 export type StoryType = 'club' | 'roster' | 'tournoi' | 'titre';
-export interface StoryEvent { date: string; when: string; type: StoryType; title: string; text: string; }
+export interface StoryEvent { date: string; when: string; type: StoryType; title: string; text: string; upcoming?: boolean; }
 
 export const story: StoryEvent[] = [
   { date: '2018-01-01', when: '2018', type: 'club', title: 'Une équipe d’amis',
@@ -101,19 +101,23 @@ export const story: StoryEvent[] = [
   { date: '2022-11-16', when: '16 novembre 2022', type: 'club', title: 'PlaZma devient une association',
     text: 'Création officielle de l’association loi 1901. Le projet change de dimension et se structure.' },
   { date: '2025-08-01', when: 'Août 2025', type: 'roster', title: 'Ke1d0, Lakraël et Boulou rejoignent l’aventure',
-    text: 'Les premières recrues du projet compétitif, socle du roster actuel.' },
+    text: 'Ke1d0 à l’ADC, Lakraël au mid et Boulou au top : les premières recrues du projet compétitif, socle du roster actuel.' },
   { date: '2026-03-29', when: '29 mars 2026', type: 'titre', title: 'Victoire à la Momen’cup',
     text: 'Premier trophée de l’histoire du club.' },
   { date: '2026-04-01', when: 'Avril 2026', type: 'roster', title: 'Joordy arrive au support',
     text: 'Le roster se renforce sur la botlane.' },
   { date: '2026-04-02', when: 'Avril 2026', type: 'tournoi', title: 'OUAT — Saison 21',
     text: 'Première saison en OUAT : Top 8 en Division 7.' },
-  { date: '2026-06-01', when: 'Juin 2026', type: 'roster', title: 'Nico rejoint l’équipe',
-    text: 'Le cinq de départ est au complet.' },
+  { date: '2026-06-01', when: 'Juin 2026', type: 'roster', title: 'naiko rejoint l’équipe',
+    text: 'Nico « naiko » prend la jungle : le cinq de départ est au complet.' },
+  { date: '2026-06-02', when: 'Juin 2026', type: 'roster', title: 'Kledou devient Head Coach',
+    text: 'Le staff se structure avec l’arrivée d’un coach dédié.' },
   { date: '2026-07-01', when: 'Juillet 2026', type: 'tournoi', title: 'OUAT — Saison 22',
     text: 'Montée en Division 5, Top 16.' },
   { date: '2026-10-14', when: 'Octobre 2026', type: 'tournoi', title: 'OUAT — Saison 23',
-    text: 'La saison en cours. Un pas de plus.' },
+    text: 'La saison en cours, de nouveau en Division 5 : consolider avant de monter.' },
+  { date: '2027-01-01', when: '2027', type: 'tournoi', title: 'Prochaine étape : Nexus Tour', upcoming: true,
+    text: 'Le prochain palier du projet.' },
 ];
 
 export const storyGoal = {
