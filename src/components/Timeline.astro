@@ -1,0 +1,97 @@
+---
+/* Timeline « Le projet » : histoire du club, mouvements joueurs, tournois.
+   Alterne gauche/droite sur desktop, se termine sur l'objectif. */
+import Icon from './Icon.astro';
+import { story, storyGoal, type StoryType } from '../data/content';
+
+const events = [...story].sort((a, b) => a.date.localeCompare(b.date));
+const label: Record<StoryType, string> = { club: 'Club', roster: 'Mercato', tournoi: 'Compétition', titre: 'Titre' };
+const icon: Record<StoryType, string> = { club: 'star', roster: 'users', tournoi: 'sword', titre: 'trophy' };
+let lastYear = '';
+---
+<ol class="tl">
+  {events.map((e, i) => {
+    const year = e.date.slice(0, 4);
+    const showYear = year !== lastYear;
+    lastYear = year;
+    return (
+      <>
+        {showYear && <li class="tl__year" data-reveal><span>{year}</span></li>}
+        <li class={`tl__item tl__item--${e.type} ${i % 2 ? 'is-right' : 'is-left'}`} data-reveal>
+          <span class="tl__dot"><Icon name={icon[e.type]} size={15} /></span>
+          <div class="tl__card">
+            <p class="tl__meta"><span class="tl__type">{label[e.type]}</span><time datetime={e.date}>{e.when}</time></p>
+            <h3 class="tl__title">{e.title}</h3>
+            <p class="tl__text">{e.text}</p>
+          </div>
+        </li>
+      </>
+    );
+  })}
+  <li class="tl__goal" data-reveal>
+    <span class="tl__goal-kicker">Objectif</span>
+    <span class="tl__goal-title">{storyGoal.title}</span>
+    <p>{storyGoal.text}</p>
+  </li>
+</ol>
+
+<style>
+  .tl { position: relative; max-width: 1000px; margin-inline: auto; padding: 0; list-style: none; }
+  .tl__item.is-right + .tl__item.is-left, .tl__item.is-left + .tl__item.is-right { margin-top: -48px; }
+  .tl::before {
+    content: ''; position: absolute; left: 50%; top: 0; bottom: 120px; width: 2px; transform: translateX(-50%);
+    background: linear-gradient(to bottom, var(--line), var(--violet) 70%, var(--violet-bright));
+  }
+  .tl__year { position: relative; text-align: center; margin: 28px 0 22px; }
+  .tl__year:first-child { margin-top: 0; }
+  .tl__year span {
+    position: relative; display: inline-block; padding: 6px 16px; background: var(--bg);
+    font-family: var(--font-display); font-weight: 800; font-size: 2rem; line-height: 1;
+    color: transparent; -webkit-text-stroke: 1px var(--text-2);
+  }
+  .tl__item { position: relative; display: flex; margin-bottom: 18px; }
+  .tl__item.is-left { justify-content: flex-start; padding-right: calc(50% + 36px); }
+  .tl__item.is-right { justify-content: flex-end; padding-left: calc(50% + 36px); }
+  .tl__dot {
+    position: absolute; left: 50%; top: 18px; transform: translateX(-50%);
+    display: grid; place-items: center; width: 34px; height: 34px;
+    background: var(--surface-2); color: var(--text-2); border: 1px solid var(--line);
+    clip-path: polygon(30% 0, 100% 0, 100% 70%, 70% 100%, 0 100%, 0 30%);
+  }
+  .tl__card {
+    width: 100%; background: var(--surface); border: 1px solid var(--line); padding: 18px 20px;
+    transition: border-color .2s ease;
+  }
+  .tl__card:hover { border-color: #3a3a45; }
+  .tl__meta { display: flex; gap: 12px; align-items: center; font-size: 0.78rem; color: var(--text-3); }
+  .tl__type { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--violet-soft); }
+  .tl__title { margin: 8px 0 6px; font-size: clamp(1.25rem, 2vw, 1.5rem); line-height: 1.05; }
+  .tl__text { font-size: 0.92rem; }
+
+  .tl__item--roster .tl__dot { color: var(--violet-soft); }
+  .tl__item--titre .tl__dot { background: linear-gradient(135deg, #3a2a0a, #5a4312); color: var(--gold); border-color: #5a4312; }
+  .tl__item--titre .tl__card { border-color: #4a3812; background: linear-gradient(135deg, #1a1508, var(--surface) 60%); }
+  .tl__item--titre .tl__type { color: var(--gold); }
+  .tl__item--club .tl__dot { background: var(--violet); color: #fff; border-color: var(--violet); }
+
+  .tl__goal {
+    position: relative; text-align: center; margin-top: 40px; padding: 34px 24px;
+    background: radial-gradient(70% 120% at 50% 0%, rgba(169,35,214,.28), transparent 70%), var(--surface);
+    border: 1px solid var(--violet);
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+  }
+  .tl__goal-kicker { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--violet-soft); }
+  .tl__goal-title {
+    display: block; margin: 8px 0 10px; font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: .95; text-transform: uppercase;
+  }
+  .tl__goal p { max-width: 44ch; margin-inline: auto; }
+
+  @media (max-width: 760px) {
+    .tl::before { left: 17px; }
+    .tl__year { text-align: left; padding-left: 0; }
+    .tl__year span { padding-left: 0; }
+    .tl__item.is-left, .tl__item.is-right { padding: 0 0 0 52px; }
+    .tl__dot { left: 17px; }
+  }
+</style>

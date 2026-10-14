@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro';
 import Mark from './Mark.astro';
+import Wordmark from './Wordmark.astro';
 import { site, socials } from '../data/site';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const year = new Date().getFullYear();
@@ -15,7 +16,7 @@ const links = [
   <div class="container footer__top">
     <a href={`${base}/#top`} class="footer__brand" aria-label={`${site.name} — accueil`}>
       <Mark size={34} class="footer__mark" />
-      <span>{site.name}</span>
+      <Wordmark />
     </a>
 
     <nav class="footer__nav" aria-label="Pied de page">
@@ -48,7 +49,7 @@ const links = [
   }
   .footer__brand {
     display: flex; align-items: center; gap: 11px;
-    font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; letter-spacing: 0.06em; text-transform: uppercase;
+    font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; 
   }
   .footer__mark { color: var(--violet); }
   .footer__nav { display: flex; gap: 24px; flex-wrap: wrap; margin-left: 8px; }

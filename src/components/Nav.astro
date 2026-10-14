@@ -1,10 +1,12 @@
 ---
 import Icon from './Icon.astro';
 import Mark from './Mark.astro';
+import Wordmark from './Wordmark.astro';
 import { site, socials } from '../data/site';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const hasContact = Boolean(site.email) || socials.length > 0;
 const links = [
+  { href: `${base}/#projet`, label: 'Le projet' },
   { href: `${base}/#roster`, label: 'Roster' },
   { href: `${base}/#palmares`, label: 'Palmarès' },
   { href: `${base}/actus`, label: 'Actus' },
@@ -16,7 +18,7 @@ const links = [
   <div class="container nav__inner">
     <a href={`${base}/#top`} class="nav__brand" aria-label={`${site.name} — accueil`}>
       <Mark size={34} class="nav__logo" />
-      <span class="nav__name">{site.name}</span>
+      <Wordmark class="nav__name" />
     </a>
 
     <nav class="nav__links" aria-label="Navigation principale">
@@ -47,12 +49,11 @@ const links = [
   .nav__inner { height: var(--nav-h); display: flex; align-items: center; gap: 24px; }
   .nav__brand { display: flex; align-items: center; gap: 11px; }
   .nav__logo { color: var(--violet); }
-  .nav__name {
+  .nav :global(.nav__name) {
     font-family: var(--font-display);
     font-weight: 700;
     font-size: 1.45rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    
   }
   .nav__links { display: flex; gap: 28px; margin-left: auto; }
   .nav__links a {

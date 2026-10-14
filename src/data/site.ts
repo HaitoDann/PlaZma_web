@@ -4,9 +4,9 @@
 
 export const site = {
   name: 'PlaZma',
-  tagline: 'Partis de zéro. Construits pour durer.',
+  tagline: 'L’ambition se construit, la place se gagne.',
   intro:
-    'PlaZma est un club esport League of Legends né de rien, avec un projet pensé sur le long terme : progresser saison après saison pour atteindre, un jour, la Division 2 de la LFL.',
+    'La PlaZma est un club né de la passion de ses créateurs pour l’esport, avec un projet avant tout humain et pensé sur le long terme : le but est d’avancer étape par étape pour atteindre, un jour, la Division 2 de la LFL.',
   game: 'League of Legends',
   // Logo violet officiel du club.
   logo: 'logo-plazma.png',

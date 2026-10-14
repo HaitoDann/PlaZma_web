@@ -3,6 +3,8 @@ import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import PlayerCard from '../components/PlayerCard.astro';
 import NewsCard from '../components/NewsCard.astro';
+import Timeline from '../components/Timeline.astro';
+import Wordmark from '../components/Wordmark.astro';
 import { site, recruitment, socials } from '../data/site';
 import { roster, staff, results, ROLE_ORDER } from '../data/content';
 import { roleLabel } from '../data/roles';
@@ -25,13 +27,25 @@ const seasons = [...new Set(results.map((r) => yearOf(r.season)))];
   <section class="hero">
     <img src={`${base}/img/bg-plazma.webp`} alt="" class="hero__bg" />
     <div class="container hero__inner">
-      <h1 class="hero__title">{site.name}</h1>
+      <h1 class="hero__title"><Wordmark /></h1>
       <p class="hero__tagline">{site.tagline}</p>
       <p class="hero__text">{site.intro}</p>
       <div class="hero__cta">
-        <a href="#roster" class="btn btn--primary">Découvrir l’équipe</a>
-        <a href={`${base}/actus`} class="btn btn--ghost">Actualités</a>
+        <a href="#projet" class="btn btn--primary">Notre histoire</a>
+        <a href="#roster" class="btn btn--ghost">L’équipe</a>
       </div>
+    </div>
+  </section>
+
+  <!-- ======================= LE PROJET ======================= -->
+  <section class="section" id="projet">
+    <div class="container">
+      <div class="s-head" data-reveal>
+        <p class="kicker">Le projet</p>
+        <h2>De zéro à la LFL</h2>
+        <p class="s-head__lede">Une bande d’amis, une association, un roster. Chaque étape compte.</p>
+      </div>
+      <Timeline />
     </div>
   </section>
 
@@ -189,6 +203,8 @@ const seasons = [...new Set(results.map((r) => yearOf(r.season)))];
   }
   .hero__text { font-size: clamp(1rem, 1.4vw, 1.12rem); max-width: 52ch; color: #c9c9d2; }
   .hero__cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
+
+  .s-head__lede { margin: 14px auto 0; max-width: 52ch; }
 
   /* ---------- ROSTER ---------- */
   .cards { display: grid; gap: 14px; justify-content: center; }
