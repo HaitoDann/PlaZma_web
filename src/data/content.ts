@@ -70,7 +70,7 @@ export const roster: Player[] = [
     country: '🇫🇷', nationality: 'France',
   },
   {
-    pseudo: 'Ke1d0', role: 'ADC', slug: 'ke1d0',
+    pseudo: 'Ke1d0', role: 'ADC', slug: 'ke1d0', photo: 'ke1d0.webp',
     country: '🇫🇷', nationality: 'France',
   },
   {

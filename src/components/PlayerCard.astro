@@ -51,11 +51,15 @@ const Tag = href ? 'a' : 'div';
     filter: saturate(.6) brightness(.68); transition: filter .4s ease;
   }
   .pcard.is-link:hover .pcard__bg { filter: saturate(.8) brightness(.82); }
-  .pcard__art::after {
+  .pcard__art::after { z-index: 2;
     content: ''; position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(to top, rgba(10,10,14,.9) 0%, rgba(10,10,14,.15) 45%, rgba(10,10,14,.35) 100%);
+    background: linear-gradient(to top, rgba(10,10,14,.85) 0%, rgba(10,10,14,0) 30%);
   }
-  .pcard__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; z-index: 1; }
+  .pcard__photo {
+    position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 92%; z-index: 1;
+    object-fit: cover; object-position: top center; transition: transform .4s ease;
+  }
+  .pcard.is-link:hover .pcard__photo { transform: scale(1.03); }
   .pcard__ghost { position: absolute; left: 12%; right: 12%; bottom: 0; width: 76%; z-index: 1; opacity: .8; }
   .pcard__id {
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
