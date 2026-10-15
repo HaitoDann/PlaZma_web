@@ -1,6 +1,7 @@
 ---
 /* Fiche joueur (inspiration Mandatory) : identité à gauche, portrait
    détouré à droite, rail de vignettes pour passer d'un joueur à l'autre. */
+import { existsSync } from 'node:fs';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import Mark from '../../components/Mark.astro';
@@ -37,6 +38,8 @@ const socialList = ([
   ['twitch', socials.twitch], ['youtube', socials.youtube],
 ] as const).filter(([, url]) => url);
 const related = (await getNews()).filter((n) => n.data.players.includes(p.slug)).slice(0, 3);
+// Icône de poste : public/img/roles/<poste>.webp (ex. mid.webp)
+const roleIcon = (r: string) => existsSync(`public/img/roles/${r.toLowerCase()}.webp`) ? `${base}/img/roles/${r.toLowerCase()}.webp` : '';
 const pad = (n: number) => String(n).padStart(2, '0');
 ---
 <Base title={`${p.pseudo} · ${site.name}`} description={`${p.pseudo}, ${p.label} de ${site.name}.`}>
@@ -49,7 +52,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
       <div class="pp__grid">
         <div class="pp__id">
-          <p class="pp__role">{p.label}</p>
+          <p class="pp__role">
+            {p.isPlayer && roleIcon(p.short) && <img src={roleIcon(p.short)} alt="" width="34" height="34" class="pp__roleicon" />}
+            {p.label}{p.captain && ' · Capitaine'}
+          </p>
           <div class="pp__name-row">
             <h1 class="pp__name">{p.pseudo}</h1>
           </div>
@@ -132,7 +138,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
     min-height: min(78vh, 760px); padding-block: 32px;
   }
 
-  .pp__role { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .pp__roleicon { width: 34px; height: 34px; }
+  .pp__role { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; letter-spacing: 0.06em; text-transform: uppercase; }
   .pp__name-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 4px 0 14px; }
   .pp__name { font-size: clamp(3.2rem, 7vw, 7rem); line-height: .82; font-weight: 800; letter-spacing: 0; min-width: 0; }
   .pp__badge {

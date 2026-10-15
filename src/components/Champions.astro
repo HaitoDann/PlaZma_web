@@ -1,6 +1,8 @@
 ---
-/* Icônes de champions via CommunityDragon (CDN public des assets LoL).
+/* Icônes de champions : fichier local s'il existe, sinon CommunityDragon.
    Le nom en jeu est converti en identifiant : "Kai'Sa" → "kaisa". */
+import { existsSync } from 'node:fs';
+
 interface Props { names: string[]; }
 const { names } = Astro.props;
 const alias: Record<string, string> = { wukong: 'monkeyking', nunuwillump: 'nunu', renataglasc: 'renata' };
@@ -8,11 +10,16 @@ const key = (n: string) => {
   const k = n.toLowerCase().normalize('NFD').replace(/[^a-z]/g, '');
   return alias[k] ?? k;
 };
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+// Icône locale (public/champions/<id>.webp) si fournie, sinon CommunityDragon.
+const src = (n: string) => existsSync(`public/champions/${key(n)}.webp`)
+  ? `${base}/champions/${key(n)}.webp`
+  : `https://cdn.communitydragon.org/latest/champion/${key(n)}/square`;
 ---
 <ul class="champs">
   {names.map((n) => (
     <li>
-      <img src={`https://cdn.communitydragon.org/latest/champion/${key(n)}/square`} alt="" width="52" height="52" loading="lazy" />
+      <img src={src(n)} alt="" width="52" height="52" loading="lazy" />
       <span>{n}</span>
     </li>
   ))}

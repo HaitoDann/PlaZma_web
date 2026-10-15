@@ -71,6 +71,9 @@ export const roster: Player[] = [
   },
   {
     pseudo: 'Lakraël', role: 'Mid', slug: 'lakrael', captain: true,
+    photo: 'lakrael.webp', age: 23,
+    champions: ['Neeko', 'Syndra', 'Ahri'],
+    bio: 'Lakraël a rejoint le club en août 2025. Il s’est rapidement imposé comme un pilier de stabilité dans les games ; son leadership et son franc-parler l’ont propulsé assez naturellement dans le rôle de capitaine.',
     country: '🇫🇷', nationality: 'France',
   },
   {
