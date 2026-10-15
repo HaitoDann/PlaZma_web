@@ -189,7 +189,7 @@ const matchDate = nextMatch
   .match .textlink { margin-left: auto; }
 
   /* ÉQUIPE */
-  .team { background: linear-gradient(180deg, #1a0c2a 0%, var(--bg-2) 70%); }
+  .team { background: var(--bg-2); }
   .group { font-family: var(--font); font-size: 0.95rem; font-weight: 600; text-transform: none; color: var(--text-2); margin: 0 0 16px; }
   .cards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
   .cards + .group { margin-top: clamp(40px, 5vw, 56px); }
@@ -235,10 +235,7 @@ const matchDate = nextMatch
     .news-grid__lead { grid-row: auto; }
   }
 
-  /* RECRUTEMENT : bandeau violet plein, temps fort de couleur */
-  #recrutement { background: linear-gradient(120deg, #5a1a85 0%, #3a1160 45%, #1d0b33 100%); }
-  #recrutement p { color: #e6d6f2; }
-  #recrutement .btn--primary { background: #fff; color: #2a0c45; }
+  /* RECRUTEMENT */
   .recruit { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 64px; align-items: start; }
   .recruit .title { margin-bottom: 0; }
   .recruit__body { display: grid; gap: 18px; justify-items: start; padding-top: 10px; }
