@@ -1,0 +1,26 @@
+---
+/* Icônes de champions via CommunityDragon (CDN public des assets LoL).
+   Le nom en jeu est converti en identifiant : "Kai'Sa" → "kaisa". */
+interface Props { names: string[]; }
+const { names } = Astro.props;
+const alias: Record<string, string> = { wukong: 'monkeyking', nunuwillump: 'nunu', renataglasc: 'renata' };
+const key = (n: string) => {
+  const k = n.toLowerCase().normalize('NFD').replace(/[^a-z]/g, '');
+  return alias[k] ?? k;
+};
+---
+<ul class="champs">
+  {names.map((n) => (
+    <li>
+      <img src={`https://cdn.communitydragon.org/latest/champion/${key(n)}/square`} alt="" width="52" height="52" loading="lazy" />
+      <span>{n}</span>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .champs { list-style: none; padding: 0; display: flex; gap: 14px; flex-wrap: wrap; }
+  .champs li { display: grid; justify-items: center; gap: 6px; width: 64px; }
+  .champs img { width: 52px; height: 52px; border: 1px solid var(--line); background: var(--surface); }
+  .champs span { font-size: 0.72rem; color: var(--text-2); text-align: center; line-height: 1.2; }
+</style>

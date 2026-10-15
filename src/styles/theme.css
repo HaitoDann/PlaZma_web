@@ -6,12 +6,12 @@
    ========================================================================= */
 
 :root {
-  --bg: #07070a;
-  --bg-2: #0c0c10;
-  --surface: #111116;
-  --surface-2: #17171d;
-  --line: #22222a;
-  --line-soft: #18181e;
+  --bg: #09070d;
+  --bg-2: #100b17;
+  --surface: #161020;
+  --surface-2: #1d1529;
+  --line: #2a2136;
+  --line-soft: #1c1525;
 
   /* Violet PlaZma (extrait du logo) */
   --violet: #a923d6;

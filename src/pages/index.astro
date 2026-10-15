@@ -17,6 +17,10 @@ const news = await getNews();
 const lead = news.find((n) => n.data.featured) ?? news[0];
 const side = news.filter((n) => n !== lead).slice(0, 2);
 
+// Palmarès : ordre chronologique, regroupé par année.
+const palm = [...results].sort((a, b) => a.date.localeCompare(b.date));
+const palmYears = [...new Set(palm.map((r) => r.date.slice(0, 4)))];
+
 const matchDate = nextMatch
   ? new Date(nextMatch.date).toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })
   : '';
@@ -91,15 +95,20 @@ const matchDate = nextMatch
   <section class="section" id="palmares">
     <div class="container">
       <h2 class="title">Palmarès</h2>
-      <ol class="palm">
-        {results.map((r) => (
-          <li class:list={['palm__row', { 'is-title': r.title }]}>
-            <span class="palm__place">{r.placement}</span>
-            <span class="palm__comp">{r.competition}{r.division && <span class="palm__div"> — {r.division}</span>}</span>
-            <span class="palm__season">{r.season}</span>
-          </li>
-        ))}
-      </ol>
+      {palmYears.map((y) => (
+        <section class="palm__year">
+          <h3 class="palm__y num">{y}</h3>
+          <ol class="palm">
+            {palm.filter((r) => r.date.startsWith(y)).map((r) => (
+              <li class:list={['palm__row', { 'is-title': r.title }]}>
+                <span class="palm__place">{r.placement}</span>
+                <span class="palm__comp">{r.competition}{r.division && <span class="palm__div"> — {r.division}</span>}</span>
+                <span class="palm__season">{r.season}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))}
     </div>
   </section>
 
@@ -180,7 +189,7 @@ const matchDate = nextMatch
   .match .textlink { margin-left: auto; }
 
   /* ÉQUIPE */
-  .team { background: var(--bg-2); }
+  .team { background: linear-gradient(180deg, #1a0c2a 0%, var(--bg-2) 70%); }
   .group { font-family: var(--font); font-size: 0.95rem; font-weight: 600; text-transform: none; color: var(--text-2); margin: 0 0 16px; }
   .cards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
   .cards + .group { margin-top: clamp(40px, 5vw, 56px); }
@@ -188,9 +197,17 @@ const matchDate = nextMatch
   @media (max-width: 620px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } }
 
   /* PALMARÈS */
-  .palm { list-style: none; padding: 0; border-top: 1px solid var(--line); }
+  .palm__year {
+    display: grid; grid-template-columns: minmax(120px, 220px) 1fr; gap: 0 clamp(24px, 5vw, 72px);
+    border-top: 1px solid var(--line); padding-top: clamp(20px, 3vw, 32px); margin-bottom: clamp(20px, 3vw, 32px);
+  }
+  .palm__y { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.6rem, 6vw, 4.5rem); line-height: .85; color: var(--violet-soft); }
+  .palm { list-style: none; padding: 0; }
+  .palm__row:first-child { padding-top: 0; }
+  .palm__row:last-child { border-bottom: 0; }
+  @media (max-width: 760px) { .palm__year { grid-template-columns: 1fr; gap: 12px; } }
   .palm__row {
-    display: grid; grid-template-columns: minmax(150px, 260px) 1fr auto; align-items: baseline; gap: 8px 32px;
+    display: grid; grid-template-columns: minmax(130px, 200px) 1fr auto; align-items: baseline; gap: 8px 32px;
     padding-block: clamp(18px, 2.4vw, 26px); border-bottom: 1px solid var(--line);
   }
   .palm__place {
@@ -218,7 +235,10 @@ const matchDate = nextMatch
     .news-grid__lead { grid-row: auto; }
   }
 
-  /* RECRUTEMENT */
+  /* RECRUTEMENT : bandeau violet plein, temps fort de couleur */
+  #recrutement { background: linear-gradient(120deg, #5a1a85 0%, #3a1160 45%, #1d0b33 100%); }
+  #recrutement p { color: #e6d6f2; }
+  #recrutement .btn--primary { background: #fff; color: #2a0c45; }
   .recruit { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 64px; align-items: start; }
   .recruit .title { margin-bottom: 0; }
   .recruit__body { display: grid; gap: 18px; justify-items: start; padding-top: 10px; }

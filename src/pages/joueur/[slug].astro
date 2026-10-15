@@ -5,6 +5,7 @@ import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import Mark from '../../components/Mark.astro';
 import Flag from '../../components/Flag.astro';
+import Champions from '../../components/Champions.astro';
 import NewsCard from '../../components/NewsCard.astro';
 import { roster, staff, ROLE_ORDER, type Player } from '../../data/content';
 import { roleLabel } from '../../data/roles';
@@ -52,12 +53,19 @@ const pad = (n: number) => String(n).padStart(2, '0');
           <div class="pp__name-row">
             <h1 class="pp__name">{p.pseudo}</h1>
           </div>
-          {(p.realName || p.nationality) && (
+          {(p.realName || p.age || p.nationality) && (
             <p class="pp__real">
-              {p.realName}{p.realName && p.nationality && ' · '}{p.nationality && <span class="pp__nat">{p.country && <Flag emoji={p.country} />} {p.nationality}</span>}
+              {p.realName}{p.realName && (p.age || p.nationality) && ' · '}{p.age && `${p.age} ans`}{p.age && p.nationality && ' · '}{p.nationality && <span class="pp__nat">{p.country && <Flag emoji={p.country} />} {p.nationality}</span>}
             </p>
           )}
+          {p.quote && <blockquote class="pp__quote">« {p.quote} »</blockquote>}
           {p.bio && <p class="pp__bio">{p.bio}</p>}
+          {p.champions && p.champions.length > 0 && (
+            <div class="pp__champs">
+              <h2 class="pp__label">Champions favoris</h2>
+              <Champions names={p.champions} />
+            </div>
+          )}
 
           {socialList.length > 0 && (
             <div class="pp__socials">
@@ -133,6 +141,12 @@ const pad = (n: number) => String(n).padStart(2, '0');
   }
   .pp__real { font-size: 0.9rem; color: var(--text-3); margin-bottom: 14px; }
   .pp__nat { display: inline-flex; align-items: center; gap: 8px; }
+  .pp__quote {
+    font-family: var(--font-display); font-weight: 600; font-size: clamp(1.3rem, 2vw, 1.6rem); line-height: 1.2;
+    color: var(--text); border-left: 3px solid var(--violet); padding-left: 16px; margin: 6px 0 18px; max-width: 34ch;
+  }
+  .pp__champs { margin-top: 26px; }
+  .pp__label { font-family: var(--font); font-size: 0.85rem; font-weight: 600; text-transform: none; color: var(--text-2); margin-bottom: 12px; }
   .pp__bio { font-size: 0.95rem; max-width: 58ch; }
   .pp__socials { display: flex; gap: 8px; margin-top: 22px; }
   .pp__socials a {

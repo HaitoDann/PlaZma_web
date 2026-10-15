@@ -36,7 +36,7 @@ const years = [...new Set(events.map((e) => e.date.slice(0, 4)))];
   }
   .tl__y {
     font-family: var(--font-display); font-weight: 800; line-height: .8;
-    font-size: clamp(3.4rem, 8vw, 6.5rem); color: var(--text); letter-spacing: -0.01em;
+    font-size: clamp(3.4rem, 8vw, 6.5rem); color: var(--violet-soft); letter-spacing: -0.01em;
     position: sticky; top: calc(var(--nav-h) + 24px); align-self: start;
   }
   .tl__list { list-style: none; padding: 0; display: grid; gap: clamp(26px, 3.5vw, 38px); }
@@ -53,7 +53,8 @@ const years = [...new Set(events.map((e) => e.date.slice(0, 4)))];
   .tl__goal {
     border-top: 1px solid var(--line); padding-top: clamp(36px, 5vw, 56px);
     font-family: var(--font-display); font-weight: 800; text-transform: uppercase;
-    font-size: clamp(2.6rem, 7vw, 5.5rem); line-height: .9; color: var(--text);
+    font-size: clamp(2.6rem, 7vw, 5.5rem); line-height: .9;
+    background: linear-gradient(90deg, #fff 0%, var(--violet-soft) 60%, var(--violet-bright)); -webkit-background-clip: text; background-clip: text; color: transparent;
   }
   .tl__goal span {
     display: block; font-family: var(--font); font-weight: 500; text-transform: none;

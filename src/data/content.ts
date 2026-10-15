@@ -24,6 +24,9 @@ export interface Player {
   nationality?: string;    // ex. 'France'
   photo?: string;          // fichier dans /public/roster/ (portrait ~3:4)
   bio?: string;
+  age?: number;
+  quote?: string;          // « petit mot », affiché en citation
+  champions?: string[];    // noms en jeu, ex. ['Kai\'Sa', 'Lee Sin'] → icônes auto
   setup?: { label: string; value: string }[];
   socials?: SocialLinks;
   captain?: boolean;
@@ -42,6 +45,7 @@ export interface StaffMember {
 }
 
 export interface Result {
+  date: string;            // AAAA-MM-JJ, sert au tri chronologique
   season: string;          // ex. '2025', 'Saison 22'
   competition: string;     // ex. 'OUAT', 'Momen’cup'
   division?: string;       // ex. 'Division 5'
@@ -87,9 +91,9 @@ export const staff: StaffMember[] = [
 
 /* ---- PALMARÈS (historique sportif, du plus marquant au plus ancien) ---- */
 export const results: Result[] = [
-  { season: 'Mars 2026', competition: 'Momen’cup', placement: 'Vainqueur', title: true },
-  { season: 'Saison 22 · Juillet 2026', competition: 'OUAT', division: 'Division 5', placement: 'Top 16' },
-  { season: 'Saison 21 · Avril 2026', competition: 'OUAT', division: 'Division 7', placement: 'Top 8' },
+  { date: '2026-03-29', season: 'Mars 2026', competition: 'Momen’cup', placement: 'Vainqueur', title: true },
+  { date: '2026-07-01', season: 'Saison 22 · Juillet 2026', competition: 'OUAT', division: 'Division 5', placement: 'Top 16' },
+  { date: '2026-04-01', season: 'Saison 21 · Avril 2026', competition: 'OUAT', division: 'Division 7', placement: 'Top 8' },
 ];
 
 /* Les actus sont dans src/content/actus/ (un fichier .md par article). */

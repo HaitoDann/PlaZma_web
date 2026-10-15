@@ -48,9 +48,9 @@ const Tag = href ? 'a' : 'div';
   .pcard__art { position: relative; aspect-ratio: 3 / 4; overflow: hidden; background: var(--bg-2); }
   .pcard__bg {
     position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-    filter: saturate(.6) brightness(.68); transition: filter .4s ease;
+    filter: saturate(.85) brightness(.8); transition: filter .4s ease;
   }
-  .pcard.is-link:hover .pcard__bg { filter: saturate(.8) brightness(.82); }
+  .pcard.is-link:hover .pcard__bg { filter: saturate(1) brightness(.95); }
   .pcard__art::after { z-index: 2;
     content: ''; position: absolute; inset: 0; pointer-events: none;
     background: linear-gradient(to top, rgba(10,10,14,.85) 0%, rgba(10,10,14,0) 30%);
