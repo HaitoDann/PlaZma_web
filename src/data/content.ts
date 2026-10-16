@@ -37,6 +37,8 @@ export interface StaffMember {
   role: string;
   slug: string;
   bio?: string;
+  age?: number;
+  quote?: string;
   socials?: SocialLinks;
   realName?: string;
   country?: string;
@@ -88,7 +90,7 @@ export const roster: Player[] = [
 
 /* ---- STAFF ---- */
 export const staff: StaffMember[] = [
-  { pseudo: 'Haito', role: 'CEO · General Manager', slug: 'haito', country: '🇫🇷', nationality: 'France' },
+  { pseudo: 'Haito', role: 'CEO · General Manager', slug: 'haito', country: '🇫🇷', nationality: 'France', photo: 'haito.webp', age: 25 },
   { pseudo: 'Kledou', role: 'Head Coach', slug: 'kledou', country: '🇫🇷', nationality: 'France' },
 ];
 
