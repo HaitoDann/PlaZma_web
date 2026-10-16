@@ -90,7 +90,8 @@ export const roster: Player[] = [
 
 /* ---- STAFF ---- */
 export const staff: StaffMember[] = [
-  { pseudo: 'Haito', role: 'CEO · General Manager', slug: 'haito', country: '🇫🇷', nationality: 'France', photo: 'haito.webp', age: 25 },
+  { pseudo: 'Haito', role: 'CEO · General Manager', slug: 'haito', country: '🇫🇷', nationality: 'France', photo: 'haito.webp', age: 25,
+    bio: 'Haito fonde la PlaZma en 2018 avec ses amis, puis crée l’association en 2022. Longtemps toplaner de l’équipe, il passe en 2025 du rôle de joueur à celui de gérant, avec une ambition : bâtir un vrai projet pour aller chercher le haut niveau sur League of Legends. Au quotidien, il gère l’équipe, le recrutement et l’organisation. Sa priorité reste l’humain ; son objectif, disputer le Nexus Tour pour le gagner et accéder à la Division 2 de la LFL.' },
   { pseudo: 'Kledou', role: 'Head Coach', slug: 'kledou', country: '🇫🇷', nationality: 'France' },
 ];
 
