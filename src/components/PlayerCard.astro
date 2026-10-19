@@ -42,6 +42,7 @@ const Tag = href ? 'a' : 'div';
   .pcard {
     display: flex; flex-direction: column;
     background: var(--surface); border: 1px solid var(--line);
+    clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
     transition: transform .3s ease, border-color .3s ease;
   }
   .pcard.is-link:hover { transform: translateY(-3px); border-color: #3b3346; }

@@ -115,6 +115,17 @@ strong { color: var(--text); font-weight: 600; }
 .btn svg { width: 17px; height: 17px; }
 .btn--primary { background: var(--violet); color: #fff; }
 .btn--primary:hover { background: var(--violet-bright); }
+/* Bouton secondaire : bordure violette qui suit le biseau (fond violet +
+   intérieur sombre découpé de la même façon, 1.5px plus petit). */
+.btn--ghost { position: relative; isolation: isolate; background: var(--violet); color: var(--text); }
+.btn--ghost::before {
+  content: ''; position: absolute; inset: 1.5px; z-index: -1; background: var(--bg);
+  clip-path: polygon(0 0, calc(100% - 9.4px) 0, 100% 9.4px, 100% 100%, 9.4px 100%, 0 calc(100% - 9.4px));
+  transition: background .15s ease;
+}
+.btn--ghost:hover::before { background: rgba(28, 10, 36, .92); }
+.btn--ghost svg { transition: transform .15s ease; }
+.btn--ghost:hover svg { transform: translateX(3px); }
 
 .textlink {
   display: inline-flex; align-items: center; gap: 8px;
@@ -141,3 +152,15 @@ strong { color: var(--text); font-weight: 600; }
 }
 .skip-link:focus { top: 14px; }
 
+
+/* Grain léger sur tout le site */
+body::after {
+  content: ''; position: fixed; inset: -50%; z-index: 300; pointer-events: none;
+  opacity: .07; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Apparition au scroll (script dans Base.astro) */
+.js [data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+.js [data-reveal].is-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .js [data-reveal] { opacity: 1; transform: none; } }

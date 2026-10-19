@@ -40,6 +40,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Archivo+Black&family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,600&display=swap"
       rel="stylesheet"
     />
+    <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
   <body>
     <a href="#main" class="skip-link">Aller au contenu</a>
@@ -49,6 +50,32 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <slot />
     </main>
     <Footer />
+
+    <script>
+      // Apparition au scroll + compteurs animés.
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const count = (el: HTMLElement) => {
+        const end = Number(el.dataset.count);
+        if (reduce || !end) return;
+        const t0 = performance.now();
+        const step = (t: number) => {
+          const k = Math.min((t - t0) / 1200, 1);
+          el.textContent = String(Math.round(end * (1 - Math.pow(1 - k, 3))));
+          if (k < 1) requestAnimationFrame(step);
+        };
+        el.textContent = '0';
+        requestAnimationFrame(step);
+      };
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          e.target.classList.add('is-in');
+          e.target.querySelectorAll<HTMLElement>('[data-count]').forEach(count);
+          io.unobserve(e.target);
+        }
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+    </script>
 
   </body>
 </html>

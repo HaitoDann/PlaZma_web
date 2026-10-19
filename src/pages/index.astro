@@ -5,6 +5,7 @@ import PlayerCard from '../components/PlayerCard.astro';
 import NewsCard from '../components/NewsCard.astro';
 import Timeline from '../components/Timeline.astro';
 import Wordmark from '../components/Wordmark.astro';
+import Mark from '../components/Mark.astro';
 import { site, recruitment, socials, nextMatch } from '../data/site';
 import { roster, staff, results, ROLE_ORDER } from '../data/content';
 import { getNews } from '../data/news';
@@ -21,6 +22,20 @@ const side = news.filter((n) => n !== lead).slice(0, 2);
 const palm = [...results].sort((a, b) => a.date.localeCompare(b.date));
 const palmYears = [...new Set(palm.map((r) => r.date.slice(0, 4)))];
 
+// Mise en gras de l'objectif dans l'intro.
+const GOAL = 'la Division 2 de la LFL';
+const [introA, introB] = site.intro.includes(GOAL) ? site.intro.split(GOAL) : [site.intro, ''];
+
+// Chiffres clés du palmarès (compteurs animés).
+const titles = results.filter((r) => r.title).length;
+const divisions = results.map((r) => Number(r.division?.match(/\d+/)?.[0])).filter(Boolean);
+const bestDiv = divisions.length ? Math.min(...divisions) : 0;
+const stats = [
+  { value: results.length, label: 'Compétitions disputées' },
+  { value: titles, label: titles > 1 ? 'Titres remportés' : 'Titre remporté', gold: true },
+  ...(bestDiv ? [{ value: bestDiv, prefix: 'D', label: 'Meilleure division atteinte' }] : []),
+];
+
 const matchDate = nextMatch
   ? new Date(nextMatch.date).toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })
   : '';
@@ -30,12 +45,13 @@ const matchDate = nextMatch
   <section class="hero">
     <img src={`${base}/img/bg-plazma.webp`} alt="" class="hero__bg" />
     <div class="container hero__inner">
-      <h1 class="hero__title"><Wordmark /></h1>
+      <Mark class="hero__mark" size="100%" title="" />
+      <h1 class="hero__title glitch" data-text={site.name}><Wordmark /></h1>
       <p class="hero__tagline">{site.tagline}</p>
-      <p class="hero__text">{site.intro}</p>
+      <p class="hero__text">{introA}{introB !== '' && <strong>{GOAL}</strong>}{introB}</p>
       <div class="hero__cta">
         <a href="#projet" class="btn btn--primary">Notre histoire</a>
-        <a href="#roster" class="textlink">Voir l’équipe <Icon name="arrow" /></a>
+        <a href="#roster" class="btn btn--ghost">Voir l’équipe <Icon name="arrow" /></a>
       </div>
     </div>
 
@@ -54,7 +70,7 @@ const matchDate = nextMatch
   <!-- LE PROJET -->
   <section class="section" id="projet">
     <div class="container">
-      <h2 class="title">De zéro à la Division 2 de LFL</h2>
+      <h2 class="title" data-reveal>De zéro à la Division 2 de LFL</h2>
       <Timeline />
     </div>
   </section>
@@ -62,12 +78,12 @@ const matchDate = nextMatch
   <!-- ÉQUIPE -->
   <section class="section team" id="roster">
     <div class="container">
-      <h2 class="title">L’équipe</h2>
+      <h2 class="title" data-reveal>L’équipe</h2>
 
       <h3 class="group">Joueurs</h3>
       <ul class="cards">
         {orderedRoster.map((p) => (
-          <li>
+          <li data-reveal>
             <PlayerCard
               pseudo={p.pseudo} sub={p.role} realName={p.realName} country={p.country}
               photo={p.photo} href={`${base}/joueur/${p.slug}`} captain={p.captain}
@@ -81,7 +97,7 @@ const matchDate = nextMatch
           <h3 class="group">Staff</h3>
           <ul class="cards">
             {staff.map((s) => (
-              <li>
+              <li data-reveal>
                 <PlayerCard pseudo={s.pseudo} sub={s.role} realName={s.realName} country={s.country} photo={s.photo} href={`${base}/joueur/${s.slug}`} />
               </li>
             ))}
@@ -94,9 +110,17 @@ const matchDate = nextMatch
   <!-- PALMARÈS -->
   <section class="section" id="palmares">
     <div class="container">
-      <h2 class="title">Palmarès</h2>
+      <h2 class="title" data-reveal>Palmarès</h2>
+      <ul class="stats">
+        {stats.map((st) => (
+          <li class:list={['stat', 'cut', { 'is-gold': st.gold }]} data-reveal>
+            <span class="stat__value num">{st.prefix}<span data-count={st.value}>{st.value}</span></span>
+            <span class="stat__label">{st.label}</span>
+          </li>
+        ))}
+      </ul>
       {palmYears.map((y) => (
-        <section class="palm__year">
+        <section class="palm__year" data-reveal>
           <h3 class="palm__y num">{y}</h3>
           <ol class="palm">
             {palm.filter((r) => r.date.startsWith(y)).map((r) => (
@@ -121,8 +145,8 @@ const matchDate = nextMatch
           <a href={`${base}/actus`} class="textlink">Toutes les actus <Icon name="arrow" /></a>
         </div>
         <div class:list={['news-grid', { 'is-single': !side.length }]}>
-          <div class="news-grid__lead"><NewsCard entry={lead} size="lg" /></div>
-          {side.map((n) => <div><NewsCard entry={n} /></div>)}
+          <div class="news-grid__lead" data-reveal><NewsCard entry={lead} size="lg" /></div>
+          {side.map((n) => <div data-reveal><NewsCard entry={n} /></div>)}
         </div>
       </div>
     </section>
@@ -130,7 +154,7 @@ const matchDate = nextMatch
 
   <!-- RECRUTEMENT -->
   <section class="section" id="recrutement">
-    <div class="container recruit">
+    <div class="container recruit" data-reveal>
       <h2 class="title">Recrutement {recruitment.open ? 'ouvert' : 'fermé'}</h2>
       <div class="recruit__body">
         <p>{recruitment.open ? recruitment.intro : recruitment.closedIntro}</p>
@@ -171,8 +195,42 @@ const matchDate = nextMatch
     background: linear-gradient(90deg, rgba(7,7,10,.92) 0%, rgba(7,7,10,.6) 50%, rgba(7,7,10,.25) 100%),
                 linear-gradient(to top, var(--bg) 0%, transparent 30%);
   }
-  .hero__inner { position: relative; z-index: 2; padding-block: clamp(64px, 9vw, 112px); }
+  .hero__inner { position: relative; z-index: 2; isolation: isolate; padding-block: clamp(64px, 9vw, 112px); }
   .hero__title { font-size: clamp(3.2rem, 11vw, 8.5rem); margin: 0 0 18px; line-height: .85; }
+  .hero__text strong { font-weight: 700; color: #fff; }
+
+  /* Monogramme en filigrane, à moitié caché derrière le texte */
+  .hero__inner :global(.hero__mark) {
+    position: absolute; z-index: -1; pointer-events: none;
+    top: 50%; left: clamp(-40px, 2vw, 40px); width: min(760px, 90vw); height: auto;
+    transform: translateY(-50%) rotate(-4deg);
+    color: var(--violet-bright); opacity: .16;
+    -webkit-mask-image: linear-gradient(100deg, #000 30%, transparent 85%);
+            mask-image: linear-gradient(100deg, #000 30%, transparent 85%);
+  }
+
+  /* Effet glitch : deux copies décalées du titre, découpées en tranches */
+  .glitch { position: relative; display: inline-block; }
+  .glitch::before, .glitch::after {
+    content: attr(data-text); position: absolute; inset: 0;
+    font-family: 'Archivo Black', var(--font-display); font-weight: 400; text-transform: none;
+    letter-spacing: -0.01em; white-space: nowrap; pointer-events: none;
+  }
+  .glitch::before { color: var(--violet-bright); animation: glitch-a 3.2s infinite steps(1); }
+  .glitch::after { color: #3ce0ff; animation: glitch-b 3.2s infinite steps(1); mix-blend-mode: screen; }
+  @keyframes glitch-a {
+    0%, 86%, 100% { clip-path: inset(0 0 100% 0); transform: none; }
+    88% { clip-path: inset(10% 0 62% 0); transform: translate(-6px, 0); }
+    91% { clip-path: inset(55% 0 20% 0); transform: translate(5px, 0); }
+    94% { clip-path: inset(30% 0 45% 0); transform: translate(-3px, 0); }
+  }
+  @keyframes glitch-b {
+    0%, 87%, 100% { clip-path: inset(0 0 100% 0); transform: none; }
+    89% { clip-path: inset(70% 0 8% 0); transform: translate(6px, 0); }
+    92% { clip-path: inset(20% 0 60% 0); transform: translate(-5px, 0); }
+    95% { clip-path: inset(45% 0 35% 0); transform: translate(3px, 0); }
+  }
+  @media (prefers-reduced-motion: reduce) { .glitch::before, .glitch::after { display: none; } }
   .hero__tagline {
     font-family: var(--font-display); font-weight: 600; text-transform: uppercase;
     font-size: clamp(1.3rem, 2.4vw, 1.8rem); letter-spacing: 0.02em; color: var(--text); margin-bottom: 14px;
@@ -197,6 +255,17 @@ const matchDate = nextMatch
   @media (max-width: 620px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } }
 
   /* PALMARÈS */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: clamp(40px, 5vw, 64px); }
+  .stat {
+    display: grid; gap: 8px; padding: clamp(22px, 3vw, 32px);
+    background: linear-gradient(135deg, var(--surface-2), var(--surface) 70%);
+    border-left: 3px solid var(--violet);
+  }
+  .stat.is-gold { border-left-color: var(--gold); }
+  .stat__value { font-family: var(--font-display); font-weight: 800; font-size: clamp(3.4rem, 7vw, 5.2rem); line-height: .85; color: var(--text); }
+  .stat.is-gold .stat__value { color: var(--gold); }
+  .stat__label { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
+
   .palm__year {
     display: grid; grid-template-columns: minmax(120px, 220px) 1fr; gap: 0 clamp(24px, 5vw, 72px);
     border-top: 1px solid var(--line); padding-top: clamp(20px, 3vw, 32px); margin-bottom: clamp(20px, 3vw, 32px);

@@ -1,35 +1,65 @@
 ---
-/* Histoire du club, en format éditorial : une colonne date, une colonne
-   récit, séparées par de simples filets. Pas de cartes ni de pictos. */
+/* Histoire du club : frise verticale. Une ligne violette se remplit au
+   scroll et allume les jalons (losanges biseautés) au fur et à mesure. */
 import { story, storyGoal } from '../data/content';
 
 const events = [...story].sort((a, b) => a.date.localeCompare(b.date));
 const years = [...new Set(events.map((e) => e.date.slice(0, 4)))];
 ---
-<div class="tl">
+<div class="tl" data-timeline>
+  <div class="tl__rail" aria-hidden="true"><div class="tl__fill"></div></div>
   {years.map((y) => (
     <section class="tl__year">
       <h3 class="tl__y num">{y}</h3>
       <ol class="tl__list">
         {events.filter((e) => e.date.startsWith(y)).map((e) => (
-          <li class:list={['tl__item', { 'is-title': e.type === 'titre', 'is-upcoming': e.upcoming }]}>
-            <time class="tl__when" datetime={e.date}>{e.when}</time>
-            <div>
-              <h4 class="tl__title">{e.title}</h4>
-              <p class="tl__text">{e.text}</p>
-            </div>
+          <li class:list={['tl__item', { 'is-title': e.type === 'titre', 'is-upcoming': e.upcoming }]} data-reveal>
+            <h4 class="tl__title">{e.title}</h4>
+            <p class="tl__text">{e.text}</p>
           </li>
         ))}
       </ol>
     </section>
   ))}
-  <p class="tl__goal">
+  <p class="tl__goal tl__item" data-reveal>
     <span>Objectif</span>
     {storyGoal.title}
   </p>
 </div>
 
+<script>
+  for (const tl of document.querySelectorAll<HTMLElement>('[data-timeline]')) {
+    const items = [...tl.querySelectorAll<HTMLElement>('.tl__item')];
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const r = tl.getBoundingClientRect();
+      const line = innerHeight * 0.6;               // point de lecture : 60 % de l'écran
+      const filled = Math.max(0, Math.min(r.height, line - r.top));
+      tl.style.setProperty('--fill', `${filled}px`);
+      for (const it of items) {
+        it.classList.toggle('is-lit', it.getBoundingClientRect().top - r.top + 14 <= filled);
+      }
+    };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', onScroll);
+    update();
+  }
+</script>
+
 <style>
+  .tl { --rail-x: 7px; --fill: 0px; position: relative; padding-left: 44px; }
+  .tl__rail {
+    position: absolute; left: var(--rail-x); top: 0; bottom: 0; width: 2px; background: var(--line);
+  }
+  .tl__fill {
+    width: 100%; height: var(--fill);
+    background: linear-gradient(to bottom, var(--violet), var(--violet-bright));
+    box-shadow: 0 0 12px 1px var(--violet), 0 0 2px var(--violet-bright);
+    transition: height .12s linear;
+  }
+
   .tl__year {
     display: grid; grid-template-columns: minmax(120px, 220px) 1fr; gap: 0 clamp(24px, 5vw, 72px);
     border-top: 1px solid var(--line); padding-block: clamp(28px, 4vw, 44px);
@@ -40,15 +70,30 @@ const years = [...new Set(events.map((e) => e.date.slice(0, 4)))];
     position: sticky; top: calc(var(--nav-h) + 24px); align-self: start;
   }
   .tl__list { list-style: none; padding: 0; display: grid; gap: clamp(26px, 3.5vw, 38px); }
-  .tl__item { display: grid; grid-template-columns: 130px 1fr; gap: 20px; }
-  .tl__when { font-size: 0.85rem; color: var(--text-3); padding-top: 4px; }
+
+  /* Jalon : losange biseauté posé sur la ligne (positionné par rapport à .tl) */
+  .tl__item::before {
+    content: ''; position: absolute; left: calc(var(--rail-x) - 7px); margin-top: 4px;
+    width: 16px; height: 16px; background: var(--surface-2); border: 0;
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    box-shadow: inset 0 0 0 2px var(--line);
+    transition: background .3s ease, transform .3s ease;
+  }
+  .tl__item.is-lit::before { background: var(--violet-bright); transform: scale(1.15); }
+  .tl__item.is-title.is-lit::before { background: var(--gold); }
+
+  /* Fondu seul : un transform ferait des items le repère des jalons. */
+  :global(.js) .tl__item[data-reveal] { transform: none; }
+
   .tl__title {
     font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
     font-size: clamp(1.35rem, 2.2vw, 1.7rem); line-height: 1.05; margin-bottom: 8px;
+    transition: color .3s ease;
   }
+  .tl__item:not(.is-lit) .tl__title { color: var(--text-2); }
   .tl__text { max-width: 62ch; }
-  .tl__item.is-title .tl__title { color: var(--gold); }
-  .tl__item.is-upcoming .tl__title { color: var(--violet-soft); }
+  .tl__item.is-title.is-lit .tl__title { color: var(--gold); }
+  .tl__item.is-upcoming.is-lit .tl__title { color: var(--violet-soft); }
 
   .tl__goal {
     border-top: 1px solid var(--line); padding-top: clamp(36px, 5vw, 56px);
@@ -62,8 +107,8 @@ const years = [...new Set(events.map((e) => e.date.slice(0, 4)))];
   }
 
   @media (max-width: 760px) {
+    .tl { padding-left: 32px; }
     .tl__year { grid-template-columns: 1fr; gap: 18px; }
     .tl__y { position: static; }
-    .tl__item { grid-template-columns: 1fr; gap: 4px; }
   }
 </style>
