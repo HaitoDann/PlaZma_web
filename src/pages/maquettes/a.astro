@@ -1,0 +1,125 @@
+---
+/* Maquette A — « Magazine » : fond papier, typo éditoriale, photos plein cadre (placeholders). */
+import { site } from '../../data/site';
+import { roster, staff, results, news, ROLE_ORDER } from '../../data/content';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const players = [...roster].sort((a, b) => ROLE_ORDER.indexOf(a.role) - ROLE_ORDER.indexOf(b.role));
+const fmt = (d: string) => new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<html lang="fr">
+<head>
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PlaZma — Maquette A</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+:root{--paper:#F3F1EC;--ink:#121212;--mute:#6d6a64;--line:#d9d5cc;--v:#5B2BD6;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.5 'Schibsted Grotesk',sans-serif}
+a{color:inherit;text-decoration:none}
+.w{max-width:1320px;margin:0 auto;padding:0 32px}
+.ph{background:repeating-linear-gradient(135deg,#e2ded5 0 2px,#ebe8e1 2px 14px);display:flex;align-items:flex-end;padding:14px;color:var(--mute);font-size:12px;letter-spacing:.04em}
+header{border-bottom:1px solid var(--ink)}
+header .w{display:flex;align-items:center;justify-content:space-between;height:72px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:22px;letter-spacing:-.02em}
+.logo img{height:28px}
+nav{display:flex;gap:32px;font-weight:500;font-size:15px}
+nav a:hover{color:var(--v)}
+.join{background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px}
+.hero{padding:56px 0 0}
+.hero h1{font-weight:900;font-size:clamp(72px,15vw,232px);line-height:.82;letter-spacing:-.06em}
+.hero h1 em{font-family:'Instrument Serif',serif;font-weight:400;font-style:italic;letter-spacing:-.02em;color:var(--v)}
+.hero__row{display:grid;grid-template-columns:1fr 2fr;gap:32px;margin-top:40px;align-items:end}
+.hero__row p{font-size:20px;max-width:30ch}
+.hero__img{aspect-ratio:16/8;margin-top:40px}
+.sec{padding:120px 0;border-top:1px solid var(--line)}
+.sh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:48px}
+.sh h2{font-weight:900;font-size:clamp(40px,6vw,88px);letter-spacing:-.04em;line-height:.9}
+.sh h2 em{font-family:'Instrument Serif',serif;font-weight:400}
+.sh a{font-weight:700;border-bottom:2px solid currentColor}
+.players{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.p .ph{aspect-ratio:3/4}
+.p:hover .ph{background:var(--v);color:#fff}
+.p h3{font-size:26px;font-weight:900;letter-spacing:-.03em;margin-top:14px}
+.p span{color:var(--mute);font-size:14px}
+.staff{margin-top:40px;color:var(--mute)}.staff b{color:var(--ink)}
+.res{display:grid;grid-template-columns:1.2fr 1fr;gap:64px}
+.win{background:var(--v);color:#fff;padding:40px;display:flex;flex-direction:column;justify-content:space-between;min-height:360px}
+.win small{font-size:14px;opacity:.8}
+.win strong{font-size:clamp(48px,6vw,96px);font-weight:900;letter-spacing:-.05em;line-height:.9}
+.win em{font-family:'Instrument Serif',serif;font-size:32px}
+.list li{list-style:none;display:grid;grid-template-columns:110px 1fr auto;padding:22px 0;border-bottom:1px solid var(--line);font-size:18px}
+.list li span:first-child{color:var(--mute)}
+.list b{font-weight:700}
+.news{display:grid;grid-template-columns:2fr 1fr 1fr;gap:24px}
+.news .ph{aspect-ratio:4/3;margin-bottom:16px}
+.tag{font-size:13px;font-weight:700;color:var(--v);text-transform:uppercase;letter-spacing:.06em}
+.news h3{font-size:26px;letter-spacing:-.02em;line-height:1.15;margin:6px 0}
+.news article:not(:first-child) h3{font-size:20px}
+.news p{color:var(--mute)}
+.cta{background:var(--ink);color:var(--paper);padding:120px 0}
+.cta h2{font-size:clamp(48px,9vw,140px);font-weight:900;letter-spacing:-.05em;line-height:.88}
+.cta h2 em{font-family:'Instrument Serif',serif;font-weight:400;color:#B9A2FF}
+.cta p{margin-top:32px;max-width:48ch;color:#b8b4ab;font-size:19px}
+footer{background:var(--ink);color:#8a867d;border-top:1px solid #2a2a2a;padding:28px 0;font-size:14px}
+@media(max-width:900px){nav{display:none}.hero__row,.res,.news{grid-template-columns:1fr}.players{grid-template-columns:repeat(2,1fr)}.w{padding:0 16px}}
+</style>
+</head>
+<body>
+<header><div class="w">
+  <a class="logo" href="#"><img src={`${base}/logo_plazma.png`} alt="" />PlaZma</a>
+  <nav><a href="#roster">Équipe</a><a href="#palmares">Palmarès</a><a href="#actus">Actus</a><a href="#club">Le club</a></nav>
+  <a class="join" href="#club">Rejoindre</a>
+</div></header>
+
+<section class="hero"><div class="w">
+  <h1>Pla<em>Z</em>ma</h1>
+  <div class="hero__row">
+    <p>Club League of Legends. Cinq amis de lycée en 2018, une association aujourd’hui.</p>
+    <p style="color:var(--mute);font-size:16px;justify-self:end">OUAT · Saison 23 en cours</p>
+  </div>
+  <div class="ph hero__img">Photo d’équipe plein cadre — à remplacer</div>
+</div></section>
+
+<section class="sec" id="roster"><div class="w">
+  <div class="sh"><h2>L’équipe <em>saison 23</em></h2><a href="#">Tout le roster</a></div>
+  <div class="players">
+    {players.map((p) => (
+      <a class="p" href={`${base}/joueur/${p.slug}`}>
+        <div class="ph">Portrait</div>
+        <h3>{p.pseudo}</h3><span>{p.role}</span>
+      </a>
+    ))}
+  </div>
+  <p class="staff">{staff.map((s, i) => <>{i ? ' · ' : ''}<b>{s.pseudo}</b> {s.role}</>)}</p>
+</div></section>
+
+<section class="sec" id="palmares"><div class="w">
+  <div class="sh"><h2>Palmarès</h2></div>
+  <div class="res">
+    {results.filter(r => r.title).slice(0,1).map((r) => (
+      <div class="win"><small>{r.season}</small><div><em>Vainqueur</em><br /><strong>{r.competition}</strong></div></div>
+    ))}
+    <ul class="list">
+      {results.map((r) => (
+        <li><span>{r.season}</span><span>{r.competition}{r.division && ` — ${r.division}`}</span><b>{r.placement}</b></li>
+      ))}
+    </ul>
+  </div>
+</div></section>
+
+<section class="sec" id="actus"><div class="w">
+  <div class="sh"><h2>Actus</h2><a href="#">Toutes les actus</a></div>
+  <div class="news">
+    {[...news, { date: '2026-09-02', title: 'Kledou prend la tête du coaching', excerpt: 'Article placeholder.', tag: 'Club' }, { date: '2026-06-20', title: 'Retour sur la victoire à la Momen’cup', excerpt: 'Article placeholder.', tag: 'Compétition' }].map((n) => (
+      <article><div class="ph">Visuel</div><span class="tag">{n.tag}</span><h3>{n.title}</h3><p>{fmt(n.date)}</p></article>
+    ))}
+  </div>
+</div></section>
+
+<section class="cta" id="club"><div class="w">
+  <h2>Objectif <em>Division 2</em> de la LFL.</h2>
+  <p>Pas en une saison. Étape par étape, avec les mêmes personnes. Le recrutement est fermé pour l’instant, on annonce les ouvertures ici et sur Discord.</p>
+</div></section>
+<footer><div class="w">© 2026 PlaZma — Association loi 1901</div></footer>
+</body></html>
