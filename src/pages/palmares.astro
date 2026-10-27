@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import Palmares from '../components/Palmares.astro';
+import { site } from '../data/site';
+---
+<Base title={`Palmarès · ${site.name}`}>
+  <header class="page-head container">
+    <h1>Palmarès</h1>
+    <p>Tous les résultats du club, du plus récent au plus ancien.</p>
+  </header>
+  <section class="section">
+    <div class="container"><Palmares /></div>
+  </section>
+</Base>

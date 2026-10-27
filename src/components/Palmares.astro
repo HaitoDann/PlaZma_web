@@ -1,0 +1,86 @@
+---
+/* Palmarès : chiffres clés (compteurs animés) + résultats par année. */
+import { results } from '../data/content';
+
+interface Props { compact?: boolean; }   // compact = chiffres seuls (accueil)
+const { compact = false } = Astro.props;
+
+const palm = [...results].sort((a, b) => b.date.localeCompare(a.date));
+const palmYears = [...new Set(palm.map((r) => r.date.slice(0, 4)))];
+const titles = results.filter((r) => r.title).length;
+const divisions = results.map((r) => Number(r.division?.match(/\d+/)?.[0])).filter(Boolean);
+const bestDiv = divisions.length ? Math.min(...divisions) : 0;
+const stats = [
+  { value: results.length, label: 'Compétitions disputées' },
+  { value: titles, label: titles > 1 ? 'Titres remportés' : 'Titre remporté', accent: true },
+  ...(bestDiv ? [{ value: bestDiv, prefix: 'D', label: 'Meilleure division' }] : []),
+];
+---
+<ul class="stats" data-reveal>
+  {stats.map((st) => (
+    <li class:list={['stat', { 'is-accent': st.accent }]}>
+      <span class="stat__value num">{st.prefix}<span data-count={st.value}>{st.value}</span></span>
+      <span class="stat__label">{st.label}</span>
+    </li>
+  ))}
+</ul>
+
+{!compact && palmYears.map((y) => (
+  <section class="palm__year" data-reveal>
+    <h2 class="palm__y num">{y}</h2>
+    <ol class="palm">
+      {palm.filter((r) => r.date.startsWith(y)).map((r) => (
+        <li class:list={['palm__row', { 'is-title': r.title }]}>
+          <span class="palm__place">{r.placement}</span>
+          <span class="palm__comp">{r.competition}{r.division && <span class="palm__div"> — {r.division}</span>}</span>
+          <span class="palm__season">{r.season}</span>
+        </li>
+      ))}
+    </ol>
+  </section>
+))}
+
+<style>
+  .stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+    margin-bottom: clamp(40px, 5vw, 64px);
+  }
+  .stat {
+    display: flex; flex-direction: column; justify-content: space-between; gap: 32px;
+    padding: clamp(20px, 2.6vw, 28px); background: var(--surface); min-height: 190px;
+  }
+  .stat + .stat { border-left: 1px solid var(--line); }
+  .stat.is-accent { background: linear-gradient(160deg, var(--violet-soft), var(--surface) 75%); }
+  .stat__value {
+    font-family: var(--font-display); font-weight: 900; font-stretch: 125%;
+    font-size: clamp(3.6rem, 7vw, 5.6rem); line-height: .8; letter-spacing: -0.03em;
+  }
+  .stat.is-accent .stat__value { color: var(--violet-ink); }
+  .stat__label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+  .stat.is-accent .stat__label { display: flex; align-items: center; gap: 8px; color: var(--violet); }
+  @media (max-width: 640px) { .stat + .stat { border-left: 0; border-top: 1px solid var(--line); } }
+
+  .palm__year {
+    display: grid; grid-template-columns: minmax(120px, 260px) 1fr; gap: 0 clamp(24px, 5vw, 72px);
+    border-top: 1px solid var(--line); padding-top: clamp(16px, 2vw, 24px); margin-bottom: clamp(24px, 3vw, 40px);
+  }
+  .palm__y { font-size: clamp(2.6rem, 6vw, 4.8rem); line-height: .8; }
+  .palm { list-style: none; padding: 0; }
+  .palm__row {
+    display: grid; grid-template-columns: minmax(150px, 280px) 1fr auto; align-items: baseline; gap: 8px 32px;
+    padding-block: clamp(14px, 2vw, 20px); border-bottom: 1px solid var(--line-soft);
+  }
+  .palm__row:first-child { padding-top: 0; }
+  .palm__row:last-child { border-bottom: 0; }
+  .palm__place {
+    font-family: var(--font-display); font-weight: 800; font-stretch: 118%; text-transform: uppercase;
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem); line-height: 1; letter-spacing: -0.02em;
+  }
+  .palm__row.is-title .palm__place { color: var(--gold); }
+  .palm__comp { font-size: 1.05rem; font-weight: 600; }
+  .palm__div { font-weight: 400; color: var(--text-2); }
+  .palm__season { font-size: 0.88rem; color: var(--text-3); text-align: right; }
+  @media (max-width: 760px) { .palm__year { grid-template-columns: 1fr; gap: 16px; } }
+  @media (max-width: 640px) { .palm__row { grid-template-columns: 1fr; gap: 4px; } .palm__season { text-align: left; } }
+</style>

@@ -1,12 +1,15 @@
 ---
+/* Accueil compact (esprit Solary) : une, roster en bande, chiffres,
+   dernières actus, recrutement. Le détail vit sur les pages dédiées. */
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import PlayerCard from '../components/PlayerCard.astro';
 import NewsCard from '../components/NewsCard.astro';
-import Timeline from '../components/Timeline.astro';
 import Wordmark from '../components/Wordmark.astro';
-import { site, recruitment, socials, nextMatch } from '../data/site';
-import { roster, staff, results, ROLE_ORDER } from '../data/content';
+import Palmares from '../components/Palmares.astro';
+import Recruit from '../components/Recruit.astro';
+import { site, nextMatch } from '../data/site';
+import { roster, ROLE_ORDER } from '../data/content';
 import { getNews } from '../data/news';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -17,144 +20,80 @@ const news = await getNews();
 const lead = news.find((n) => n.data.featured) ?? news[0];
 const side = news.filter((n) => n !== lead).slice(0, 2);
 
-// Palmarès : ordre chronologique, regroupé par année.
-const palm = [...results].sort((a, b) => a.date.localeCompare(b.date));
-const palmYears = [...new Set(palm.map((r) => r.date.slice(0, 4)))];
-
 // Mise en gras de l'objectif dans l'intro.
 const GOAL = 'la Division 2 de la LFL';
 const [introA, introB] = site.intro.includes(GOAL) ? site.intro.split(GOAL) : [site.intro, ''];
-
-// Chiffres clés du palmarès (compteurs animés).
-const titles = results.filter((r) => r.title).length;
-const divisions = results.map((r) => Number(r.division?.match(/\d+/)?.[0])).filter(Boolean);
-const bestDiv = divisions.length ? Math.min(...divisions) : 0;
-const stats = [
-  { value: results.length, label: 'Compétitions disputées' },
-  { value: titles, label: titles > 1 ? 'Titres remportés' : 'Titre remporté', gold: true },
-  ...(bestDiv ? [{ value: bestDiv, prefix: 'D', label: 'Meilleure division atteinte' }] : []),
-];
 
 const matchDate = nextMatch
   ? new Date(nextMatch.date).toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })
   : '';
 ---
 <Base>
-  <!-- HERO : une une de magazine — logotype pleine largeur, intro, objectif en aplat violet -->
+  <!-- HERO -->
   <section class="hero">
+    <div class="hero__glow" aria-hidden="true"></div>
     <div class="container">
       <div class="hero__bar">
-        <span>Club esport · {site.game}</span>
+        <span><span class="dot"></span> Club esport · {site.game}</span>
         <span>Fondé en 2018 · Association loi 1901</span>
       </div>
       <h1 class="hero__title"><Wordmark /></h1>
       <div class="hero__grid">
-        <div class="hero__lead">
-          <p class="hero__text">{introA}{introB !== '' && <strong>{GOAL}</strong>}{introB}</p>
-          <div class="hero__cta">
-            <a href="#roster" class="btn btn--primary">Voir l’équipe <Icon name="arrow" /></a>
-            <a href="#projet" class="btn btn--ghost">Notre histoire</a>
-          </div>
+        <p class="hero__text">{introA}{introB !== '' && <strong>{GOAL}</strong>}{introB}</p>
+        <div class="hero__cta">
+          <a href={`${base}/roster`} class="btn btn--primary">Voir l’équipe <Icon name="arrow" /></a>
+          <a href={`${base}/club`} class="btn btn--ghost">Notre histoire</a>
         </div>
-        <a href="#projet" class="goal">
-          <span class="goal__k">Objectif</span>
-          <span class="goal__v">LFL<br />Division 2</span>
-          <span class="goal__f">Étape par étape <Icon name="arrow" /></span>
-        </a>
       </div>
     </div>
+  </section>
 
-    {nextMatch && (
+  {nextMatch && (
+    <div class="container">
       <div class="match">
-        <div class="container match__inner">
-          <span class="match__label">Prochain match</span>
-          <span class="match__vs">PlaZma <em>vs</em> {nextMatch.opponent}</span>
-          <span class="match__meta">{nextMatch.competition} · <time datetime={nextMatch.date}>{matchDate}</time></span>
-          {nextMatch.stream && <a href={nextMatch.stream} target="_blank" rel="noopener" class="match__link">Regarder <Icon name="arrow-up-right" /></a>}
-        </div>
+        <span class="match__label"><span class="dot"></span> Prochain match</span>
+        <span class="match__vs">PlaZma <em>vs</em> {nextMatch.opponent}</span>
+        <span class="match__meta">{nextMatch.competition} · <time datetime={nextMatch.date}>{matchDate}</time></span>
+        {nextMatch.stream && <a href={nextMatch.stream} target="_blank" rel="noopener" class="textlink">Regarder <Icon name="arrow-up-right" /></a>}
       </div>
-    )}
-  </section>
-
-  <!-- LE PROJET -->
-  <section class="section" id="projet">
-    <div class="container">
-      <p class="s-index"><b>01</b><i>/</i>Le projet</p>
-      <h2 class="title" data-reveal>De zéro à la<br />Division 2 de LFL</h2>
-      <Timeline />
     </div>
-  </section>
+  )}
 
-  <!-- ÉQUIPE -->
-  <section class="section team" id="roster">
+  <!-- ROSTER -->
+  <section class="section">
     <div class="container">
-      <p class="s-index"><b>02</b><i>/</i>L’équipe</p>
-      <h2 class="title" data-reveal>Le roster</h2>
-
-      <h3 class="group">Joueurs</h3>
+      <div class="head">
+        <p class="s-index"><b>01</b><i>/</i>L’équipe</p>
+        <a href={`${base}/roster`} class="textlink">Tout le roster <Icon name="arrow" /></a>
+      </div>
       <ul class="cards">
         {orderedRoster.map((p, i) => (
-          <li data-reveal>
-            <PlayerCard
-              pseudo={p.pseudo} sub={p.role} realName={p.realName} country={p.country} index={i + 1}
-              photo={p.photo} href={`${base}/joueur/${p.slug}`} captain={p.captain}
-            />
+          <li data-reveal style={`transition-delay:${i * 60}ms`}>
+            <PlayerCard pseudo={p.pseudo} sub={p.role} country={p.country} index={i + 1}
+              photo={p.photo} href={`${base}/joueur/${p.slug}`} captain={p.captain} />
           </li>
         ))}
       </ul>
-
-      {staff.length > 0 && (
-        <>
-          <h3 class="group">Staff</h3>
-          <ul class="cards">
-            {staff.map((s) => (
-              <li data-reveal>
-                <PlayerCard pseudo={s.pseudo} sub={s.role} realName={s.realName} country={s.country} photo={s.photo} href={`${base}/joueur/${s.slug}`} />
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
     </div>
   </section>
 
-  <!-- PALMARÈS -->
-  <section class="section" id="palmares">
+  <!-- CHIFFRES -->
+  <section class="section section--tight">
     <div class="container">
-      <p class="s-index"><b>03</b><i>/</i>Palmarès</p>
-      <h2 class="title" data-reveal>Les résultats</h2>
-      <ul class="stats">
-        {stats.map((st) => (
-          <li class:list={['stat', { 'is-gold': st.gold }]} data-reveal>
-            <span class="stat__value num">{st.prefix}<span data-count={st.value}>{st.value}</span></span>
-            <span class="stat__label">{st.label}</span>
-          </li>
-        ))}
-      </ul>
-      {palmYears.map((y) => (
-        <section class="palm__year" data-reveal>
-          <h3 class="palm__y num">{y}</h3>
-          <ol class="palm">
-            {palm.filter((r) => r.date.startsWith(y)).map((r) => (
-              <li class:list={['palm__row', { 'is-title': r.title }]}>
-                <span class="palm__place">{r.placement}</span>
-                <span class="palm__comp">{r.competition}{r.division && <span class="palm__div"> — {r.division}</span>}</span>
-                <span class="palm__season">{r.season}</span>
-              </li>
-            ))}
-          </ol>
-        </section>
-      ))}
+      <div class="head">
+        <p class="s-index"><b>02</b><i>/</i>Palmarès</p>
+        <a href={`${base}/palmares`} class="textlink">Tous les résultats <Icon name="arrow" /></a>
+      </div>
+      <Palmares compact />
     </div>
   </section>
 
   <!-- ACTUS -->
   {lead && (
-    <section class="section actus" id="actus">
+    <section class="section section--tight">
       <div class="container">
-        <p class="s-index"><b>04</b><i>/</i>Actus</p>
-        <div class="actus__head">
-          <h2 class="title">Dernières actus</h2>
+        <div class="head">
+          <p class="s-index"><b>03</b><i>/</i>Actus</p>
           <a href={`${base}/actus`} class="textlink">Toutes les actus <Icon name="arrow" /></a>
         </div>
         <div class:list={['news-grid', { 'is-single': !side.length }]}>
@@ -165,158 +104,69 @@ const matchDate = nextMatch
     </section>
   )}
 
-  <!-- RECRUTEMENT -->
-  <section class="section" id="recrutement">
-    <div class="container">
-      <p class="s-index"><b>05</b><i>/</i>Recrutement</p>
-      <div class="recruit" data-reveal>
-        <h2 class="recruit__title">Recrutement<br /><span class:list={['recruit__state', { 'is-open': recruitment.open }]}>{recruitment.open ? 'ouvert' : 'fermé'}</span></h2>
-        <div class="recruit__body">
-          <p>{recruitment.open ? recruitment.intro : recruitment.closedIntro}</p>
-          {recruitment.open && recruitment.roles.length > 0 && (
-            <p>Postes recherchés : <strong>{recruitment.roles.join(', ')}</strong></p>
-          )}
-          {recruitment.open && recruitment.ctaUrl && (
-            <a href={recruitment.ctaUrl} class="btn btn--light" target="_blank" rel="noopener">
-              <Icon name="discord" size={17} /> {recruitment.ctaLabel}
-            </a>
-          )}
-        </div>
-      </div>
-    </div>
+  <section class="section section--tight">
+    <div class="container"><Recruit /></div>
   </section>
-
-  {site.email && (
-    <section class="section" id="contact">
-      <div class="container">
-        <p class="s-index"><b>06</b><i>/</i>Contact</p>
-        <a href={`mailto:${site.email}`} class="mail">{site.email}</a>
-      </div>
-    </section>
-  )}
 </Base>
 
 <style>
-  .title { font-size: clamp(2.4rem, 6vw, 5rem); margin-bottom: clamp(32px, 5vw, 64px); }
+  .section--tight { padding-top: 0; }
+  .head {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    border-top: 1px solid var(--line); padding-top: 14px; margin-bottom: clamp(20px, 3vw, 32px);
+  }
+  .head .s-index { border: 0; padding: 0; margin: 0; }
+  .head .textlink { border: 0; padding: 0; font-size: 0.85rem; }
 
   /* HERO */
-  .hero { padding-top: clamp(20px, 3vw, 32px); }
+  .hero { position: relative; padding-top: clamp(20px, 3vw, 32px); padding-bottom: clamp(48px, 7vw, 96px); overflow: hidden; }
+  .hero__glow {
+    position: absolute; inset: -20% -10% auto auto; width: 70%; height: 120%; pointer-events: none;
+    background: radial-gradient(closest-side, rgba(169, 35, 214, .16), transparent 70%);
+  }
+  .hero .container { position: relative; }
   .hero__bar {
     display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
-    border-top: 2px solid var(--ink); padding-top: 12px;
-    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    border-top: 1px solid var(--line); padding-top: 12px;
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-2);
   }
+  .hero__bar .dot { margin-right: 6px; vertical-align: middle; }
   .hero__title {
     font-size: clamp(4.2rem, 21.5vw, 17.5rem); line-height: .8; letter-spacing: -0.045em;
-    margin: clamp(16px, 2.5vw, 28px) 0 clamp(28px, 4vw, 48px) -0.04em;
+    margin: clamp(16px, 2.5vw, 28px) 0 clamp(28px, 4vw, 44px) -0.04em;
     text-transform: none;
+    animation: rise 1s var(--ease) both;
   }
-  .hero__title :global(.wm b:last-of-type) { color: var(--violet); }
+  .hero__title :global(.wm b) { color: var(--violet); }
   .hero__grid {
-    display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px;
-    border-top: 1px solid var(--line); padding-top: clamp(24px, 3vw, 32px);
+    display: grid; grid-template-columns: minmax(0, 1.4fr) auto; gap: 24px 48px; align-items: end;
+    animation: rise 1s .15s var(--ease) both;
   }
-  .hero__lead { display: flex; flex-direction: column; justify-content: space-between; gap: 32px; }
-  .hero__text { font-size: clamp(1.15rem, 1.9vw, 1.5rem); line-height: 1.4; color: var(--text); max-width: 34ch; }
-  .hero__text strong { font-weight: 700; background: var(--violet-soft); padding: 0 .15em; }
-  .hero__cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero__text { font-size: clamp(1.1rem, 1.7vw, 1.35rem); line-height: 1.45; color: var(--text); max-width: 46ch; }
+  .hero__text strong { font-weight: 700; color: var(--violet-ink); }
+  .hero__cta { display: flex; gap: 10px; flex-wrap: wrap; }
+  @keyframes rise { from { opacity: 0; transform: translateY(24px); } }
+  @media (max-width: 820px) { .hero__grid { grid-template-columns: 1fr; } }
 
-  .goal {
-    display: flex; flex-direction: column; justify-content: space-between; gap: 32px;
-    background: var(--violet); color: #fff; padding: clamp(22px, 3vw, 32px); border-radius: var(--radius);
-    min-height: 260px; transition: background .2s ease;
+  .match {
+    display: flex; align-items: baseline; gap: 10px 28px; flex-wrap: wrap;
+    border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 18px 22px;
+    margin-bottom: clamp(32px, 4vw, 48px);
   }
-  .goal:hover { background: var(--violet-ink); }
-  .goal__k { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; opacity: .8; }
-  .goal__v {
-    font-family: var(--font-display); font-weight: 900; font-stretch: 125%; text-transform: uppercase;
-    font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: .9; letter-spacing: -0.02em;
-  }
-  .goal__f { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.95rem; }
-  .goal__f :global(svg) { width: 18px; height: 18px; }
-  @media (max-width: 820px) { .hero__grid { grid-template-columns: 1fr; } .goal { min-height: 200px; } }
+  .match__label { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--violet); }
+  .match__vs { font-family: var(--font-display); font-weight: 800; font-stretch: 118%; font-size: 1.35rem; text-transform: uppercase; }
+  .match__vs em { font-style: normal; color: var(--text-3); margin-inline: 6px; }
+  .match__meta { color: var(--text-2); font-size: 0.92rem; }
+  .match .textlink { margin-left: auto; }
 
-  .match { margin-top: clamp(32px, 5vw, 56px); background: var(--ink); color: #fff; }
-  .match__inner { display: flex; align-items: baseline; gap: 10px 28px; flex-wrap: wrap; padding-block: 18px; }
-  .match__label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #c9a6e6; }
-  .match__vs { font-family: var(--font-display); font-weight: 800; font-stretch: 118%; font-size: 1.4rem; text-transform: uppercase; }
-  .match__vs em { font-style: normal; opacity: .5; margin-inline: 6px; }
-  .match__meta { color: #b9b5bf; font-size: 0.92rem; }
-  .match__link { margin-left: auto; display: inline-flex; gap: 6px; align-items: center; font-weight: 600; }
-
-  /* ÉQUIPE */
-  .team { background: var(--bg-2); }
-  .group { font-family: var(--font); font-stretch: 100%; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; color: var(--text-3); margin: 0 0 14px; }
-  .cards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
-  .cards + .group { margin-top: clamp(40px, 5vw, 56px); }
+  .cards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
   @media (max-width: 1000px) { .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 620px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } }
 
-  /* PALMARÈS */
-  .stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;
-    margin-bottom: clamp(48px, 6vw, 80px);
-  }
-  .stat {
-    display: flex; flex-direction: column; justify-content: space-between; gap: 40px;
-    padding: clamp(20px, 2.6vw, 28px); background: var(--surface); border-radius: var(--radius); min-height: 220px;
-  }
-  .stat.is-gold { background: var(--violet); color: #fff; }
-  .stat__value {
-    font-family: var(--font-display); font-weight: 900; font-stretch: 125%;
-    font-size: clamp(4rem, 8vw, 6.5rem); line-height: .8; letter-spacing: -0.03em;
-  }
-  .stat__label { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
-  .stat.is-gold .stat__label { color: #fff; opacity: .85; }
-
-  .palm__year {
-    display: grid; grid-template-columns: minmax(120px, 260px) 1fr; gap: 0 clamp(24px, 5vw, 72px);
-    border-top: 2px solid var(--ink); padding-top: clamp(16px, 2vw, 24px); margin-bottom: clamp(24px, 3vw, 40px);
-  }
-  .palm__y { font-size: clamp(2.6rem, 6vw, 4.8rem); line-height: .8; }
-  .palm { list-style: none; padding: 0; }
-  .palm__row {
-    display: grid; grid-template-columns: minmax(150px, 280px) 1fr auto; align-items: baseline; gap: 8px 32px;
-    padding-block: clamp(14px, 2vw, 20px); border-bottom: 1px solid var(--line);
-  }
-  .palm__row:first-child { padding-top: 0; }
-  .palm__row:last-child { border-bottom: 0; }
-  .palm__place {
-    font-family: var(--font-display); font-weight: 800; font-stretch: 118%; text-transform: uppercase;
-    font-size: clamp(1.4rem, 2.2vw, 1.9rem); line-height: 1; letter-spacing: -0.02em;
-  }
-  .palm__row.is-title .palm__place { color: var(--violet); }
-  .palm__comp { font-size: 1.1rem; font-weight: 600; }
-  .palm__div { font-weight: 400; color: var(--text-2); }
-  .palm__season { font-size: 0.9rem; color: var(--text-3); text-align: right; }
-  @media (max-width: 760px) { .palm__year { grid-template-columns: 1fr; gap: 16px; } }
-  @media (max-width: 640px) { .palm__row { grid-template-columns: 1fr; gap: 4px; } .palm__season { text-align: left; } }
-
-  /* ACTUS */
-  .actus { background: var(--bg-2); }
-  .actus__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: clamp(32px, 5vw, 56px); }
-  .actus__head .title { margin-bottom: 0; }
-  .news-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 12px; }
+  .news-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 10px; }
   .news-grid__lead { grid-row: span 2; }
   .news-grid > div, .news-grid :global(.ncard) { height: 100%; }
   .news-grid.is-single { grid-template-columns: 1fr; }
   .news-grid.is-single .news-grid__lead { grid-row: auto; }
   @media (max-width: 820px) { .news-grid { grid-template-columns: 1fr; } .news-grid__lead { grid-row: auto; } }
-
-  /* RECRUTEMENT : bloc d'encre */
-  .recruit {
-    display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px 64px; align-items: end;
-    background: var(--ink); color: #fff; border-radius: var(--radius); padding: clamp(28px, 5vw, 64px);
-  }
-  .recruit__title { color: #fff; font-size: clamp(1.9rem, 6vw, 5rem); }
-  .recruit__state { color: #c9a6e6; }
-  .recruit__state.is-open { color: #7ee2a8; }
-  .recruit__body { display: grid; gap: 18px; justify-items: start; }
-  .recruit__body p { color: #c8c4cd; font-size: 1.05rem; }
-  .recruit__body strong { color: #fff; }
-  .recruit :global(.btn--light) { background: #fff; color: var(--ink); border-color: #fff; }
-  .recruit :global(.btn--light:hover) { background: var(--violet); border-color: var(--violet); color: #fff; }
-  @media (max-width: 760px) { .recruit { grid-template-columns: minmax(0, 1fr); } }
-
-  .mail { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.6rem, 4vw, 3rem); border-bottom: 3px solid var(--violet); }
 </style>

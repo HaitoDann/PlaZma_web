@@ -1,0 +1,38 @@
+---
+/* Bloc recrutement (statut, texte, bouton Discord si ouvert). */
+import Icon from './Icon.astro';
+import { recruitment } from '../data/site';
+---
+<div class="recruit" data-reveal>
+  <div>
+    <p class="recruit__state"><span class:list={['dot', { 'is-open': recruitment.open }]}></span>{recruitment.open ? 'Recrutement ouvert' : 'Recrutement fermé'}</p>
+    <h2 class="recruit__title">Rejoindre<br />la PlaZma</h2>
+  </div>
+  <div class="recruit__body">
+    <p>{recruitment.open ? recruitment.intro : recruitment.closedIntro}</p>
+    {recruitment.open && recruitment.roles.length > 0 && (
+      <p>Postes recherchés : <strong>{recruitment.roles.join(', ')}</strong></p>
+    )}
+    {recruitment.open && recruitment.how && <p>{recruitment.how}</p>}
+    {recruitment.open && recruitment.ctaUrl && (
+      <a href={recruitment.ctaUrl} class="btn btn--primary" target="_blank" rel="noopener">
+        <Icon name="discord" size={17} /> {recruitment.ctaLabel}
+      </a>
+    )}
+  </div>
+</div>
+
+<style>
+  .recruit {
+    display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px 64px; align-items: end;
+    background: radial-gradient(120% 140% at 0% 0%, var(--violet-soft), var(--surface) 60%);
+    border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(28px, 5vw, 64px);
+  }
+  .recruit__state { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-2); margin-bottom: 18px; }
+  .recruit__state .dot:not(.is-open) { background: var(--text-3); box-shadow: none; }
+  .recruit__state .dot.is-open { background: #6fdc9b; box-shadow: 0 0 0 3px rgba(111,220,155,.2); }
+  .recruit__title { font-size: clamp(2rem, 6vw, 4.6rem); }
+  .recruit__body { display: grid; gap: 16px; justify-items: start; }
+  .recruit__body p { font-size: 1.05rem; }
+  @media (max-width: 760px) { .recruit { grid-template-columns: minmax(0, 1fr); } }
+</style>

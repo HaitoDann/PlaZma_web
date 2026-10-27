@@ -2,6 +2,7 @@
 import '../styles/theme.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import { ClientRouter } from 'astro:transitions';
 import { site } from '../data/site';
 
 interface Props {
@@ -31,15 +32,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={`${base}/${site.logo}`} />
-    <meta name="theme-color" content="#f3f1ec" />
+    <meta name="theme-color" content="#0b0a0d" />
 
     <!-- Polices : Instrument Sans (contenu) · Archivo élargi (titres) · Archivo Black (logotype) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Archivo:wdth,wght@100..125,500..900&family=Archivo+Black&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Archivo:wdth,wght@62..125,500..900&family=Archivo+Black&display=swap"
       rel="stylesheet"
     />
+    <ClientRouter />
     <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
   <body>
@@ -66,15 +68,19 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         el.textContent = '0';
         requestAnimationFrame(step);
       };
-      const io = new IntersectionObserver((entries) => {
-        for (const e of entries) {
-          if (!e.isIntersecting) continue;
-          e.target.classList.add('is-in');
-          e.target.querySelectorAll<HTMLElement>('[data-count]').forEach(count);
-          io.unobserve(e.target);
-        }
-      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-      document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+      // Relancé à chaque navigation (ClientRouter).
+      document.addEventListener('astro:page-load', () => {
+        document.documentElement.classList.add('js');
+        const io = new IntersectionObserver((entries) => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue;
+            e.target.classList.add('is-in');
+            e.target.querySelectorAll<HTMLElement>('[data-count]').forEach(count);
+            io.unobserve(e.target);
+          }
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+      });
     </script>
 
   </body>

@@ -1,6 +1,6 @@
 ---
 /* Carte d'actu : visuel en tête si l'actu a une image ; sinon
-   couverture typographique (aplat violet + catégorie en grand). */
+   couverture typographique (fond prune + catégorie en grand). */
 import type { CollectionEntry } from 'astro:content';
 import { fmtDate } from '../data/news';
 
@@ -25,26 +25,27 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 </a>
 
 <style>
-  .ncard { display: flex; flex-direction: column; background: var(--surface); border-radius: var(--radius); overflow: hidden; }
-  .ncard__cover { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--violet); }
+  .ncard { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: border-color .3s ease; }
+  .ncard:hover { border-color: #3a3046; }
+  .ncard__cover { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: radial-gradient(90% 120% at 100% 0%, #3a1d52, var(--violet-soft) 55%, var(--bg-2)); }
   .ncard--lg .ncard__cover { aspect-ratio: auto; flex: 1; min-height: clamp(220px, 28vw, 380px); }
   .ncard__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
   .ncard__gen {
     position: absolute; left: 16px; bottom: 6px; right: 16px;
     font-family: var(--font-display); font-weight: 900; font-stretch: 125%; text-transform: uppercase;
-    font-size: clamp(2.4rem, 6vw, 4.5rem); line-height: .8; letter-spacing: -0.03em; color: rgba(255,255,255,.18);
-    transition: color .3s ease; white-space: nowrap; overflow: hidden;
+    font-size: clamp(2.4rem, 6vw, 4.5rem); line-height: .8; letter-spacing: -0.03em; color: rgba(217, 198, 245, .14);
+    transition: color .4s ease; white-space: nowrap; overflow: hidden;
   }
   .ncard--md .ncard__gen { font-size: clamp(2rem, 3.4vw, 2.8rem); }
   .ncard:hover .ncard__img { transform: scale(1.04); }
-  .ncard:hover .ncard__gen { color: rgba(255,255,255,.4); }
+  .ncard:hover .ncard__gen { color: rgba(217, 198, 245, .32); }
   .ncard__body { padding: clamp(16px, 2vw, 24px); }
   .ncard__meta { display: flex; gap: 14px; align-items: center; font-size: 0.82rem; color: var(--text-3); }
   .ncard__title {
     margin-top: 10px; font-size: clamp(1.25rem, 1.8vw, 1.5rem); line-height: 1; max-width: 30ch;
     transition: color .15s ease;
   }
-  .ncard:hover .ncard__title { color: var(--violet); }
+  .ncard:hover .ncard__title { color: var(--violet-ink); }
   .ncard--lg .ncard__title { font-size: clamp(1.7rem, 3vw, 2.6rem); }
   .ncard__excerpt { margin-top: 12px; max-width: 56ch; }
 </style>

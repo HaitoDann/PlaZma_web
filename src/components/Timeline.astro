@@ -28,6 +28,7 @@ const years = [...new Set(events.map((e) => e.date.slice(0, 4)))];
 </div>
 
 <script>
+  document.addEventListener('astro:page-load', () => {
   for (const tl of document.querySelectorAll<HTMLElement>('[data-timeline]')) {
     const items = [...tl.querySelectorAll<HTMLElement>('.tl__item')];
     let ticking = false;
@@ -46,12 +47,13 @@ const years = [...new Set(events.map((e) => e.date.slice(0, 4)))];
     addEventListener('resize', onScroll);
     update();
   }
+  });
 </script>
 
 <style>
   .tl { --rail-x: 5px; --fill: 0px; position: relative; padding-left: 40px; }
   .tl__rail { position: absolute; left: var(--rail-x); top: 0; bottom: 0; width: 2px; background: var(--line); }
-  .tl__fill { width: 100%; height: var(--fill); background: var(--violet); transition: height .12s linear; }
+  .tl__fill { width: 100%; height: var(--fill); background: linear-gradient(var(--violet-bright), var(--violet)); transition: height .12s linear; }
 
   .tl__year {
     display: grid; grid-template-columns: minmax(120px, 260px) 1fr; gap: 0 clamp(24px, 5vw, 72px);
@@ -63,7 +65,7 @@ const years = [...new Set(events.map((e) => e.date.slice(0, 4)))];
     position: sticky; top: calc(var(--nav-h) + 24px); align-self: start;
     color: var(--line); transition: color .3s ease;
   }
-  .tl__year:has(.is-lit) .tl__y { color: var(--ink); }
+  .tl__year:has(.is-lit) .tl__y { color: var(--text); }
   .tl__list { list-style: none; padding: 0; display: grid; gap: clamp(24px, 3vw, 36px); }
 
   /* Jalon : pastille carrée posée sur le rail */
@@ -72,8 +74,8 @@ const years = [...new Set(events.map((e) => e.date.slice(0, 4)))];
     width: 12px; height: 12px; background: var(--bg); border: 2px solid var(--line);
     transition: background .3s ease, border-color .3s ease;
   }
-  .tl__item.is-lit::before { background: var(--violet); border-color: var(--violet); }
-  .tl__item.is-title.is-lit::before { background: var(--ink); border-color: var(--ink); }
+  .tl__item.is-lit::before { background: var(--violet-bright); border-color: var(--violet-bright); }
+  .tl__item.is-title.is-lit::before { background: var(--gold); border-color: var(--gold); }
 
   /* Fondu seul : un transform ferait des items le repère des jalons. */
   :global(.js) .tl__item[data-reveal] { transform: none; }
@@ -85,7 +87,7 @@ const years = [...new Set(events.map((e) => e.date.slice(0, 4)))];
   }
   .tl__item:not(.is-lit) .tl__title { color: var(--text-3); }
   .tl__text { max-width: 60ch; }
-  .tl__item.is-title.is-lit .tl__title { color: var(--violet); }
+  .tl__item.is-title.is-lit .tl__title { color: var(--gold); }
   .tl__item.is-upcoming .tl__title::after {
     content: 'À venir'; margin-left: 10px; vertical-align: middle;
     font: 600 0.7rem var(--font); letter-spacing: 0.08em; text-transform: uppercase;
@@ -93,9 +95,9 @@ const years = [...new Set(events.map((e) => e.date.slice(0, 4)))];
   }
 
   .tl__goal {
-    border-top: 2px solid var(--ink); padding-top: clamp(24px, 3vw, 36px);
+    border-top: 1px solid var(--line); padding-top: clamp(24px, 3vw, 36px);
     font-family: var(--font-display); font-weight: 900; font-stretch: 125%; text-transform: uppercase;
-    font-size: clamp(2.6rem, 8vw, 6.5rem); line-height: .85; letter-spacing: -0.03em; color: var(--violet);
+    font-size: clamp(2.6rem, 8vw, 6.5rem); line-height: .85; letter-spacing: -0.03em; color: var(--violet-ink);
   }
   .tl__goal span {
     display: block; font-family: var(--font); font-weight: 600; font-stretch: 100%; text-transform: uppercase;
@@ -105,6 +107,6 @@ const years = [...new Set(events.map((e) => e.date.slice(0, 4)))];
   @media (max-width: 760px) {
     .tl { padding-left: 30px; }
     .tl__year { grid-template-columns: 1fr; gap: 18px; }
-    .tl__y { position: static; color: var(--ink); }
+    .tl__y { position: static; color: var(--text); }
   }
 </style>

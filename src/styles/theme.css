@@ -1,31 +1,35 @@
 /* =========================================================================
-   PlaZma — Design system « Papier & Violet »
-   Fond papier clair, encre noire, violet du logo en aplats francs.
-   Signature : sections numérotées (01 / Le projet), filets d'encre épais,
+   PlaZma — Design system « Nuit & Lilas »
+   Fond quasi noir teinté, texte blanc cassé, violet dosé (règle 60-30-10) :
+   lilas désaturé pour les accents, violet du logo en signaux ponctuels.
+   Signature : sections numérotées (01 / Le projet), filets fins,
    titres larges en capitales, logotype géant en pied de page.
-   Pas de néon, pas de dégradés, pas de biseaux.
    ========================================================================= */
 
 :root {
-  --bg: #f3f1ec;            /* papier */
-  --bg-2: #ebe8e1;          /* papier un ton plus bas */
-  --surface: #ffffff;
-  --surface-2: #e4e0d7;
-  --line: #d6d1c6;
-  --line-soft: #e2ded5;
-  --ink: #121015;
+  /* Neutres sombres légèrement teintés de violet (jamais de noir pur) */
+  --bg: #0b0a0d;
+  --bg-2: #100e13;
+  --surface: #15131a;
+  --surface-2: #1c1922;
+  --line: #27232e;
+  --line-soft: #1d1a22;
+  --ink: #0b0a0d;
 
-  /* Violet PlaZma (logo) — aplats et accents */
-  --violet: #8a1cc0;
+  /* Violet PlaZma, en trois doses :
+     - lilas désaturé pour les accents de texte et l'état actif
+     - violet du logo, réservé aux petits signaux (points, traits, logo)
+     - prune très sombre pour les fonds teintés */
+  --violet: #b99ae6;
   --violet-bright: #a923d6;
-  --violet-soft: #efe3f7;
-  --violet-ink: #5e1188;
+  --violet-soft: #24182f;
+  --violet-ink: #d9c6f5;
 
-  --text: var(--ink);
-  --text-2: #4a4750;
-  --text-3: #85818b;
+  --text: #ece9ef;
+  --text-2: #a7a2ae;
+  --text-3: #6f6a77;
 
-  --gold: #b88a1e;
+  --gold: #d8b768;
 
   --font: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: 'Archivo', 'Instrument Sans', sans-serif;
@@ -33,9 +37,10 @@
   --maxw: 1320px;
   --gutter: clamp(16px, 4vw, 48px);
   --nav-h: 64px;
-  --radius: 4px;
+  --radius: 6px;
+  --ease: cubic-bezier(.22, 1, .36, 1);
 
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -81,7 +86,7 @@ a { color: inherit; text-decoration: none; transition: color .15s ease; }
 img { max-width: 100%; display: block; }
 ul { list-style: none; padding: 0; }
 strong { color: var(--text); font-weight: 600; }
-::selection { background: var(--violet); color: #fff; }
+::selection { background: var(--violet-bright); color: #fff; }
 
 .container { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
 .section { padding-block: clamp(64px, 9vw, 120px); }
@@ -89,7 +94,7 @@ strong { color: var(--text); font-weight: 600; }
 /* En-tête de section numéroté : filet d'encre + « 01 / Le projet » */
 .s-index {
   display: flex; align-items: center; gap: 10px;
-  border-top: 2px solid var(--ink); padding-top: 14px; margin-bottom: clamp(24px, 3vw, 36px);
+  border-top: 1px solid var(--line); padding-top: 14px; margin-bottom: clamp(24px, 3vw, 36px);
   font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text);
 }
 .s-index b { font-weight: 700; color: var(--violet); font-variant-numeric: tabular-nums; }
@@ -103,23 +108,23 @@ strong { color: var(--text); font-weight: 600; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   font-family: var(--font); font-weight: 600; font-size: 0.95rem;
-  padding: 14px 22px; border: 2px solid var(--ink); border-radius: 999px; cursor: pointer;
+  padding: 13px 22px; border: 1px solid var(--line); border-radius: 999px; cursor: pointer;
   transition: background .15s ease, color .15s ease, border-color .15s ease;
 }
 .btn svg { width: 17px; height: 17px; transition: transform .15s ease; }
 .btn:hover svg { transform: translateX(3px); }
-.btn--primary { background: var(--ink); color: var(--bg); }
-.btn--primary:hover { background: var(--violet); border-color: var(--violet); }
-.btn--ghost { background: transparent; color: var(--ink); }
-.btn--ghost:hover { background: var(--ink); color: var(--bg); }
+.btn--primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+.btn--primary:hover { background: var(--violet-ink); border-color: var(--violet-ink); }
+.btn--ghost { background: var(--surface); color: var(--text); }
+.btn--ghost:hover { border-color: var(--violet); color: var(--violet-ink); }
 
 .textlink {
   display: inline-flex; align-items: center; gap: 8px;
   font-size: 0.95rem; font-weight: 600; color: var(--text);
-  border-bottom: 2px solid var(--ink); padding-bottom: 2px;
+  border-bottom: 1px solid var(--line); padding-bottom: 3px;
 }
 .textlink svg { width: 15px; height: 15px; transition: transform .15s ease; }
-.textlink:hover { color: var(--violet); border-color: var(--violet); }
+.textlink:hover { color: var(--violet-ink); border-color: var(--violet); }
 .textlink:hover svg { transform: translateX(3px); }
 
 /* Pastille de catégorie d'actu */
@@ -133,12 +138,26 @@ strong { color: var(--text); font-weight: 600; }
 :focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
 .skip-link {
   position: absolute; left: 16px; top: -60px; z-index: 200;
-  background: var(--ink); color: #fff; padding: 10px 16px; font-weight: 600;
+  background: var(--text); color: var(--bg); padding: 10px 16px; font-weight: 600;
   transition: top .2s ease;
 }
 .skip-link:focus { top: 14px; }
 
 /* Apparition au scroll (script dans Base.astro) */
-.js [data-reveal] { opacity: 0; transform: translateY(14px); transition: opacity .5s ease, transform .5s ease; }
+.js [data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
 .js [data-reveal].is-in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .js [data-reveal] { opacity: 1; transform: none; } }
+
+/* Point lumineux (signal violet du logo) */
+.dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--violet-bright); box-shadow: 0 0 0 3px rgba(169,35,214,.18); }
+
+/* En-tête de page (pages internes, façon Solary) */
+.page-head { padding-block: clamp(48px, 7vw, 96px) clamp(32px, 4vw, 48px); border-bottom: 1px solid var(--line); text-align: center; }
+.page-head h1 { font-size: clamp(2.8rem, 7vw, 5.5rem); }
+.page-head p { margin-top: 14px; }
+
+/* Transitions entre pages (View Transitions) */
+@keyframes vt-out { to { opacity: 0; transform: translateY(-8px); } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(12px); } }
+::view-transition-old(root) { animation: vt-out .25s var(--ease) both; }
+::view-transition-new(root) { animation: vt-in .45s var(--ease) both; }

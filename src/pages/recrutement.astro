@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import Recruit from '../components/Recruit.astro';
+import { site } from '../data/site';
+---
+<Base title={`Recrutement · ${site.name}`}>
+  <header class="page-head container">
+    <h1>Recrutement</h1>
+    <p>Les ouvertures de postes du club.</p>
+  </header>
+  <section class="section">
+    <div class="container"><Recruit /></div>
+  </section>
+</Base>

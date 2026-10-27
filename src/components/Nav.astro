@@ -1,29 +1,63 @@
 ---
+/* Menu compact (esprit Solary) : entrées avec sous-menus déroulants,
+   pastille « compétition en cours / prochain match » à droite. */
 import Icon from './Icon.astro';
 import Mark from './Mark.astro';
 import Wordmark from './Wordmark.astro';
-import { site, socials } from '../data/site';
+import { site, nextMatch } from '../data/site';
+import { roster, staff, ROLE_ORDER } from '../data/content';
+
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const hasContact = Boolean(site.email) || socials.length > 0;
-const links = [
-  { href: `${base}/#projet`, label: 'Le projet' },
-  { href: `${base}/#roster`, label: 'Roster' },
-  { href: `${base}/#palmares`, label: 'Palmarès' },
-  { href: `${base}/actus`, label: 'Actus' },
-  { href: `${base}/#recrutement`, label: 'Recrutement' },
-  ...(hasContact ? [{ href: `${base}/#contact`, label: 'Contact' }] : []),
+const path = Astro.url.pathname.replace(base, '') || '/';
+const players = [...roster].sort((a, b) => ROLE_ORDER.indexOf(a.role) - ROLE_ORDER.indexOf(b.role));
+
+type Item = { href: string; label: string; sub?: string };
+type Entry = { label: string; href: string; match: string[]; items?: Item[] };
+const entries: Entry[] = [
+  { label: 'Club', href: `${base}/club`, match: ['/club', '/recrutement'], items: [
+    { href: `${base}/club`, label: 'Notre histoire' },
+    { href: `${base}/recrutement`, label: 'Recrutement' },
+  ] },
+  { label: 'Roster', href: `${base}/roster`, match: ['/roster', '/joueur'], items: [
+    ...players.map((p) => ({ href: `${base}/joueur/${p.slug}`, label: p.pseudo, sub: p.role })),
+    ...staff.map((s) => ({ href: `${base}/joueur/${s.slug}`, label: s.pseudo, sub: s.role.split(' · ')[0] })),
+  ] },
+  { label: 'Palmarès', href: `${base}/palmares`, match: ['/palmares'] },
+  { label: 'Actus', href: `${base}/actus`, match: ['/actus'] },
 ];
+const isOn = (e: Entry) => e.match.some((m) => path.startsWith(m));
+const chip = nextMatch
+  ? { k: new Date(nextMatch.date).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }), v: `vs ${nextMatch.opponent}` }
+  : { k: 'En cours', v: site.season };
 ---
 <header class="nav" id="nav">
   <div class="container nav__inner">
-    <a href={`${base}/#top`} class="nav__brand" aria-label={`${site.name} — accueil`}>
+    <a href={`${base}/`} class="nav__brand" aria-label={`${site.name} — accueil`}>
       <Mark size={30} class="nav__logo" />
       <Wordmark class="nav__name" />
     </a>
 
     <nav class="nav__links" aria-label="Navigation principale">
-      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+      {entries.map((e) => (
+        <div class="nav__item">
+          <a href={e.href} class:list={['nav__top', { 'is-on': isOn(e) }]}>
+            {e.label}{e.items && <svg class="nav__chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>}
+          </a>
+          {e.items && (
+            <div class="nav__drop">
+              {e.items.map((it) => (
+                <a href={it.href}><span>{it.label}</span>{it.sub && <small>{it.sub}</small>}</a>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
     </nav>
+
+    <a href={nextMatch?.stream ?? `${base}/palmares`} class="nav__chip">
+      <span class="nav__chip-k"><span class="dot"></span>{chip.k}</span>
+      <span class="nav__chip-v">{chip.v}</span>
+    </a>
 
     <button class="nav__burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobile-menu">
       <Icon name="menu" size={22} />
@@ -32,7 +66,15 @@ const links = [
 
   <div class="nav__mobile" id="mobile-menu" hidden>
     <nav aria-label="Navigation mobile">
-      {links.map((l) => <a href={l.href} class="nav__mobile-link">{l.label}</a>)}
+      <a href={`${base}/`} class="nav__mobile-link">Accueil</a>
+      {entries.map((e) => (
+        <>
+          <a href={e.href} class="nav__mobile-link">{e.label}</a>
+          {e.items && e.label !== 'Roster' && (
+            <div class="nav__mobile-sub">{e.items.map((it) => <a href={it.href}>{it.label}</a>)}</div>
+          )}
+        </>
+      ))}
     </nav>
   </div>
 </header>
@@ -40,52 +82,88 @@ const links = [
 <style>
   .nav {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(243, 241, 236, 0.92);
-    backdrop-filter: blur(10px);
+    background: rgba(11, 10, 13, 0.82);
+    backdrop-filter: blur(14px) saturate(140%);
     border-bottom: 1px solid var(--line);
   }
-  .nav__inner { height: var(--nav-h); display: flex; align-items: center; gap: 24px; }
+  .nav__inner { height: var(--nav-h); display: flex; align-items: center; gap: 28px; }
   .nav__brand { display: flex; align-items: center; gap: 10px; }
-  .nav__logo { color: var(--violet); }
+  .nav__logo { color: var(--violet-bright); }
   .nav :global(.nav__name) { font-size: 1.15rem; }
-  .nav__links { display: flex; gap: 6px; margin-left: auto; }
-  .nav__links a {
-    font-size: 0.92rem; font-weight: 600; color: var(--text);
-    padding: 8px 14px; border-radius: 999px;
-    transition: background .15s ease, color .15s ease;
+
+  .nav__links { display: flex; gap: 2px; }
+  .nav__item { position: relative; }
+  .nav__top {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.82rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--text-2); padding: 8px 12px; border-radius: 999px;
+    transition: color .2s ease, background .2s ease;
   }
-  .nav__links a:hover { background: var(--ink); color: var(--bg); }
+  .nav__top:hover, .nav__item:focus-within .nav__top { color: var(--text); background: var(--surface); }
+  .nav__top.is-on { color: var(--text); }
+  .nav__top.is-on::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--violet-bright); }
+  .nav__chev { width: 9px; height: 6px; transition: transform .25s var(--ease); }
+  .nav__item:hover .nav__chev, .nav__item:focus-within .nav__chev { transform: rotate(180deg); }
+
+  .nav__drop {
+    position: absolute; top: calc(100% + 8px); left: 0; min-width: 220px;
+    display: grid; padding: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: 0 18px 40px rgba(0,0,0,.45);
+    opacity: 0; visibility: hidden; transform: translateY(-6px);
+    transition: opacity .2s ease, transform .3s var(--ease), visibility .2s;
+  }
+  .nav__drop::before { content: ''; position: absolute; left: 0; right: 0; top: -10px; height: 10px; }
+  .nav__item:hover .nav__drop, .nav__item:focus-within .nav__drop { opacity: 1; visibility: visible; transform: none; }
+  .nav__drop a {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+    padding: 10px 12px; border-radius: 4px; font-weight: 600; font-size: 0.95rem;
+  }
+  .nav__drop a:hover { background: var(--surface-2); color: var(--violet-ink); }
+  .nav__drop small { font-size: 0.75rem; font-weight: 500; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .nav__chip {
+    margin-left: auto; display: flex; align-items: stretch; overflow: hidden;
+    border: 1px solid var(--line); border-radius: var(--radius); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+    transition: border-color .2s ease;
+  }
+  .nav__chip:hover { border-color: var(--violet); }
+  .nav__chip-k { display: flex; align-items: center; gap: 7px; padding: 8px 10px; background: var(--violet-soft); color: var(--violet-ink); }
+  .nav__chip-v { display: flex; align-items: center; padding: 8px 12px; }
 
   .nav__burger {
-    display: none; margin-left: auto;
-    background: transparent; border: 2px solid var(--ink); border-radius: 999px;
+    display: none; margin-left: 4px;
+    background: transparent; border: 1px solid var(--line); border-radius: 999px;
     color: var(--text); padding: 7px; cursor: pointer;
   }
-  .nav__mobile { border-bottom: 1px solid var(--line); background: var(--bg); }
+  .nav__mobile { border-bottom: 1px solid var(--line); background: var(--bg); max-height: calc(100vh - var(--nav-h)); overflow-y: auto; }
   .nav__mobile nav { display: flex; flex-direction: column; padding: 6px var(--gutter) 18px; }
   .nav__mobile-link {
     padding: 14px 2px;
     font-family: var(--font-display); font-weight: 800; font-stretch: 118%; text-transform: uppercase;
-    font-size: 1.5rem; letter-spacing: -0.01em;
-    border-bottom: 1px solid var(--line);
+    font-size: 1.5rem; letter-spacing: -0.01em; border-bottom: 1px solid var(--line-soft);
   }
-  .nav__mobile-link:hover { color: var(--violet); }
+  .nav__mobile-link:hover { color: var(--violet-ink); }
+  .nav__mobile-sub { display: flex; gap: 18px; padding: 10px 2px 14px; border-bottom: 1px solid var(--line-soft); }
+  .nav__mobile-sub a { color: var(--text-2); font-weight: 600; }
 
-  @media (max-width: 860px) {
+  @media (max-width: 900px) {
     .nav__links { display: none; }
     .nav__burger { display: inline-flex; }
   }
+  @media (max-width: 480px) { .nav__chip-v { display: none; } }
 </style>
 
 <script>
-  const burger = document.getElementById('burger');
-  const menu = document.getElementById('mobile-menu');
-  if (burger && menu) {
+  document.addEventListener('astro:page-load', () => {
+    const burger = document.getElementById('burger');
+    const menu = document.getElementById('mobile-menu');
+    if (!burger || !menu || burger.dataset.ready) return;
+    burger.dataset.ready = '1';
     const toggle = (open: boolean) => {
       menu.hidden = !open;
       burger.setAttribute('aria-expanded', String(open));
     };
     burger.addEventListener('click', () => toggle(menu.hidden));
     menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => toggle(false)));
-  }
+  });
 </script>

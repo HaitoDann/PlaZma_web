@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import Timeline from '../components/Timeline.astro';
+import Recruit from '../components/Recruit.astro';
+import { site } from '../data/site';
+---
+<Base title={`Le club · ${site.name}`}>
+  <header class="page-head container">
+    <h1>Notre histoire</h1>
+    <p>De cinq amis au lycée à un club associatif, cap sur la Division 2 de la LFL.</p>
+  </header>
+  <section class="section">
+    <div class="container"><Timeline /></div>
+  </section>
+  <section class="section" style="padding-top:0">
+    <div class="container"><Recruit /></div>
+  </section>
+</Base>

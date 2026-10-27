@@ -58,13 +58,13 @@ const players = roster.filter((p) => d.players.includes(p.slug));
   .art__title { font-size: clamp(2.4rem, 6vw, 4.6rem); margin: 14px 0 20px; }
   .art__lede { font-size: 1.3rem; line-height: 1.45; color: var(--text); }
   .art__cover { width: 100%; max-height: 560px; object-fit: cover; margin-top: 40px; border-radius: var(--radius); }
-  .art__body { margin-top: 40px; padding-top: 32px; border-top: 2px solid var(--ink); }
+  .art__body { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--line); }
   .prose :global(p), .prose :global(ul), .prose :global(blockquote) { margin-bottom: 1.1em; }
   .prose :global(ul) { list-style: none; }
   .prose :global(li) { padding-left: 22px; position: relative; color: var(--text-2); margin-bottom: 6px; }
   .prose :global(li)::before { content: ''; position: absolute; left: 0; top: .65em; width: 8px; height: 8px; background: var(--violet); }
   .prose :global(h2) { font-size: 2rem; margin: 1.4em 0 .5em; }
-  .prose :global(a) { color: var(--violet); text-decoration: underline; text-underline-offset: 3px; }
+  .prose :global(a) { color: var(--violet-ink); text-decoration: underline; text-underline-offset: 3px; }
   .prose :global(blockquote) { border-left: 2px solid var(--violet); padding-left: 18px; }
   .prose :global(img) { margin: 1.4em 0; border-radius: var(--radius); }
   .art__players { margin-top: 56px; }

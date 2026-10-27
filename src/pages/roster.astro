@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import PlayerCard from '../components/PlayerCard.astro';
+import { site } from '../data/site';
+import { roster, staff, ROLE_ORDER } from '../data/content';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const players = [...roster].sort((a, b) => ROLE_ORDER.indexOf(a.role) - ROLE_ORDER.indexOf(b.role));
+---
+<Base title={`Roster · ${site.name}`}>
+  <header class="page-head container">
+    <h1>Le roster</h1>
+    <p>{site.season} · Joueurs et staff</p>
+  </header>
+  <section class="section">
+    <div class="container">
+      <p class="s-index"><b>01</b><i>/</i>Joueurs</p>
+      <ul class="cards">
+        {players.map((p, i) => (
+          <li data-reveal style={`transition-delay:${i * 60}ms`}>
+            <PlayerCard pseudo={p.pseudo} sub={p.role} realName={p.realName} country={p.country} index={i + 1}
+              photo={p.photo} href={`${base}/joueur/${p.slug}`} captain={p.captain} />
+          </li>
+        ))}
+      </ul>
+      {staff.length > 0 && (
+        <>
+          <p class="s-index staff"><b>02</b><i>/</i>Staff</p>
+          <ul class="cards">
+            {staff.map((s, i) => (
+              <li data-reveal style={`transition-delay:${i * 60}ms`}>
+                <PlayerCard pseudo={s.pseudo} sub={s.role} realName={s.realName} country={s.country} photo={s.photo} href={`${base}/joueur/${s.slug}`} />
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+  .staff { margin-top: clamp(48px, 6vw, 72px); }
+  @media (max-width: 1000px) { .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 620px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } }
+</style>

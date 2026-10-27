@@ -37,6 +37,7 @@ const tags = [...new Set(news.map((n) => n.data.tag))];
 </Base>
 
 <script>
+  document.addEventListener('astro:page-load', () => {
   const items = document.querySelectorAll<HTMLElement>('.list > li');
   document.querySelectorAll<HTMLButtonElement>('.filter').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -44,16 +45,17 @@ const tags = [...new Set(news.map((n) => n.data.tag))];
       items.forEach((li) => (li.hidden = btn.dataset.tag !== 'all' && li.dataset.tag !== btn.dataset.tag));
     });
   });
+  });
 </script>
 
 <style>
-  .title { font-size: clamp(3rem, 9vw, 7rem); margin-bottom: 32px; border-top: 2px solid var(--ink); padding-top: 16px; }
+  .title { font-size: clamp(3rem, 9vw, 7rem); margin-bottom: 32px; border-top: 1px solid var(--line); padding-top: 16px; }
   .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
   .filter {
     font: 600 0.9rem var(--font); color: var(--text); background: transparent;
-    border: 2px solid var(--ink); border-radius: 999px; padding: 8px 16px; cursor: pointer;
+    border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; cursor: pointer;
   }
-  .filter.is-on, .filter:hover { background: var(--ink); color: var(--bg); }
+  .filter.is-on, .filter:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
   .list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
   .list > li[hidden] { display: none; }
   .list > li :global(.ncard) { height: 100%; }
