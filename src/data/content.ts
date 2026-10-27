@@ -91,6 +91,7 @@ export const roster: Player[] = [
   },
   {
     pseudo: 'Joordy', role: 'Support', slug: 'joordy', age: 21,
+    photo: 'joordy.webp',
     champions: ['Nami', 'Lulu', 'Milio'],
     bio: 'Joordy a rejoint le club en avril 2026. Gardien et clown de l’équipe, il est capable de dynamiter toute la carte.',
     country: '🇫🇷', nationality: 'France',
