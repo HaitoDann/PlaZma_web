@@ -12,7 +12,7 @@ PlaZma attaque aujourd’hui la **saison 23 de la OUAT**. Après un Top 16 en Di
 Le roster aligné pour ce premier jour :
 
 - **Boulou** — Top
-- **naiko** — Jungle
+- **Naiko** — Jungle
 - **Lakraël** — Mid
 - **Ke1d0** — ADC
 - **Joordy** — Support

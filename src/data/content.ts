@@ -65,14 +65,15 @@ export const slugify = (s: string) =>
 export const roster: Player[] = [
   {
     pseudo: 'Boulou', role: 'Top', slug: 'boulou', age: 22,
+    photo: 'boulou.webp',
     champions: ['Ornn', 'Garen', 'Malphite'],
     bio: 'Boulou a rejoint le club en août 2025. Il se démarque par un style ultra agressif en lane, il est capable du pire comme du meilleur. Force tranquille dans les moments de haute tension, c’est un teammate sur lequel on peut s’appuyer.',
     country: '🇫🇷', nationality: 'France',
   },
   {
-    pseudo: 'naiko', role: 'Jungle', slug: 'naiko', age: 21,
+    pseudo: 'Naiko', role: 'Jungle', slug: 'naiko', age: 21,
     champions: ['Talon', 'Pantheon', 'Shen'],
-    bio: 'naiko a rejoint le club en juin 2026. C’est un joueur intuitif et explosif, il se démarque par ses mécaniques et ses champions agressifs.',
+    bio: 'Naiko a rejoint le club en juin 2026. C’est un joueur intuitif et explosif, il se démarque par ses mécaniques et ses champions agressifs.',
     country: '🇫🇷', nationality: 'France',
   },
   {
@@ -145,8 +146,8 @@ export const story: StoryEvent[] = [
     text: 'Sayro, alors capitaine de l’équipe, décide de prendre ses distances avec le jeu. Nous recrutons Joordy au poste de support et le capitanat est transmis à Lakraël.' },
   { date: '2026-04-02', when: 'Avril 2026', type: 'tournoi', title: 'OUAT — Saison 21',
     text: 'Première inscription à la ligue amateur OUAT : l’équipe termine Top 8 de la Division 7.' },
-  { date: '2026-06-01', when: 'Juin 2026', type: 'roster', title: 'naiko prend la jungle',
-    text: 'Après la défaite en playoffs de la OUAT, il est temps de se renforcer. Nico « naiko » est recruté au poste de jungler pour remplacer Zugu, lui-même arrivé en novembre 2025 à la place d’Henri. Peu disponible, Zugu avait dû être remplacé par Haito sur la majorité des matchs.' },
+  { date: '2026-06-01', when: 'Juin 2026', type: 'roster', title: 'Naiko prend la jungle',
+    text: 'Après la défaite en playoffs de la OUAT, il est temps de se renforcer. Nico « Naiko » est recruté au poste de jungler pour remplacer Zugu, lui-même arrivé en novembre 2025 à la place d’Henri. Peu disponible, Zugu avait dû être remplacé par Haito sur la majorité des matchs.' },
   { date: '2026-06-02', when: 'Juin 2026', type: 'roster', title: 'Kledou devient Head Coach',
     text: 'Le staff commence à se structurer avec l’arrivée de Kledou au poste de Head Coach.' },
   { date: '2026-07-01', when: 'Juillet 2026', type: 'tournoi', title: 'OUAT — Saison 22',
