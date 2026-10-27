@@ -1,0 +1,134 @@
+---
+/* Calendrier (inspiration Solary) : onglets À venir / Terminé, une ligne
+   par match. Les résultats du palmarès complètent l'onglet Terminé.
+   Le tri passé / à venir se fait dans le navigateur (site statique). */
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+import { matches, results } from '../data/content';
+
+type Row = { date: string; time?: string; title: string; sub?: string; stream?: string; right?: string; gold?: boolean };
+const day = (iso: string) => new Date(iso).toLocaleDateString('fr-FR', { weekday: 'short', day: '2-digit', month: '2-digit' }).replace('.', '');
+const rows: Row[] = [
+  ...matches.map((m) => ({
+    date: m.date,
+    time: m.date.includes('T') ? m.date.slice(11, 16).replace(':', 'h') : 'TBD',
+    title: m.title ? `${m.competition} — ${m.title}` : m.competition,
+    sub: m.opponent ? `vs ${m.opponent}` : undefined,
+    stream: m.stream,
+    right: m.score,
+  })),
+  ...results.map((r) => ({
+    date: r.date, title: r.competition + (r.division ? ` — ${r.division}` : ''),
+    sub: r.season, right: r.placement, gold: r.title,
+  })),
+].sort((a, b) => a.date.localeCompare(b.date));
+---
+<Base title={`Calendrier · ${site.name}`}>
+  <header class="page-head container">
+    <h1>Calendrier</h1>
+    <p>Les prochains rendez-vous à ne pas manquer</p>
+  </header>
+
+  <section class="section">
+    <div class="container cal">
+      <div class="cal__tabs" role="tablist">
+        <button role="tab" class="cal__tab is-on" data-tab="up" aria-selected="true">À venir</button>
+        <button role="tab" class="cal__tab" data-tab="done" aria-selected="false">Terminé</button>
+      </div>
+
+      <div class="cal__board">
+        <div class="cal__games" aria-label="Jeux">
+          <span class="cal__game is-on">League of Legends</span>
+        </div>
+        <ol class="cal__list">
+          {rows.map((r) => (
+            <li class="cal__row" data-date={r.date}>
+              <div class="cal__when">
+                <span class="cal__day">{day(r.date)}</span>
+                {r.time && <span class="cal__time">{r.time}</span>}
+                {r.stream && <a href={r.stream} target="_blank" rel="noopener" class="cal__stream"><Icon name="twitch" size={11} /> Stream</a>}
+              </div>
+              <div class="cal__what">
+                <span class:list={['cal__title', { 'is-gold': r.gold }]}>{r.title}</span>
+                {r.sub && <span class="cal__sub">{r.sub}</span>}
+              </div>
+              <span class="cal__right">{r.right}</span>
+            </li>
+          ))}
+        </ol>
+        <p class="cal__empty" hidden>Aucun match annoncé pour le moment.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const list = document.querySelector('.cal__list');
+    if (!list) return;
+    const rows = [...list.querySelectorAll<HTMLElement>('.cal__row')];
+    const empty = document.querySelector<HTMLElement>('.cal__empty')!;
+    const now = Date.now();
+    const isPast = (r: HTMLElement) => new Date(r.dataset.date!).getTime() + 3 * 3600e3 < now;
+    const show = (tab: string) => {
+      document.querySelectorAll<HTMLButtonElement>('.cal__tab').forEach((b) => {
+        const on = b.dataset.tab === tab;
+        b.classList.toggle('is-on', on);
+        b.setAttribute('aria-selected', String(on));
+      });
+      const visible = tab === 'up' ? rows.filter((r) => !isPast(r)) : rows.filter(isPast).reverse();
+      rows.forEach((r) => (r.hidden = !visible.includes(r)));
+      visible.forEach((r) => list.appendChild(r));
+      empty.hidden = visible.length > 0;
+      empty.textContent = tab === 'up' ? 'Aucun match annoncé pour le moment.' : 'Aucun match terminé.';
+    };
+    document.querySelectorAll<HTMLButtonElement>('.cal__tab').forEach((b) => b.addEventListener('click', () => show(b.dataset.tab!)));
+    show('up');
+  });
+</script>
+
+<style>
+  .cal { max-width: 900px; }
+  .cal__tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+  .cal__tab {
+    font: 600 0.78rem var(--font); letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-2); background: transparent; border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 9px 14px; cursor: pointer; transition: color .2s ease, background .2s ease, border-color .2s ease;
+  }
+  .cal__tab:hover { color: var(--text); }
+  .cal__tab.is-on { color: var(--text); background: var(--surface-2); border-color: var(--surface-2); }
+
+  .cal__board { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+  .cal__games { display: flex; justify-content: center; gap: 24px; padding: 12px; border-bottom: 1px solid var(--line); background: var(--bg-2); }
+  .cal__game { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+  .cal__game.is-on { color: var(--violet-ink); }
+
+  .cal__list { list-style: none; padding: 0; }
+  .cal__row {
+    display: grid; grid-template-columns: 120px 1fr 120px; align-items: center; gap: 16px;
+    padding: 18px 20px; border-top: 1px solid var(--line-soft); transition: background .2s ease;
+  }
+  .cal__row:first-child { border-top: 0; }
+  .cal__row:hover { background: var(--surface-2); }
+  .cal__row[hidden] { display: none; }
+  .cal__when { display: grid; gap: 2px; justify-items: start; }
+  .cal__day { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+  .cal__time { font-size: 0.8rem; font-weight: 600; color: var(--text-2); }
+  .cal__stream {
+    display: inline-flex; align-items: center; gap: 4px; margin-top: 4px;
+    font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: #fff;
+    background: var(--violet-bright); padding: 2px 6px; border-radius: 3px;
+  }
+  .cal__what { display: grid; gap: 3px; text-align: center; }
+  .cal__title { font-family: var(--font-display); font-weight: 800; font-stretch: 112%; font-size: 0.95rem; text-transform: uppercase; color: var(--violet-ink); }
+  .cal__title.is-gold { color: var(--gold); }
+  .cal__sub { font-size: 0.82rem; color: var(--text-2); }
+  .cal__right { justify-self: end; font-family: var(--font-display); font-weight: 800; font-stretch: 112%; text-transform: uppercase; font-size: 0.95rem; }
+  .cal__empty { padding: 40px 20px; text-align: center; color: var(--text-3); }
+  @media (max-width: 620px) {
+    .cal__row { grid-template-columns: 84px 1fr; }
+    .cal__what { text-align: left; }
+    .cal__right { grid-column: 2; justify-self: start; }
+  }
+</style>

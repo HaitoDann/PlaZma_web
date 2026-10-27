@@ -1,6 +1,6 @@
 ---
 /* Carte d'actu : visuel en tête si l'actu a une image ; sinon
-   couverture typographique (fond prune + catégorie en grand). */
+   couverture typographique (fond prune + date en grand). */
 import type { CollectionEntry } from 'astro:content';
 import { fmtDate } from '../data/news';
 
@@ -14,7 +14,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     {d.cover ? (
       <img src={`${base}/actus/${d.cover}`} alt="" loading="lazy" class="ncard__img" />
     ) : (
-      <span class="ncard__gen" aria-hidden="true">{d.tag}</span>
+      <span class="ncard__gen num" aria-hidden="true">{d.date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }).replace('/', '.')}</span>
     )}
   </div>
   <div class="ncard__body">

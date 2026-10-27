@@ -5,11 +5,9 @@ import Icon from './Icon.astro';
 import Mark from './Mark.astro';
 import Wordmark from './Wordmark.astro';
 import { site, nextMatch } from '../data/site';
-import { roster, staff, ROLE_ORDER } from '../data/content';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const path = Astro.url.pathname.replace(base, '') || '/';
-const players = [...roster].sort((a, b) => ROLE_ORDER.indexOf(a.role) - ROLE_ORDER.indexOf(b.role));
 
 type Item = { href: string; label: string; sub?: string };
 type Entry = { label: string; href: string; match: string[]; items?: Item[] };
@@ -18,10 +16,11 @@ const entries: Entry[] = [
     { href: `${base}/club`, label: 'Notre histoire' },
     { href: `${base}/recrutement`, label: 'Recrutement' },
   ] },
+  // Un jeu par roster : ajouter une entrée ici le jour où un 2e roster arrive.
   { label: 'Roster', href: `${base}/roster`, match: ['/roster', '/joueur'], items: [
-    ...players.map((p) => ({ href: `${base}/joueur/${p.slug}`, label: p.pseudo, sub: p.role })),
-    ...staff.map((s) => ({ href: `${base}/joueur/${s.slug}`, label: s.pseudo, sub: s.role.split(' · ')[0] })),
+    { href: `${base}/roster`, label: 'League of Legends' },
   ] },
+  { label: 'Calendrier', href: `${base}/calendrier`, match: ['/calendrier'] },
   { label: 'Palmarès', href: `${base}/palmares`, match: ['/palmares'] },
   { label: 'Actus', href: `${base}/actus`, match: ['/actus'] },
 ];
@@ -54,7 +53,7 @@ const chip = nextMatch
       ))}
     </nav>
 
-    <a href={nextMatch?.stream ?? `${base}/palmares`} class="nav__chip">
+    <a href={`${base}/calendrier`} class="nav__chip">
       <span class="nav__chip-k"><span class="dot"></span>{chip.k}</span>
       <span class="nav__chip-v">{chip.v}</span>
     </a>
@@ -70,7 +69,7 @@ const chip = nextMatch
       {entries.map((e) => (
         <>
           <a href={e.href} class="nav__mobile-link">{e.label}</a>
-          {e.items && e.label !== 'Roster' && (
+          {e.items && (
             <div class="nav__mobile-sub">{e.items.map((it) => <a href={it.href}>{it.label}</a>)}</div>
           )}
         </>

@@ -102,6 +102,21 @@ export const results: Result[] = [
   { date: '2026-04-01', season: 'Saison 21 · Avril 2026', competition: 'OUAT', division: 'Division 7', placement: 'Top 8' },
 ];
 
+/* ---- CALENDRIER (page /calendrier) ----
+   Un match par ligne. Avant la date → onglet « À venir », après → « Terminé ».
+   Exemple :
+   { date: '2026-11-04T20:00', competition: 'OUAT · Division 5', title: 'Journée 3',
+     opponent: 'Nom de l’équipe', stream: 'https://twitch.tv/...', score: '1-0' } */
+export interface Match {
+  date: string;            // AAAA-MM-JJTHH:MM (heure de Paris)
+  competition: string;
+  title?: string;          // ex. 'Journée 3', 'Quart de finale'
+  opponent?: string;
+  stream?: string;
+  score?: string;          // une fois joué, ex. '1-0'
+}
+export const matches: Match[] = [];
+
 /* Les actus sont dans src/content/actus/ (un fichier .md par article). */
 
 /* ---- HISTOIRE (timeline « Le projet ») ----
