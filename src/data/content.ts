@@ -70,7 +70,9 @@ export const roster: Player[] = [
     country: '🇫🇷', nationality: 'France',
   },
   {
-    pseudo: 'naiko', role: 'Jungle', slug: 'naiko',
+    pseudo: 'naiko', role: 'Jungle', slug: 'naiko', age: 21,
+    champions: ['Talon', 'Pantheon', 'Shen'],
+    bio: 'naiko a rejoint le club en juin 2026. C’est un joueur intuitif et explosif, il se démarque par ses mécaniques et ses champions agressifs.',
     country: '🇫🇷', nationality: 'France',
   },
   {
@@ -87,7 +89,9 @@ export const roster: Player[] = [
     country: '🇫🇷', nationality: 'France',
   },
   {
-    pseudo: 'Joordy', role: 'Support', slug: 'joordy',
+    pseudo: 'Joordy', role: 'Support', slug: 'joordy', age: 21,
+    champions: ['Nami', 'Lulu', 'Milio'],
+    bio: 'Joordy a rejoint le club en avril 2026. Gardien et clown de l’équipe, il est capable de dynamiter toute la carte.',
     country: '🇫🇷', nationality: 'France',
   },
 ];
