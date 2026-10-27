@@ -64,7 +64,9 @@ export const slugify = (s: string) =>
 /* ---- ROSTER ---- */
 export const roster: Player[] = [
   {
-    pseudo: 'Boulou', role: 'Top', slug: 'boulou',
+    pseudo: 'Boulou', role: 'Top', slug: 'boulou', age: 22,
+    champions: ['Ornn', 'Garen', 'Malphite'],
+    bio: 'Boulou a rejoint le club en août 2025. Il se démarque par un style ultra agressif en lane, il est capable du pire comme du meilleur. Force tranquille dans les moments de haute tension, c’est un teammate sur lequel on peut s’appuyer.',
     country: '🇫🇷', nationality: 'France',
   },
   {
