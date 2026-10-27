@@ -49,66 +49,62 @@ const years = [...new Set(events.map((e) => e.date.slice(0, 4)))];
 </script>
 
 <style>
-  .tl { --rail-x: 7px; --fill: 0px; position: relative; padding-left: 44px; }
-  .tl__rail {
-    position: absolute; left: var(--rail-x); top: 0; bottom: 0; width: 2px; background: var(--line);
-  }
-  .tl__fill {
-    width: 100%; height: var(--fill);
-    background: linear-gradient(to bottom, var(--violet), var(--violet-bright));
-    box-shadow: 0 0 12px 1px var(--violet), 0 0 2px var(--violet-bright);
-    transition: height .12s linear;
-  }
+  .tl { --rail-x: 5px; --fill: 0px; position: relative; padding-left: 40px; }
+  .tl__rail { position: absolute; left: var(--rail-x); top: 0; bottom: 0; width: 2px; background: var(--line); }
+  .tl__fill { width: 100%; height: var(--fill); background: var(--violet); transition: height .12s linear; }
 
   .tl__year {
-    display: grid; grid-template-columns: minmax(120px, 220px) 1fr; gap: 0 clamp(24px, 5vw, 72px);
+    display: grid; grid-template-columns: minmax(120px, 260px) 1fr; gap: 0 clamp(24px, 5vw, 72px);
     border-top: 1px solid var(--line); padding-block: clamp(28px, 4vw, 44px);
   }
   .tl__y {
-    font-family: var(--font-display); font-weight: 800; line-height: .8;
-    font-size: clamp(3.4rem, 8vw, 6.5rem); color: var(--text); letter-spacing: -0.01em;
+    font-family: var(--font-display); font-weight: 900; font-stretch: 125%; line-height: .8;
+    font-size: clamp(3.2rem, 7vw, 6rem); letter-spacing: -0.04em;
     position: sticky; top: calc(var(--nav-h) + 24px); align-self: start;
+    color: var(--line); transition: color .3s ease;
   }
-  .tl__list { list-style: none; padding: 0; display: grid; gap: clamp(26px, 3.5vw, 38px); }
+  .tl__year:has(.is-lit) .tl__y { color: var(--ink); }
+  .tl__list { list-style: none; padding: 0; display: grid; gap: clamp(24px, 3vw, 36px); }
 
-  /* Jalon : losange biseauté posé sur la ligne (positionné par rapport à .tl) */
+  /* Jalon : pastille carrée posée sur le rail */
   .tl__item::before {
-    content: ''; position: absolute; left: calc(var(--rail-x) - 7px); margin-top: 4px;
-    width: 16px; height: 16px; background: var(--surface-2); border: 0;
-    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
-    box-shadow: inset 0 0 0 2px var(--line);
-    transition: background .3s ease, transform .3s ease;
+    content: ''; position: absolute; left: calc(var(--rail-x) - 5px); margin-top: 6px;
+    width: 12px; height: 12px; background: var(--bg); border: 2px solid var(--line);
+    transition: background .3s ease, border-color .3s ease;
   }
-  .tl__item.is-lit::before { background: var(--violet-bright); transform: scale(1.15); }
-  .tl__item.is-title.is-lit::before { background: var(--gold); }
+  .tl__item.is-lit::before { background: var(--violet); border-color: var(--violet); }
+  .tl__item.is-title.is-lit::before { background: var(--ink); border-color: var(--ink); }
 
   /* Fondu seul : un transform ferait des items le repère des jalons. */
   :global(.js) .tl__item[data-reveal] { transform: none; }
 
   .tl__title {
-    font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
-    font-size: clamp(1.35rem, 2.2vw, 1.7rem); line-height: 1.05; margin-bottom: 8px;
+    font-family: var(--font-display); font-weight: 800; font-stretch: 112%; text-transform: uppercase;
+    font-size: clamp(1.3rem, 2.2vw, 1.75rem); line-height: 1.02; margin-bottom: 8px; letter-spacing: -0.01em;
     transition: color .3s ease;
   }
-  .tl__item:not(.is-lit) .tl__title { color: var(--text-2); }
-  .tl__text { max-width: 62ch; }
-  .tl__item.is-title.is-lit .tl__title { color: var(--gold); }
-  .tl__item.is-upcoming.is-lit .tl__title { color: var(--violet-soft); }
+  .tl__item:not(.is-lit) .tl__title { color: var(--text-3); }
+  .tl__text { max-width: 60ch; }
+  .tl__item.is-title.is-lit .tl__title { color: var(--violet); }
+  .tl__item.is-upcoming .tl__title::after {
+    content: 'À venir'; margin-left: 10px; vertical-align: middle;
+    font: 600 0.7rem var(--font); letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 4px 8px; border-radius: 999px; border: 1.5px solid currentColor;
+  }
 
   .tl__goal {
-    border-top: 1px solid var(--line); padding-top: clamp(36px, 5vw, 56px);
-    font-family: var(--font-display); font-weight: 800; text-transform: uppercase;
-    font-size: clamp(2.6rem, 7vw, 5.5rem); line-height: .9;
-    background: linear-gradient(90deg, #fff 0%, var(--violet-soft) 60%, var(--violet-bright)); -webkit-background-clip: text; background-clip: text; color: transparent;
+    border-top: 2px solid var(--ink); padding-top: clamp(24px, 3vw, 36px);
+    font-family: var(--font-display); font-weight: 900; font-stretch: 125%; text-transform: uppercase;
+    font-size: clamp(2.6rem, 8vw, 6.5rem); line-height: .85; letter-spacing: -0.03em; color: var(--violet);
   }
   .tl__goal span {
-    display: block; font-family: var(--font); font-weight: 500; text-transform: none;
-    font-size: 0.95rem; color: var(--text-3); margin-bottom: 14px;
+    display: block; font-family: var(--font); font-weight: 600; font-stretch: 100%; text-transform: uppercase;
+    font-size: 0.8rem; letter-spacing: 0.08em; color: var(--text-3); margin-bottom: 14px;
   }
 
   @media (max-width: 760px) {
-    .tl { padding-left: 32px; }
+    .tl { padding-left: 30px; }
     .tl__year { grid-template-columns: 1fr; gap: 18px; }
-    .tl__y { position: static; }
+    .tl__y { position: static; color: var(--ink); }
   }
 </style>

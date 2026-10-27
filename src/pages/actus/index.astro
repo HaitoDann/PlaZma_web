@@ -47,15 +47,14 @@ const tags = [...new Set(news.map((n) => n.data.tag))];
 </script>
 
 <style>
-  .title { font-size: clamp(2.8rem, 6vw, 4.6rem); margin-bottom: 28px; }
+  .title { font-size: clamp(3rem, 9vw, 7rem); margin-bottom: 32px; border-top: 2px solid var(--ink); padding-top: 16px; }
   .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
   .filter {
-    font: 600 0.78rem var(--font); letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--text-2); background: transparent; border: 1px solid var(--line);
-    padding: 10px 16px; cursor: pointer;
+    font: 600 0.9rem var(--font); color: var(--text); background: transparent;
+    border: 2px solid var(--ink); border-radius: 999px; padding: 8px 16px; cursor: pointer;
   }
-  .filter.is-on { background: var(--surface-2); color: var(--text); border-color: var(--surface-2); }
-  .list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .filter.is-on, .filter:hover { background: var(--ink); color: var(--bg); }
+  .list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
   .list > li[hidden] { display: none; }
   .list > li :global(.ncard) { height: 100%; }
   .is-lead { grid-column: 1 / -1; }

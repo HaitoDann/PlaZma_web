@@ -17,7 +17,7 @@ const links = [
 <header class="nav" id="nav">
   <div class="container nav__inner">
     <a href={`${base}/#top`} class="nav__brand" aria-label={`${site.name} — accueil`}>
-      <Mark size={34} class="nav__logo" />
+      <Mark size={30} class="nav__logo" />
       <Wordmark class="nav__name" />
     </a>
 
@@ -39,54 +39,37 @@ const links = [
 
 <style>
   .nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(7, 7, 10, 0.86);
-    backdrop-filter: blur(12px);
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(243, 241, 236, 0.92);
+    backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--line);
-    box-shadow: inset 0 -1px 0 rgba(169,35,214,.35);
   }
   .nav__inner { height: var(--nav-h); display: flex; align-items: center; gap: 24px; }
-  .nav__brand { display: flex; align-items: center; gap: 11px; }
+  .nav__brand { display: flex; align-items: center; gap: 10px; }
   .nav__logo { color: var(--violet); }
-  .nav :global(.nav__name) {
-    font-size: 1.2rem;
-    
-  }
-  .nav__links { display: flex; gap: 28px; margin-left: auto; }
+  .nav :global(.nav__name) { font-size: 1.15rem; }
+  .nav__links { display: flex; gap: 6px; margin-left: auto; }
   .nav__links a {
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-2);
-    padding: 6px 0;
-    position: relative;
+    font-size: 0.92rem; font-weight: 600; color: var(--text);
+    padding: 8px 14px; border-radius: 999px;
+    transition: background .15s ease, color .15s ease;
   }
-  .nav__links a::after {
-    content: ''; position: absolute; left: 0; bottom: 0;
-    width: 0; height: 2px; background: var(--violet);
-    transition: width 0.18s ease;
-  }
-  .nav__links a:hover { color: var(--text); }
-  .nav__links a:hover::after { width: 100%; }
+  .nav__links a:hover { background: var(--ink); color: var(--bg); }
 
   .nav__burger {
     display: none; margin-left: auto;
-    background: var(--surface); border: 1px solid var(--line);
-    color: var(--text); padding: 8px; cursor: pointer;
+    background: transparent; border: 2px solid var(--ink); border-radius: 999px;
+    color: var(--text); padding: 7px; cursor: pointer;
   }
-  .nav__mobile { border-bottom: 1px solid var(--line); background: var(--bg-2); }
+  .nav__mobile { border-bottom: 1px solid var(--line); background: var(--bg); }
   .nav__mobile nav { display: flex; flex-direction: column; padding: 6px var(--gutter) 18px; }
   .nav__mobile-link {
-    padding: 15px 2px;
-    font-weight: 500;
-    font-size: 1rem;
-    color: var(--text-2);
-    border-bottom: 1px solid var(--line-soft);
+    padding: 14px 2px;
+    font-family: var(--font-display); font-weight: 800; font-stretch: 118%; text-transform: uppercase;
+    font-size: 1.5rem; letter-spacing: -0.01em;
+    border-bottom: 1px solid var(--line);
   }
-  .nav__mobile-link:hover { color: var(--text); }
+  .nav__mobile-link:hover { color: var(--violet); }
 
   @media (max-width: 860px) {
     .nav__links { display: none; }

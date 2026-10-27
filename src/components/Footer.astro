@@ -34,6 +34,8 @@ const links = [
     )}
   </div>
 
+  <div class="container footer__giant" aria-hidden="true"><Wordmark /></div>
+
   <div class="container footer__bottom">
     <span class="num">© {year} {site.name}</span>
     <span>Club esport · {site.game}</span>
@@ -42,30 +44,32 @@ const links = [
 </footer>
 
 <style>
-  .footer { border-top: 2px solid var(--violet); background: var(--bg-2); }
+  .footer { background: var(--ink); color: #fff; margin-top: clamp(32px, 5vw, 64px); }
   .footer__top {
     display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
     padding-block: 40px 28px;
   }
-  .footer__brand {
-    display: flex; align-items: center; gap: 11px;
-    font-family: var(--font-display); font-weight: 700; font-size: 1.2rem;
+  .footer__brand { display: flex; align-items: center; gap: 10px; font-size: 1.15rem; }
+  .footer__brand :global(.wm) { color: #fff; }
+  .footer__mark { color: #c9a6e6; }
+  .footer__nav { display: flex; gap: 24px; flex-wrap: wrap; margin-left: auto; }
+  .footer__nav a { color: #c8c4cd; font-weight: 500; }
+  .footer__nav a:hover { color: #fff; }
+  .footer__socials { display: flex; gap: 14px; }
+  .footer__socials a { color: #c8c4cd; }
+  .footer__socials a:hover { color: #fff; }
+  .footer__giant {
+    font-size: clamp(4rem, 21.5vw, 17.5rem); line-height: .78; letter-spacing: -0.045em;
+    overflow: hidden; padding-top: 8px;
   }
-  .footer__mark { color: var(--violet); }
-  .footer__nav { display: flex; gap: 24px; flex-wrap: wrap; margin-left: 8px; }
-  .footer__nav a { color: var(--text-2); font-size: 0.92rem; }
-  .footer__nav a:hover { color: var(--text); }
-  .footer__socials { display: flex; gap: 14px; margin-left: auto; }
-  .footer__socials a { color: var(--text-3); }
-  .footer__socials a:hover { color: var(--text); }
+  .footer__giant :global(.wm) { color: #1f1c24; }
   .footer__bottom {
     display: flex; gap: 20px; flex-wrap: wrap;
-    padding-block: 20px; border-top: 1px solid var(--line-soft);
-    font-size: 0.82rem; color: var(--text-3);
+    padding-block: 20px; border-top: 1px solid #2a2730;
+    font-size: 0.82rem; color: #8e8a94;
   }
   .footer__fine { margin-left: auto; }
   @media (max-width: 640px) {
     .footer__nav { margin-left: 0; width: 100%; }
-    .footer__socials { margin-left: 0; }
   }
 </style>
