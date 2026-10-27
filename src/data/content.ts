@@ -66,7 +66,7 @@ export const roster: Player[] = [
   {
     pseudo: 'Boulou', role: 'Top', slug: 'boulou', age: 22,
     photo: 'boulou.webp',
-    champions: ['Ornn', 'Garen', 'Malphite'],
+    champions: ['Ornn', 'Garen', 'Irelia'],
     bio: 'Boulou a rejoint le club en août 2025. Il se démarque par un style ultra agressif en lane, il est capable du pire comme du meilleur. Force tranquille dans les moments de haute tension, c’est un teammate sur lequel on peut s’appuyer.',
     country: '🇫🇷', nationality: 'France',
   },
