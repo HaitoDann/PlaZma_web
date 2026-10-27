@@ -81,7 +81,9 @@ export const roster: Player[] = [
     country: '🇫🇷', nationality: 'France',
   },
   {
-    pseudo: 'Ke1d0', role: 'ADC', slug: 'ke1d0',
+    pseudo: 'Ke1d0', role: 'ADC', slug: 'ke1d0', age: 21,
+    champions: ['Jinx', 'Ashe', 'Xayah'],
+    bio: 'Ke1d0 a rejoint le club en août 2025. Central dans les compositions de l’équipe, il sait monter en puissance et devenir une vraie menace en fin de partie.',
     country: '🇫🇷', nationality: 'France',
   },
   {
